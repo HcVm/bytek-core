@@ -77,7 +77,32 @@ export const updateOpportunity = mutation({
     },
     handler: async (ctx, args) => {
         const { id, ...updates } = args;
+        const prevOpp = await ctx.db.get(id);
+
         await ctx.db.patch(id, updates);
+
+        // Disparador CASCADA: Si pasa a ganada, inyectar el proyecto a Operaciones automáticamente
+        if (updates.status === "won" && prevOpp?.status !== "won") {
+            const client = await ctx.db.get(prevOpp!.clientId);
+
+            // Verificar si ya tiene proyecto creado para no duplicar
+            const existingProjects = await ctx.db.query("projects")
+                .filter((q) => q.eq(q.field("opportunityId"), id))
+                .collect();
+
+            if (existingProjects.length === 0) {
+                await ctx.db.insert("projects", {
+                    clientId: prevOpp!.clientId,
+                    opportunityId: id,
+                    title: `Proyecto: ${client?.companyName || 'Nuevo Cliente'} - ${updates.packageId || prevOpp!.packageId}`,
+                    status: "planning",
+                    milestones: [
+                        { name: "Adelanto Inicial (50%)", percentage: 50, isPaid: false },
+                        { name: "Entrega Final (50%)", percentage: 50, isPaid: false }
+                    ]
+                });
+            }
+        }
     },
 });
 

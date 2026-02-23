@@ -50,7 +50,7 @@ export function TaskDetailDialog({
                 taskId: task._id,
                 status,
                 priority,
-                assigneeId: assigneeId ? (assigneeId as Id<"users">) : undefined,
+                assigneeId: assigneeId && assigneeId !== "unassigned" ? (assigneeId as Id<"users">) : undefined,
                 githubPrLink,
                 storyPoints: storyPoints ? parseInt(storyPoints) : undefined,
             });
@@ -67,6 +67,11 @@ export function TaskDetailDialog({
                 {children}
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px] h-[85vh] flex flex-col p-0 overflow-hidden">
+                <DialogHeader className="sr-only">
+                    <DialogTitle>Detalle de la Tarea</DialogTitle>
+                    <DialogDescription>Edición extendida para el Jira Clone</DialogDescription>
+                </DialogHeader>
+
                 <div className="flex items-center gap-3 px-6 py-4 border-b border-zinc-200 bg-zinc-50/80">
                     {getTypeIcon(task.type)}
                     <span className="text-sm font-semibold text-zinc-600 uppercase tracking-wider">{task.boardId.substring(task.boardId.length - 4)}-{task._id.substring(task._id.length - 4)}</span>
@@ -129,7 +134,7 @@ export function TaskDetailDialog({
                                         <SelectValue placeholder="Sin asignar" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="">Ninguno</SelectItem>
+                                        <SelectItem value="unassigned">Ninguno</SelectItem>
                                         {boardMembers.map(m => (
                                             <SelectItem key={m._id} value={m._id}>{m.name}</SelectItem>
                                         ))}

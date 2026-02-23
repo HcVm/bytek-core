@@ -58,6 +58,28 @@ export const updateQuoteStatus = mutation({
             const quote = await (ctx.db as any).get(args.quoteId);
             if (quote) {
                 await (ctx.db as any).patch(quote.opportunityId, { status: "won", estimatedValue: quote.total });
+
+                // A su vez, inyectar Proyecto a Operaciones
+                const opp = await (ctx.db as any).get(quote.opportunityId);
+                if (opp) {
+                    const existingProjects = await (ctx.db as any).query("projects")
+                        .filter((q: any) => q.eq(q.field("opportunityId"), opp._id))
+                        .collect();
+
+                    if (existingProjects.length === 0) {
+                        const client = await (ctx.db as any).get(opp.clientId);
+                        await (ctx.db as any).insert("projects", {
+                            clientId: opp.clientId,
+                            opportunityId: opp._id,
+                            title: `Proyecto: ${client?.companyName || 'Nuevo Cliente'} - ${opp.packageId}`,
+                            status: "planning",
+                            milestones: [
+                                { name: "Adelanto Inicial (50%)", percentage: 50, isPaid: false },
+                                { name: "Entrega Final (50%)", percentage: 50, isPaid: false }
+                            ]
+                        });
+                    }
+                }
             }
         }
     }
