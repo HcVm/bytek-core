@@ -8,17 +8,25 @@
  * @module
  */
 
+import type * as agile from "../agile.js";
 import type * as auth from "../auth.js";
 import type * as clientPortal from "../clientPortal.js";
 import type * as clients from "../clients.js";
+import type * as departments from "../departments.js";
+import type * as documents from "../documents.js";
 import type * as fieldService from "../fieldService.js";
+import type * as finance from "../finance.js";
+import type * as hr from "../hr.js";
 import type * as http from "../http.js";
+import type * as internalRequests from "../internalRequests.js";
 import type * as inventory from "../inventory.js";
 import type * as invoices from "../invoices.js";
+import type * as legal from "../legal.js";
 import type * as metrics from "../metrics.js";
 import type * as opportunities from "../opportunities.js";
 import type * as packages from "../packages.js";
 import type * as projects from "../projects.js";
+import type * as quotes from "../quotes.js";
 import type * as users from "../users.js";
 
 import type {
@@ -28,17 +36,25 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  agile: typeof agile;
   auth: typeof auth;
   clientPortal: typeof clientPortal;
   clients: typeof clients;
+  departments: typeof departments;
+  documents: typeof documents;
   fieldService: typeof fieldService;
+  finance: typeof finance;
+  hr: typeof hr;
   http: typeof http;
+  internalRequests: typeof internalRequests;
   inventory: typeof inventory;
   invoices: typeof invoices;
+  legal: typeof legal;
   metrics: typeof metrics;
   opportunities: typeof opportunities;
   packages: typeof packages;
   projects: typeof projects;
+  quotes: typeof quotes;
   users: typeof users;
 }>;
 

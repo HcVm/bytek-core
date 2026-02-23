@@ -9,6 +9,7 @@ import { Plus } from "lucide-react";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 import { Badge } from "@/components/ui/badge";
 import { OpportunityFormDialog } from "./OpportunityFormDialog";
+import { QuoteGeneratorDialog } from "./QuoteGeneratorDialog";
 import { Pencil } from "lucide-react";
 
 // Columnas del Kanban basadas en el esquema
@@ -135,8 +136,9 @@ export default function OportunidadesPage() {
                                                                     {opp.packageId.replace(/_/g, ' ').toUpperCase()}
                                                                 </p>
                                                                 <div className="mt-2 text-right">
-                                                                    <span className="text-sm font-semibold text-emerald-600">
-                                                                        S/ {opp.estimatedValue.toLocaleString('es-PE', { minimumFractionDigits: 2 })}
+                                                                    <span className="text-sm font-semibold text-emerald-600 flex items-center justify-between">
+                                                                        <QuoteGeneratorDialog opportunityId={opp._id} clientName={opp.clientName || 'Cliente'} />
+                                                                        <span>S/ {opp.estimatedValue.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</span>
                                                                     </span>
                                                                 </div>
                                                             </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Activity, ShieldCheck, Cctv, Server, Rocket, ChevronRight, BarChart3 } from "lucide-react";
+import { Activity, ShieldCheck, Cctv, Server, Rocket, ChevronRight, BarChart3, Archive } from "lucide-react";
 import Link from "next/link";
 import { motion, Variants } from "framer-motion";
 
@@ -54,8 +54,12 @@ export default function Home() {
           className="flex items-center gap-6"
         >
           {/* Botón principal unificado -> Lleva al CRM Dashboard Gerencial */}
+          <Link href="/admin" className="group flex items-center gap-2 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-white px-5 py-2.5 rounded-full text-sm font-semibold transition-all">
+            <span>Admin Central</span>
+            <Server className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
           <Link href="/crm" className="group flex items-center gap-2 bg-white hover:bg-zinc-100 text-zinc-950 px-5 py-2.5 rounded-full text-sm font-semibold transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]">
-            <span>Abrir Plataforma Base</span>
+            <span>CRM Comercial</span>
             <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </motion.div>
@@ -170,9 +174,9 @@ export default function Home() {
               <ShieldCheck className="w-6 h-6 text-zinc-400 group-hover:text-indigo-400 transition-colors" />
               <span className="font-medium text-sm text-zinc-300">Dashboard de Ventas</span>
             </Link>
-            <Link href="/crm/facturacion" className="group bg-zinc-900/30 border border-white/5 rounded-xl p-5 flex flex-col items-start gap-4 hover:bg-zinc-800/50 hover:border-white/10 transition-all cursor-pointer">
-              <Activity className="w-6 h-6 text-zinc-400 group-hover:text-emerald-400 transition-colors" />
-              <span className="font-medium text-sm text-zinc-300">Tesorería Principal</span>
+            <Link href="/admin/inventario" className="group bg-zinc-900/30 border border-white/5 rounded-xl p-5 flex flex-col items-start gap-4 hover:bg-zinc-800/50 hover:border-white/10 transition-all cursor-pointer">
+              <Archive className="w-6 h-6 text-zinc-400 group-hover:text-emerald-400 transition-colors" />
+              <span className="font-medium text-sm text-zinc-300">Logística & Almacén</span>
             </Link>
             <Link href="/client-portal" className="group bg-zinc-900/30 border border-white/5 rounded-xl p-5 flex flex-col items-start gap-4 hover:bg-zinc-800/50 hover:border-white/10 transition-all cursor-pointer">
               <Cctv className="w-6 h-6 text-zinc-500 group-hover:text-amber-400 transition-colors" />
