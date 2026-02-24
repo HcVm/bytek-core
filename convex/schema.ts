@@ -205,9 +205,28 @@ export default defineSchema({
         storyPoints: v.optional(v.number()), // Fibonacci: 1, 2, 3, 5, 8, etc.
         assigneeId: v.optional(v.id("users")),
         githubPrLink: v.optional(v.string()), // Integración Dev
+        // Planificación Temporal (Fase 15 — Gantt)
+        startDate: v.optional(v.number()), // Timestamp de inicio planificado
+        dueDate: v.optional(v.number()),   // Timestamp de entrega estimada
         createdAt: v.number(),
         updatedAt: v.optional(v.number()),
     }).index("by_board", ["boardId"]).index("by_sprint", ["sprintId"]).index("by_assignee", ["assigneeId"]),
+
+    // ==========================================
+    // GESTIÓN DE RIESGOS DE PROYECTO (PMI)
+    // ==========================================
+    projectRisks: defineTable({
+        projectId: v.id("projects"),
+        title: v.string(),
+        description: v.optional(v.string()),
+        probability: v.union(v.literal("low"), v.literal("medium"), v.literal("high"), v.literal("critical")),
+        impact: v.union(v.literal("low"), v.literal("medium"), v.literal("high"), v.literal("critical")),
+        status: v.union(v.literal("identified"), v.literal("mitigating"), v.literal("resolved"), v.literal("accepted")),
+        mitigation: v.optional(v.string()), // Plan de acción
+        ownerId: v.id("users"), // Responsable del riesgo
+        createdAt: v.number(),
+        updatedAt: v.optional(v.number()),
+    }).index("by_project", ["projectId"]),
 
     boardMessages: defineTable({
         boardId: v.id("boards"),

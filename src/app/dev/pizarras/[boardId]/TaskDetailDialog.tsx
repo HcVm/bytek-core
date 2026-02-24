@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Bookmark, Bug, CheckSquare, Github, Link as LinkIcon, Save, Zap } from "lucide-react";
+import { Bookmark, Bug, CheckSquare, Github, Link as LinkIcon, Save, Zap, CalendarDays } from "lucide-react";
 
 export function TaskDetailDialog({
     task,
@@ -32,6 +32,8 @@ export function TaskDetailDialog({
     const [storyPoints, setStoryPoints] = useState(task.storyPoints?.toString() || "");
     const [githubPrLink, setGithubPrLink] = useState(task.githubPrLink || "");
     const [status, setStatus] = useState(task.status);
+    const [taskStartDate, setTaskStartDate] = useState(task.startDate ? new Date(task.startDate).toISOString().split('T')[0] : "");
+    const [taskDueDate, setTaskDueDate] = useState(task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : "");
 
     const updateTaskFields = useMutation(api.agile.updateTaskFields);
 
@@ -53,6 +55,8 @@ export function TaskDetailDialog({
                 assigneeId: assigneeId && assigneeId !== "unassigned" ? (assigneeId as Id<"users">) : undefined,
                 githubPrLink,
                 storyPoints: storyPoints ? parseInt(storyPoints) : undefined,
+                startDate: taskStartDate ? new Date(taskStartDate).getTime() : undefined,
+                dueDate: taskDueDate ? new Date(taskDueDate).getTime() : undefined,
             });
             toast.success("Detalles de la tarea actualizados");
             setOpen(false);
@@ -165,6 +169,15 @@ export function TaskDetailDialog({
                                     value={storyPoints}
                                     onChange={e => setStoryPoints(e.target.value)}
                                 />
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <label className="text-xs font-bold text-zinc-500 uppercase flex items-center gap-1"><CalendarDays className="w-3 h-3" /> Inicio</label>
+                                <Input type="date" className="h-8" value={taskStartDate} onChange={e => setTaskStartDate(e.target.value)} />
+                            </div>
+                            <div className="space-y-1.5">
+                                <label className="text-xs font-bold text-zinc-500 uppercase flex items-center gap-1"><CalendarDays className="w-3 h-3" /> Entrega</label>
+                                <Input type="date" className="h-8" value={taskDueDate} onChange={e => setTaskDueDate(e.target.value)} />
                             </div>
                         </div>
                     </div>

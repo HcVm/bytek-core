@@ -69,6 +69,8 @@ export const createTask = mutation({
         storyPoints: v.optional(v.number()),
         assigneeId: v.optional(v.id("users")),
         status: v.union(v.literal("todo"), v.literal("in_progress"), v.literal("review"), v.literal("done")),
+        startDate: v.optional(v.number()),
+        dueDate: v.optional(v.number()),
     },
     handler: async (ctx, args) => {
         return await ctx.db.insert("tasks", {
@@ -83,10 +85,12 @@ export const updateTaskFields = mutation({
         taskId: v.id("tasks"),
         status: v.optional(v.union(v.literal("todo"), v.literal("in_progress"), v.literal("review"), v.literal("done"))),
         priority: v.optional(v.union(v.literal("low"), v.literal("medium"), v.literal("high"), v.literal("urgent"))),
-        sprintId: v.optional(v.id("sprints")), // null to move back to backlog - we use undefined in convex mostly but we can patch
+        sprintId: v.optional(v.id("sprints")),
         assigneeId: v.optional(v.id("users")),
         githubPrLink: v.optional(v.string()),
         storyPoints: v.optional(v.number()),
+        startDate: v.optional(v.number()),
+        dueDate: v.optional(v.number()),
     },
     handler: async (ctx, args) => {
         const { taskId, ...updates } = args;
@@ -94,6 +98,72 @@ export const updateTaskFields = mutation({
             ...updates,
             updatedAt: Date.now(),
         });
+    }
+});
+
+// Backlog: Tareas sin sprint asignado
+export const getBacklogTasks = query({
+    args: { boardId: v.optional(v.id("boards")) },
+    handler: async (ctx, args) => {
+        let allTasks;
+        if (args.boardId) {
+            allTasks = await ctx.db.query("tasks")
+                .withIndex("by_board", q => q.eq("boardId", args.boardId!))
+                .collect();
+        } else {
+            allTasks = await ctx.db.query("tasks").collect();
+        }
+        // Filtrar las que NO tienen sprintId
+        const backlogTasks = allTasks.filter(t => !t.sprintId);
+
+        return Promise.all(
+            backlogTasks.map(async (task) => {
+                const assignee = task.assigneeId ? await ctx.db.get(task.assigneeId) : null;
+                const board = await ctx.db.get(task.boardId);
+                return { ...task, assigneeName: assignee?.name, boardTitle: board?.title };
+            })
+        );
+    }
+});
+
+// Gantt: Tareas con fechas para renderizado temporal
+export const getTasksForGantt = query({
+    args: { boardId: v.id("boards") },
+    handler: async (ctx, args) => {
+        const tasks = await ctx.db.query("tasks")
+            .withIndex("by_board", q => q.eq("boardId", args.boardId))
+            .collect();
+
+        // Solo las tareas que tengan al menos startDate
+        const ganttTasks = tasks.filter(t => t.startDate);
+
+        return Promise.all(
+            ganttTasks.map(async (task) => {
+                const assignee = task.assigneeId ? await ctx.db.get(task.assigneeId) : null;
+                return { ...task, assigneeName: assignee?.name };
+            })
+        );
+    }
+});
+
+// Gestión de Sprints
+export const updateSprintStatus = mutation({
+    args: {
+        sprintId: v.id("sprints"),
+        status: v.union(v.literal("planned"), v.literal("active"), v.literal("closed")),
+    },
+    handler: async (ctx, args) => {
+        await ctx.db.patch(args.sprintId, { status: args.status });
+    }
+});
+
+export const assignTaskToSprint = mutation({
+    args: {
+        taskId: v.id("tasks"),
+        sprintId: v.optional(v.id("sprints")),
+    },
+    handler: async (ctx, args) => {
+        await ctx.db.patch(args.taskId, { sprintId: args.sprintId, updatedAt: Date.now() });
     }
 });
 

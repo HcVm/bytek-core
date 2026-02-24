@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, KanbanSquare, GitMerge, FileCode2, LogOut, Settings, ListTodo } from "lucide-react";
+import { LayoutDashboard, KanbanSquare, GitMerge, FileCode2, LogOut, Settings, ListTodo, GanttChartSquare, ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
@@ -46,6 +46,18 @@ export function DevSidebar() {
                 <Link href="/dev/sprints" className={`flex items-center gap-3 px-3 py-2.5 rounded-md transition-all ${pathname.includes('/dev/sprints') ? 'bg-blue-500/15 text-blue-400 font-medium border border-blue-500/20' : 'hover:bg-slate-900 hover:text-white'}`}>
                     <GitMerge className="w-4 h-4" />
                     <span className="text-sm">Active Sprints</span>
+                </Link>
+
+                <div className="pt-4 mb-2 mt-4 border-t border-slate-800/50">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-3">Planificación Estratégica</span>
+                </div>
+                <Link href="/dev/gantt" className={`flex items-center gap-3 px-3 py-2.5 rounded-md transition-all ${pathname.includes('/dev/gantt') ? 'bg-blue-500/15 text-blue-400 font-medium border border-blue-500/20' : 'hover:bg-slate-900 hover:text-white'}`}>
+                    <GanttChartSquare className="w-4 h-4" />
+                    <span className="text-sm">Diagrama Gantt</span>
+                </Link>
+                <Link href="/dev/riesgos" className={`flex items-center gap-3 px-3 py-2.5 rounded-md transition-all ${pathname.includes('/dev/riesgos') ? 'bg-blue-500/15 text-blue-400 font-medium border border-blue-500/20' : 'hover:bg-slate-900 hover:text-white'}`}>
+                    <ShieldAlert className="w-4 h-4" />
+                    <span className="text-sm">Registro de Riesgos</span>
                 </Link>
 
                 <div className="pt-4 mb-2 mt-4 border-t border-slate-800/50">
