@@ -27,6 +27,7 @@ import type * as opportunities from "../opportunities.js";
 import type * as packages from "../packages.js";
 import type * as projects from "../projects.js";
 import type * as quotes from "../quotes.js";
+import type * as reports from "../reports.js";
 import type * as risks from "../risks.js";
 import type * as users from "../users.js";
 
@@ -56,6 +57,7 @@ declare const fullApi: ApiFromModules<{
   packages: typeof packages;
   projects: typeof projects;
   quotes: typeof quotes;
+  reports: typeof reports;
   risks: typeof risks;
   users: typeof users;
 }>;

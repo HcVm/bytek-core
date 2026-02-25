@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowLeft, Save, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Save, CheckCircle2, FileBarChart } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -172,6 +172,10 @@ export default function ProyectoDetallePage() {
                                     </div>
                                 </div>
                             )}
+
+                            <Link href={`/dev/reportes/${projectId}`} className="w-full mt-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg flex items-center justify-center gap-2 text-sm font-medium transition-colors">
+                                <FileBarChart className="w-4 h-4" /> Ver Reporte Post-Mortem
+                            </Link>
                         </CardContent>
                     </Card>
                 </div>
