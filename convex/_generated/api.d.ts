@@ -12,6 +12,7 @@ import type * as agile from "../agile.js";
 import type * as auth from "../auth.js";
 import type * as clientPortal from "../clientPortal.js";
 import type * as clients from "../clients.js";
+import type * as contracts from "../contracts.js";
 import type * as departments from "../departments.js";
 import type * as documents from "../documents.js";
 import type * as fieldService from "../fieldService.js";
@@ -42,6 +43,7 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   clientPortal: typeof clientPortal;
   clients: typeof clients;
+  contracts: typeof contracts;
   departments: typeof departments;
   documents: typeof documents;
   fieldService: typeof fieldService;

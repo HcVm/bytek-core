@@ -1,6 +1,6 @@
 "use client";
 
-import { Settings, Users, Briefcase, LayoutDashboard, LogOut, PackageSearch, FileText, FolderKanban, CreditCard, Archive, Compass, UserCog } from "lucide-react";
+import { Settings, Users, Briefcase, LayoutDashboard, LogOut, PackageSearch, FileText, FolderKanban, CreditCard, Archive, Compass, UserCog, FileSignature } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
@@ -42,6 +42,10 @@ export default function Sidebar() {
                 <Link href="/crm/facturacion" className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${pathname.includes('/facturacion') ? 'bg-indigo-500/10 text-indigo-400' : 'hover:bg-zinc-900 hover:text-white'}`}>
                     <CreditCard className="w-5 h-5" />
                     <span className="text-sm font-medium">Facturación</span>
+                </Link>
+                <Link href="/admin/contratos" className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${pathname.includes('/contratos') ? 'bg-indigo-500/10 text-indigo-400' : 'hover:bg-zinc-900 hover:text-white'}`}>
+                    <FileSignature className="w-5 h-5" />
+                    <span className="text-sm font-medium">Contratos</span>
                 </Link>
                 <div className="pt-4 mt-4 border-t border-zinc-900 mb-2">
                     <span className="text-xs font-semibold text-zinc-500 px-3 uppercase tracking-wider">Enlaces Externos</span>
