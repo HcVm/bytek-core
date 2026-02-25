@@ -7,7 +7,7 @@ import { Id } from "../../../../convex/_generated/dataModel";
 import { GitMerge, Plus, Play, Square, CheckCircle, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import {
     Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription,
 } from "@/components/ui/dialog";
@@ -46,17 +46,17 @@ export default function SprintManager() {
                 startDate: new Date(startDate).getTime(),
                 endDate: new Date(endDate).getTime(),
             });
-            toast.success("Sprint creado exitosamente.");
+            sileo.success({ title: "Sprint creado exitosamente." });
             setIsDialogOpen(false);
             setSprintName(""); setSprintGoal(""); setStartDate(""); setEndDate("");
-        } catch (e) { toast.error("Error al crear sprint."); }
+        } catch (e) { sileo.error({ title: "Error al crear sprint." }); }
     };
 
     const handleStatusChange = async (sprintId: Id<"sprints">, newStatus: "planned" | "active" | "closed") => {
         try {
             await updateSprintStatus({ sprintId, status: newStatus });
-            toast.success(`Sprint ${newStatus === 'active' ? 'activado' : newStatus === 'closed' ? 'cerrado' : 'planificado'}.`);
-        } catch (e) { toast.error("Error al actualizar sprint."); }
+            sileo.success({ title: `Sprint ${newStatus === 'active' ? 'activado' : newStatus === 'closed' ? 'cerrado' : 'planificado'}.` });
+        } catch (e) { sileo.error({ title: "Error al actualizar sprint." }); }
     };
 
     const getStatusIcon = (s: string) => {

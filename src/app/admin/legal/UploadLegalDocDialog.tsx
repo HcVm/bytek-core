@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UploadCloud, File, Calendar, Building, Landmark, ShieldCheck, Handshake } from "lucide-react";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 
 export function UploadLegalDocDialog({ currentTab }: { currentTab: "corporativo" | "comercial" }) {
     const [open, setOpen] = useState(false);
@@ -40,7 +40,7 @@ export function UploadLegalDocDialog({ currentTab }: { currentTab: "corporativo"
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!selectedFile) {
-            toast.error("Debes adjuntar un archivo PDF o Escaneo");
+            sileo.error({ title: "Debes adjuntar un archivo PDF o Escaneo" });
             return;
         }
         if (!currentAdminId) return;
@@ -69,12 +69,12 @@ export function UploadLegalDocDialog({ currentTab }: { currentTab: "corporativo"
                 uploadedBy: currentAdminId
             });
 
-            toast.success("Documento Legal archivado con éxito");
+            sileo.success({ title: "Documento Legal archivado con éxito" });
             setOpen(false);
             setFormData({ title: "", type: currentTab === "corporativo" ? "marca" : "contrato_cliente", status: "vigente", expirationDate: "", targetClientId: "none" });
             setSelectedFile(null);
         } catch (error) {
-            toast.error("Error interconectando con la Bóveda Segura");
+            sileo.error({ title: "Error interconectando con la Bóveda Segura" });
         } finally {
             setIsUploading(false);
         }

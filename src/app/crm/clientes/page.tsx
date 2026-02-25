@@ -8,7 +8,7 @@ import {
     Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 } from "@/components/ui/table";
 import { Pencil, Trash2, UsersRound } from "lucide-react";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import { Badge } from "@/components/ui/badge";
 import { ClientFormDialog } from "./ClientFormDialog";
 
@@ -17,14 +17,21 @@ export default function ClientesPage() {
     const deleteClient = useMutation(api.clients.deleteClient);
 
     const handleDelete = async (id: Id<"clients">) => {
-        if (confirm("¿Estás seguro de eliminar este cliente? Esto podría afectar sus oportunidades y facturas relacionadas.")) {
-            try {
-                await deleteClient({ id });
-                toast.success("Cliente eliminado exitosamente");
-            } catch (error: any) {
-                toast.error("Error al eliminar el cliente");
-            }
-        }
+        sileo.error({
+            title: "¿Eliminar este cliente?",
+            description: "Esto podría afectar sus oportunidades y facturas relacionadas.",
+            button: {
+                title: "Confirmar Eliminación",
+                onClick: async () => {
+                    try {
+                        await deleteClient({ id });
+                        sileo.success({ title: "Cliente eliminado exitosamente" });
+                    } catch (error: any) {
+                        sileo.error({ title: "Error al eliminar el cliente" });
+                    }
+                },
+            },
+        });
     };
 
     const getStatusBadge = (status: string) => {

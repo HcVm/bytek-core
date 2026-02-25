@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import {
     Dialog,
     DialogContent,
@@ -74,11 +74,11 @@ export function RequestFormDialog({ trigger }: { trigger?: React.ReactNode }) {
                 fromUserId: senderId,
             });
 
-            toast.success("Solicitud enviada al área seleccionada.");
+            sileo.success({ title: "Solicitud enviada al área seleccionada." });
             setOpen(false);
             form.reset();
         } catch (error: any) {
-            toast.error(error.message || 'Error al emitir el requerimiento');
+            sileo.error({ title: error.message || 'Error al emitir el requerimiento' });
         }
     }
 

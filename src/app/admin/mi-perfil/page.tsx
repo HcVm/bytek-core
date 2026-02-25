@@ -6,7 +6,7 @@ import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
 import { Clock, CalendarDays, Receipt, Clock3, LogOut, CheckCircle2, UserCog } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 
 export default function MiPerfilPage() {
     // Para MVP sin Login Auth real, simulamos con el primer usuario de la BD o por un ID fijo
@@ -66,9 +66,9 @@ function PerfilContenido({ userId }: { userId: Id<"users"> }) {
     const handleClockIn = async () => {
         try {
             await clockInMutation({ userId, date: today });
-            toast.success("¡Asistencia Marcada! Buen día de trabajo.");
+            sileo.success({ title: "¡Asistencia Marcada! Buen día de trabajo." });
         } catch (error: any) {
-            toast.error(error.message || "Error al registrar entrada.");
+            sileo.error({ title: error.message || "Error al registrar entrada." });
         }
     };
 
@@ -76,9 +76,9 @@ function PerfilContenido({ userId }: { userId: Id<"users"> }) {
         if (!attendance) return;
         try {
             await clockOutMutation({ attendanceId: attendance._id });
-            toast.success("¡Salida Registrada! Hasta mañana.");
+            sileo.success({ title: "¡Salida Registrada! Hasta mañana." });
         } catch (error: any) {
-            toast.error("Error al registrar salida.");
+            sileo.error({ title: "Error al registrar salida." });
         }
     };
 

@@ -4,7 +4,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Users, FileWarning, Fingerprint, CalendarCheck, CheckCircle2, XCircle } from "lucide-react";
 import Link from "next/link";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import { Badge } from "@/components/ui/badge";
 
 export default function HRAdminDashboard() {
@@ -19,9 +19,9 @@ export default function HRAdminDashboard() {
     const handleResolveLeave = async (requestId: any, status: "aprobado" | "rechazado") => {
         try {
             await resolveLeaveMutation({ requestId, status, managerId: currentAdminId });
-            toast.success(`Solicitud ${status === 'aprobado' ? 'aprobada' : 'rechazada'}`);
+            sileo.success({ title: `Solicitud ${status === 'aprobado' ? 'aprobada' : 'rechazada'}` });
         } catch (error) {
-            toast.error("Error al procesar la solicitud");
+            sileo.error({ title: "Error al procesar la solicitud" });
         }
     };
 

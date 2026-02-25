@@ -10,7 +10,7 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { Plus, FileText, Download, Eye, AlertCircle, Calendar } from "lucide-react";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
@@ -34,7 +34,7 @@ export default function CotizadorPage() {
         if (!input) return;
 
         setIsGenerating(true);
-        toast.info("Generando PDF...");
+        sileo.info({ title: "Generando PDF..." });
 
         try {
             const imgData = await htmlToImage.toPng(input, {
@@ -50,16 +50,16 @@ export default function CotizadorPage() {
             pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
             pdf.save(`Cotizacion_${selectedQuote?.quoteNumber || 'BYTEK'}.pdf`);
 
-            toast.success("PDF descargado correctamente");
+            sileo.success({ title: "PDF descargado correctamente" });
 
             // Auto marcamos como enviado si estaba en borrador
             if (selectedQuote && selectedQuote.status === "borrador") {
                 await updateStatus({ quoteId: selectedQuote._id as any, status: "enviado" });
-                toast.success("El Estado cambió automáticamente a Enviado.");
+                sileo.success({ title: "El Estado cambió automáticamente a Enviado." });
             }
         } catch (error) {
             console.error("Error al exportar a PDF:", error);
-            toast.error("Hubo un error al generar el documento");
+            sileo.error({ title: "Hubo un error al generar el documento" });
         } finally {
             setIsGenerating(false);
         }

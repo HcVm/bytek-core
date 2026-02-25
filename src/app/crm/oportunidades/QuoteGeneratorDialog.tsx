@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus, Trash2, FileText } from "lucide-react";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import { formatCurrency } from "@/lib/utils";
 
 interface QuoteItem {
@@ -63,12 +63,12 @@ export function QuoteGeneratorDialog({ opportunityId, clientName }: { opportunit
         e.preventDefault();
 
         if (!loggedInUser) {
-            toast.error("Error de sesión");
+            sileo.error({ title: "Error de sesión" });
             return;
         }
 
         if (items.some(i => !i.description || i.totalPrice <= 0)) {
-            toast.error("Revise los items de la cotización");
+            sileo.error({ title: "Revise los items de la cotización" });
             return;
         }
 
@@ -81,11 +81,11 @@ export function QuoteGeneratorDialog({ opportunityId, clientName }: { opportunit
                 notes,
                 createdBy: loggedInUser
             });
-            toast.success("Cotización B2B Generada");
+            sileo.success({ title: "Cotización B2B Generada" });
             setOpen(false);
         } catch (error) {
             console.error(error);
-            toast.error("Fallo al generar cotización");
+            sileo.error({ title: "Fallo al generar cotización" });
         }
     };
 

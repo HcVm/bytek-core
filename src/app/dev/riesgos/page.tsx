@@ -7,7 +7,7 @@ import { Id } from "../../../../convex/_generated/dataModel";
 import { ShieldAlert, Plus, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import {
     Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription,
 } from "@/components/ui/dialog";
@@ -65,23 +65,23 @@ export default function RiskRegistry() {
 
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!projectId || !ownerId) { toast.error("Selecciona proyecto y responsable."); return; }
+        if (!projectId || !ownerId) { sileo.error({ title: "Selecciona proyecto y responsable." }); return; }
         try {
             if (editingId) {
                 await updateRisk({ id: editingId, title, description, probability, impact, status, mitigation, ownerId: ownerId as Id<"users"> });
-                toast.success("Riesgo actualizado.");
+                sileo.success({ title: "Riesgo actualizado." });
             } else {
                 await createRisk({ projectId: projectId as Id<"projects">, title, description, probability, impact, status, mitigation, ownerId: ownerId as Id<"users"> });
-                toast.success("Riesgo registrado.");
+                sileo.success({ title: "Riesgo registrado." });
             }
             setIsDialogOpen(false);
-        } catch (e) { toast.error("Error al guardar."); }
+        } catch (e) { sileo.error({ title: "Error al guardar." }); }
     };
 
     const handleDelete = async (id: Id<"projectRisks">) => {
         if (!confirm("¿Eliminar este riesgo?")) return;
         await deleteRisk({ id });
-        toast.success("Riesgo eliminado.");
+        sileo.success({ title: "Riesgo eliminado." });
     };
 
     if (risks === undefined) return <div className="p-10 flex items-center justify-center h-full"><span className="animate-pulse text-slate-400 font-semibold tracking-widest text-sm uppercase">Cargando Riesgos...</span></div>;

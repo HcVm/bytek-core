@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import {
     Dialog,
     DialogContent,
@@ -55,11 +55,11 @@ export function HardwareFormDialog() {
     async function onSubmit(values: FormValues) {
         try {
             await addHardwareModel(values);
-            toast.success("Modelo de Hardware registrado en catálogo");
+            sileo.success({ title: "Modelo de Hardware registrado en catálogo" });
             setOpen(false);
             form.reset();
         } catch (error: any) {
-            toast.error(error.message || "Error al registrar");
+            sileo.error({ title: error.message || "Error al registrar" });
         }
     }
 

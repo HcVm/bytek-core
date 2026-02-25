@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Briefcase, DollarSign, Calendar, CreditCard, Phone, Settings2, FileText, UploadCloud, UserMinus, ShieldAlert, File, Trash2, Home, HeartPulse, Building2 } from "lucide-react";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import { Badge } from "@/components/ui/badge";
 
 export function EmployeeProfileDialog({ userId, userName }: { userId: Id<"users">, userName: string }) {
@@ -87,10 +87,10 @@ export function EmployeeProfileDialog({ userId, userName }: { userId: Id<"users"
                 terminationDate: formData.terminationDate ? new Date(formData.terminationDate).getTime() : undefined,
                 terminationReason: formData.terminationReason
             });
-            toast.success("Legajo digital actualizado");
+            sileo.success({ title: "Legajo digital actualizado" });
             // No cerramos el modal para permitir navegar solapas
         } catch (error) {
-            toast.error("Error al guardar el legajo");
+            sileo.error({ title: "Error al guardar el legajo" });
         }
     };
 
@@ -120,10 +120,10 @@ export function EmployeeProfileDialog({ userId, userName }: { userId: Id<"users"
                 uploadedBy: userId // En la vida real, sería el admin actual. Para simplificar, userId
             });
 
-            toast.success("Documento cargado a la bóveda");
+            sileo.success({ title: "Documento cargado a la bóveda" });
             if (fileInputRef.current) fileInputRef.current.value = "";
         } catch (error) {
-            toast.error("Fallo al subir archivo");
+            sileo.error({ title: "Fallo al subir archivo" });
         } finally {
             setIsUploading(false);
         }
@@ -132,9 +132,9 @@ export function EmployeeProfileDialog({ userId, userName }: { userId: Id<"users"
     const handleDeleteDoc = async (docId: Id<"employeeDocuments">, storageId: Id<"_storage">) => {
         try {
             await deleteDocument({ documentId: docId, fileId: storageId });
-            toast.success("Archivo eliminado");
+            sileo.success({ title: "Archivo eliminado" });
         } catch (error) {
-            toast.error("Error borrando el archivo");
+            sileo.error({ title: "Error borrando el archivo" });
         }
     };
 

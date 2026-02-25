@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { motion } from "framer-motion";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 
 export default function ClientPortalLogin() {
     const router = useRouter();
@@ -24,14 +24,14 @@ export default function ClientPortalLogin() {
     const handleAccess = () => {
         if (loginMethod === "simulate") {
             if (!selectedClient) {
-                toast.error("Selecciona una cuenta de empresa para ingresar.");
+                sileo.error({ title: "Selecciona una cuenta de empresa para ingresar." });
                 return;
             }
             // Navegamos al layout protegido del portal con el cliente en la URL (o cookie en prod)
             router.push(`/client-portal/${selectedClient}`);
-            toast.success("Acceso Concedido: Entorno Simulado");
+            sileo.success({ title: "Acceso Concedido: Entorno Simulado" });
         } else {
-            toast("En el sistema real, te ha llegado un correo electrónico con un enlace mágico.");
+            sileo.info({ title: "En el sistema real, te ha llegado un correo electrónico con un enlace mágico." });
         }
     };
 

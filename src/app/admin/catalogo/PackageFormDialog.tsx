@@ -5,7 +5,7 @@ import * as z from "zod";
 import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import {
     Dialog,
     DialogContent,
@@ -86,15 +86,15 @@ export function PackageFormDialog({
         try {
             if (isEditing) {
                 await updatePackage({ id: initialData._id, ...values });
-                toast.success("Paquete actualizado con éxito");
+                sileo.success({ title: "Paquete actualizado con éxito" });
             } else {
                 await createPackage(values);
-                toast.success("Paquete creado con éxito");
+                sileo.success({ title: "Paquete creado con éxito" });
             }
             setOpen(false);
             if (!isEditing) form.reset();
         } catch (error) {
-            toast.error(`Error al ${isEditing ? 'actualizar' : 'crear'} el paquete`);
+            sileo.error({ title: `Error al ${isEditing ? 'actualizar' : 'crear'} el paquete` });
             console.error(error);
         }
     }

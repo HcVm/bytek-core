@@ -7,7 +7,7 @@ import * as z from "zod";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -50,11 +50,11 @@ export function BoardFormDialog({ currentUserId }: { currentUserId: Id<"users"> 
                 memberIds,
             });
 
-            toast.success("Pizarra Kanban creada.");
+            sileo.success({ title: "Pizarra Kanban creada." });
             setOpen(false);
             form.reset();
         } catch (error: any) {
-            toast.error("Error al crear la pizarra");
+            sileo.error({ title: "Error al crear la pizarra" });
         }
     }
 

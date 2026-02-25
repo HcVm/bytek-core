@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Id } from "../../../convex/_generated/dataModel";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import { MapPin, Navigation, Clock, CheckCircle, ChevronDown, ChevronUp, FileSignature, UploadCloud } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,20 +33,20 @@ export function InterventionCard({ intervention }: { intervention: any }) {
                 }
 
                 if (!hasEvidence) {
-                    toast.warning("Se recomienda adjuntar evidencia antes de cerrar el acta.");
+                    sileo.warning({ title: "Se recomienda adjuntar evidencia antes de cerrar el acta." });
                 }
 
                 payload.evidencePhotosUrl = hasEvidence ? ["https://placeholder.com/evidence1.jpg"] : [];
             }
 
             await updateStatus(payload);
-            toast.success("Estado de Orden Actualizado");
+            sileo.success({ title: "Estado de Orden Actualizado" });
 
             if (newStatus === "completed") {
                 setExpanded(false);
             }
         } catch (error: any) {
-            toast.error(error.message || "Error al actualizar");
+            sileo.error({ title: error.message || "Error al actualizar" });
         }
     }
 
@@ -63,7 +63,7 @@ export function InterventionCard({ intervention }: { intervention: any }) {
                 <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                         <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm ${isCompleted ? "bg-emerald-100 text-emerald-700" :
-                                (isWorking ? "bg-amber-100 text-amber-700" : "bg-indigo-100 text-indigo-700")
+                            (isWorking ? "bg-amber-100 text-amber-700" : "bg-indigo-100 text-indigo-700")
                             }`}>
                             {isCompleted ? "Completado" : typeLabel}
                         </span>
@@ -137,7 +137,7 @@ export function InterventionCard({ intervention }: { intervention: any }) {
                                             className="w-full h-8 text-xs border-dashed"
                                             onClick={() => {
                                                 setHasEvidence(!hasEvidence);
-                                                toast("Simulación: Cámara Abierta / Evidencia Guardada");
+                                                sileo.info({ title: "Simulación: Cámara Abierta / Evidencia Guardada" });
                                             }}
                                         >
                                             <UploadCloud className="w-3 h-3 mr-2" />

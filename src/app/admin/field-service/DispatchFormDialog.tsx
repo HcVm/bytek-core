@@ -5,7 +5,7 @@ import * as z from "zod";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import {
     Dialog,
     DialogContent,
@@ -78,11 +78,11 @@ export function DispatchFormDialog() {
                 type: values.type,
                 siteLocation: values.siteLocation,
             });
-            toast.success("Orden de trabajo programada correctamente");
+            sileo.success({ title: "Orden de trabajo programada correctamente" });
             setOpen(false);
             form.reset();
         } catch (error: any) {
-            toast.error(error.message || "Error al programar despacho");
+            sileo.error({ title: error.message || "Error al programar despacho" });
         }
     }
 

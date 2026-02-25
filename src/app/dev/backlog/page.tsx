@@ -6,7 +6,7 @@ import { Id } from "../../../../convex/_generated/dataModel";
 import { ListTodo, ArrowRight, Bookmark, Bug, CheckSquare, Zap, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import {
     Select,
     SelectContent,

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import { Id } from "../../../../../convex/_generated/dataModel";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -58,10 +58,10 @@ export function TaskDetailDialog({
                 startDate: taskStartDate ? new Date(taskStartDate).getTime() : undefined,
                 dueDate: taskDueDate ? new Date(taskDueDate).getTime() : undefined,
             });
-            toast.success("Detalles de la tarea actualizados");
+            sileo.success({ title: "Detalles de la tarea actualizados" });
             setOpen(false);
         } catch (error) {
-            toast.error("Error guardando tarea");
+            sileo.error({ title: "Error guardando tarea" });
         }
     };
 

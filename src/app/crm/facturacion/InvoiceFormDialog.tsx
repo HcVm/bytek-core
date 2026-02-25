@@ -5,7 +5,7 @@ import * as z from "zod";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import {
     Dialog,
     DialogContent,
@@ -111,15 +111,15 @@ export function InvoiceFormDialog({
 
             if (isEditing) {
                 await updateInvoice({ id: initialData._id, ...payload });
-                toast.success("Factura actualizada");
+                sileo.success({ title: "Factura actualizada" });
             } else {
                 await createInvoice(payload);
-                toast.success("Cuenta por cobrar generada");
+                sileo.success({ title: "Cuenta por cobrar generada" });
             }
             setOpen(false);
             if (!isEditing) form.reset();
         } catch (error: any) {
-            toast.error(error.message || `Error al guardar la factura`);
+            sileo.error({ title: error.message || `Error al guardar la factura` });
             console.error(error);
         }
     }

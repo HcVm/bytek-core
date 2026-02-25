@@ -8,7 +8,7 @@ import { Plus, Settings2, Pencil, Trash2, PackageSearch } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/utils";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import {
     Dialog,
     DialogContent,
@@ -71,7 +71,7 @@ export default function CatalogPage() {
         e.preventDefault();
         const priceNum = parseFloat(basePrice);
         if (isNaN(priceNum) || priceNum < 0) {
-            toast.error("Coloca un precio base válido.");
+            sileo.error({ title: "Coloca un precio base válido." });
             return;
         }
 
@@ -87,15 +87,15 @@ export default function CatalogPage() {
         try {
             if (editingPackage) {
                 await updatePackage({ id: editingPackage._id, ...payload });
-                toast.success("Servicio actualizado con éxito.");
+                sileo.success({ title: "Servicio actualizado con éxito." });
             } else {
                 await createPackage(payload);
-                toast.success("Nuevo producto/servicio añadido al catálogo.");
+                sileo.success({ title: "Nuevo producto/servicio añadido al catálogo." });
             }
             setIsDialogOpen(false);
         } catch (error) {
             console.error(error);
-            toast.error("Ocurrió un error al procesar la solicitud.");
+            sileo.error({ title: "Ocurrió un error al procesar la solicitud." });
         }
     };
 
@@ -106,10 +106,10 @@ export default function CatalogPage() {
 
         try {
             await deletePackage({ id });
-            toast.success("Servicio eliminado del catálogo.");
+            sileo.success({ title: "Servicio eliminado del catálogo." });
         } catch (error) {
             console.error(error);
-            toast.error("Error al intentar eliminar.");
+            sileo.error({ title: "Error al intentar eliminar." });
         }
     };
 

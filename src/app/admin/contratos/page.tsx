@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import {
     Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import jsPDF from "jspdf";
 
 export default function ContractGeneratorPage() {
@@ -63,7 +63,7 @@ export default function ContractGeneratorPage() {
     const handleExportPDF = async () => {
         if (!contract) return;
         try {
-            toast.info("Generando PDF...");
+            sileo.info({ title: "Generando PDF..." });
             const pdf = new jsPDF("p", "mm", "a4");
             const pageW = pdf.internal.pageSize.getWidth();
             const pageH = pdf.internal.pageSize.getHeight();
@@ -204,10 +204,10 @@ export default function ContractGeneratorPage() {
             pdf.text(`RUC: ${contract.client.taxId}`, col2X + lineW / 2, y, { align: "center" });
 
             pdf.save(`contrato-${contract.client.name.replace(/\s/g, '_')}-${Date.now()}.pdf`);
-            toast.success("PDF descargado correctamente.");
+            sileo.success({ title: "PDF descargado correctamente." });
         } catch (e) {
             console.error(e);
-            toast.error("Error al generar PDF.");
+            sileo.error({ title: "Error al generar PDF." });
         }
     };
 

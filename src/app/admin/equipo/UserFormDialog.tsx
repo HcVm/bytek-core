@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import {
     Dialog,
     DialogContent,
@@ -69,11 +69,11 @@ export function UserFormDialog({
                 departmentId: values.departmentId === "none" ? undefined : (values.departmentId as any)
             };
             await createUser(payload as any);
-            toast.success("Miembro de equipo creado con éxito");
+            sileo.success({ title: "Miembro de equipo creado con éxito" });
             setOpen(false);
             form.reset();
         } catch (error: any) {
-            toast.error(error.message || 'Error al crear el equipo');
+            sileo.error({ title: error.message || 'Error al crear el equipo' });
             console.error(error);
         }
     }

@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, TrendingDown, Calendar, Hash, CheckCircle2, CircleDashed, Building2, HardDrive, Car, Home } from "lucide-react";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import { Badge } from "@/components/ui/badge";
 
 export function AddExpenseDialog() {
@@ -50,7 +50,7 @@ export function AddExpenseDialog() {
                 registeredBy: currentAdminId
             });
 
-            toast.success("Egreso OPEX registrado con éxito");
+            sileo.success({ title: "Egreso OPEX registrado con éxito" });
             setOpen(false);
             // Reset form
             setFormData({
@@ -59,7 +59,7 @@ export function AddExpenseDialog() {
                 projectId: "none", providerName: ""
             });
         } catch (error) {
-            toast.error("Error al registrar el OPEX");
+            sileo.error({ title: "Error al registrar el OPEX" });
         }
     };
 

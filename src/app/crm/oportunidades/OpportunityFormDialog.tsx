@@ -5,7 +5,7 @@ import * as z from "zod";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import {
     Dialog,
     DialogContent,
@@ -105,15 +105,15 @@ export function OpportunityFormDialog({
 
             if (isEditing) {
                 await updateOpportunity({ id: initialData._id, ...payload });
-                toast.success("Oportunidad actualizada con éxito");
+                sileo.success({ title: "Oportunidad actualizada con éxito" });
             } else {
                 await createOpportunity(payload);
-                toast.success("Oportunidad creada con éxito");
+                sileo.success({ title: "Oportunidad creada con éxito" });
             }
             setOpen(false);
             if (!isEditing) form.reset();
         } catch (error: any) {
-            toast.error(error.message || `Error al ${isEditing ? 'actualizar' : 'crear'} la oportunidad`);
+            sileo.error({ title: error.message || `Error al ${isEditing ? 'actualizar' : 'crear'} la oportunidad` });
             console.error(error);
         }
     }

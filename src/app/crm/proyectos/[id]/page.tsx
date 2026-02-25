@@ -11,7 +11,7 @@ import { ArrowLeft, Save, CheckCircle2, FileBarChart } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import { Progress } from "@/components/ui/progress";
 
 export default function ProyectoDetallePage() {
@@ -57,15 +57,15 @@ export default function ProyectoDetallePage() {
             const allDone = localMilestones.every(m => m.completedAt);
             if (allDone && project.status !== "completed") {
                 await updateStatus({ id: project._id, status: "completed" });
-                toast.success("Proyecto marcado como completado");
+                sileo.success({ title: "Proyecto marcado como completado" });
             } else if (!allDone && project.status === "completed") {
                 await updateStatus({ id: project._id, status: "in_progress" });
             }
 
-            toast.success("Avance guardado correctamente");
+            sileo.success({ title: "Avance guardado correctamente" });
         } catch (error) {
             console.error(error);
-            toast.error("Error al guardar los hitos");
+            sileo.error({ title: "Error al guardar los hitos" });
         } finally {
             setIsSaving(false);
         }

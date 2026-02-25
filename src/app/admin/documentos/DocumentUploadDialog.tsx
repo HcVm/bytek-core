@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import {
     Dialog,
     DialogContent,
@@ -61,7 +61,7 @@ export function DocumentUploadDialog({ trigger }: { trigger?: React.ReactNode })
 
     async function onSubmit(values: FormValues) {
         if (!selectedFile) {
-            toast.error("Por favor selecciona un archivo PDF o documento para subir.");
+            sileo.error({ title: "Por favor selecciona un archivo PDF o documento para subir." });
             return;
         }
 
@@ -91,12 +91,12 @@ export function DocumentUploadDialog({ trigger }: { trigger?: React.ReactNode })
                 category: values.category as any,
             });
 
-            toast.success("Documento interno guardado con éxito.");
+            sileo.success({ title: "Documento interno guardado con éxito." });
             setOpen(false);
             form.reset();
             setSelectedFile(null);
         } catch (error: any) {
-            toast.error(error.message || 'Error al subir el documento');
+            sileo.error({ title: error.message || 'Error al subir el documento' });
         } finally {
             setIsUploading(false);
         }

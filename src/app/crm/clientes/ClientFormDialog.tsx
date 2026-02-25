@@ -5,7 +5,7 @@ import * as z from "zod";
 import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import {
     Dialog,
     DialogContent,
@@ -83,15 +83,15 @@ export function ClientFormDialog({
         try {
             if (isEditing) {
                 await updateClient({ id: initialData._id, ...values });
-                toast.success("Cliente actualizado con éxito");
+                sileo.success({ title: "Cliente actualizado con éxito" });
             } else {
                 await createClient(values);
-                toast.success("Cliente creado con éxito");
+                sileo.success({ title: "Cliente creado con éxito" });
             }
             setOpen(false);
             if (!isEditing) form.reset();
         } catch (error: any) {
-            toast.error(error.message || `Error al ${isEditing ? 'actualizar' : 'crear'} el cliente`);
+            sileo.error({ title: error.message || `Error al ${isEditing ? 'actualizar' : 'crear'} el cliente` });
             console.error(error);
         }
     }

@@ -7,7 +7,7 @@ import * as z from "zod";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import { Id } from "../../../../../convex/_generated/dataModel";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -48,11 +48,11 @@ export function TaskFormDialog({ boardId, boardMembers }: { boardId: Id<"boards"
                 status: "todo",
                 assigneeId: values.assigneeId as Id<"users">,
             });
-            toast.success("Tarea registrada correctamente.");
+            sileo.success({ title: "Tarea registrada correctamente." });
             setOpen(false);
             form.reset();
         } catch (error: any) {
-            toast.error("Error al crear la tarea");
+            sileo.error({ title: "Error al crear la tarea" });
         }
     }
 

@@ -5,7 +5,7 @@ import * as z from "zod";
 import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Id } from "../../../../convex/_generated/dataModel";
-import { toast } from "sonner";
+import { sileo } from "sileo";
 import {
     Dialog,
     DialogContent,
@@ -44,12 +44,12 @@ export function SerialEntryDialog({ hardwareId, equipmentName }: { hardwareId: I
     async function onSubmit(values: FormValues) {
         try {
             await registerSerialNumber({ hardwareId, serial: values.serial });
-            toast.success("Número de serie ingresado y listo para despacho.");
+            sileo.success({ title: "Número de serie ingresado y listo para despacho." });
             form.reset(); // Listo para escanear el siguiente automáticamente
             // Opcional: enfocar de nuevo el input
             document.getElementById("serialInput")?.focus();
         } catch (error: any) {
-            toast.error(error.message || "Error al registrar serie");
+            sileo.error({ title: error.message || "Error al registrar serie" });
         }
     }
 
