@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UploadLegalDocDialog } from "./UploadLegalDocDialog";
+import { ManageSLAsDialog } from "./ManageSLAsDialog";
 
 export default function LegalDashboard() {
     const [activeTab, setActiveTab] = useState<"corporativo" | "comercial">("corporativo");
@@ -158,8 +159,11 @@ export default function LegalDashboard() {
                                                 {doc.expirationDate ? new Date(doc.expirationDate).toLocaleDateString('es-PE') : <span className="text-slate-400 italic">Indefinido</span>}
                                             </div>
 
-                                            <div className="col-span-1 flex justify-end">
-                                                <a href={doc.url as string} target="_blank" rel="noopener noreferrer" className="p-2 bg-slate-100 text-slate-600 hover:bg-indigo-100 hover:text-indigo-700 rounded-lg transition-colors" title="Descargar / Ver PDF original">
+                                            <div className="col-span-1 flex justify-end gap-2">
+                                                {(doc.type === "contrato_cliente" || doc.type === "nda") && (
+                                                    <ManageSLAsDialog documentId={doc._id} title={doc.title} />
+                                                )}
+                                                <a href={doc.url as string} target="_blank" rel="noopener noreferrer" className="p-2 bg-slate-100 text-slate-600 hover:bg-indigo-100 hover:text-indigo-700 rounded-lg transition-colors flex items-center justify-center shrink-0" title="Descargar / Ver PDF original">
                                                     <Download className="w-4 h-4" />
                                                 </a>
                                             </div>
@@ -171,7 +175,7 @@ export default function LegalDashboard() {
                     </Tabs>
 
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }

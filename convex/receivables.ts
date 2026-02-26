@@ -1,5 +1,6 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import { internalCreateJournalEntry, getCurrentPeriod } from "./journal";
 
 // =============================================
 // CUENTAS POR COBRAR (Accounts Receivable)
@@ -77,33 +78,72 @@ export const recordPaymentReceived = mutation({
             await ctx.db.patch(args.bankAccountId, {
                 currentBalance: Math.round((bankAccount.currentBalance + args.amount) * 100) / 100,
             });
+
+            // Registrar el pago
+            const paymentId = await ctx.db.insert("payments", {
+                type: "cobro",
+                receivableId: args.receivableId,
+                bankAccountId: args.bankAccountId,
+                amount: args.amount,
+                paymentDate: args.paymentDate,
+                paymentMethod: args.paymentMethod,
+                reference: args.reference,
+                createdAt: Date.now(),
+            });
+
+            // Registrar transacción bancaria
+            await ctx.db.insert("bankTransactions", {
+                bankAccountId: args.bankAccountId,
+                date: args.paymentDate,
+                type: "ingreso",
+                description: `Cobro CxC ${receivable.documentNumber}`,
+                amount: args.amount,
+                reference: args.reference,
+                reconciled: true,
+                createdAt: Date.now(),
+            });
+
+            // Automatización Contable: Asiento de Cobranza (104 vs 1212)
+            const period = await getCurrentPeriod(ctx);
+            if (!period) throw new Error("No existe un período contable configurado para este mes.");
+            if (period.status === "cerrado") throw new Error("El período contable actual está cerrado. No se pueden registrar cobranzas.");
+
+            const sysAcc = await ctx.db.query("accountingAccounts").collect();
+            const a1041 = sysAcc.find(a => a._id === bankAccount.accountingAccountId) || sysAcc.find(a => a.code === "1041");
+            const a1212 = sysAcc.find(a => a.code === "1212");
+            const firstAdmin = await ctx.db.query("users").filter(q => q.eq(q.field("role"), "admin")).first();
+
+            if (a1041 && a1212 && firstAdmin) {
+                await internalCreateJournalEntry(ctx, {
+                    date: args.paymentDate,
+                    periodId: period._id,
+                    description: `Cobro de Documento: ${receivable.documentNumber}`,
+                    type: "operacion",
+                    createdBy: firstAdmin._id,
+                    sourceModule: "crm_payments",
+                    sourceId: paymentId,
+                    lines: [
+                        {
+                            accountId: a1041._id,
+                            accountCode: a1041.code,
+                            description: `Ingreso en banco por cobranza`,
+                            debit: args.amount,
+                            credit: 0
+                        },
+                        {
+                            accountId: a1212._id,
+                            accountCode: a1212.code,
+                            description: `Cancelación cta por cobrar ${receivable.documentNumber}`,
+                            debit: 0,
+                            credit: args.amount
+                        }
+                    ]
+                });
+            }
+            return paymentId;
         }
 
-        // Registrar el pago
-        const paymentId = await ctx.db.insert("payments", {
-            type: "cobro",
-            receivableId: args.receivableId,
-            bankAccountId: args.bankAccountId,
-            amount: args.amount,
-            paymentDate: args.paymentDate,
-            paymentMethod: args.paymentMethod,
-            reference: args.reference,
-            createdAt: Date.now(),
-        });
-
-        // Registrar transacción bancaria
-        await ctx.db.insert("bankTransactions", {
-            bankAccountId: args.bankAccountId,
-            date: args.paymentDate,
-            type: "ingreso",
-            description: `Cobro CxC ${receivable.documentNumber}`,
-            amount: args.amount,
-            reference: args.reference,
-            reconciled: true,
-            createdAt: Date.now(),
-        });
-
-        return paymentId;
+        throw new Error("Cuenta bancaria no encontrada.");
     }
 });
 

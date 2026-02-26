@@ -46,7 +46,7 @@ export default function ClientDashboardPage() {
                 className="bg-white p-6 rounded-2xl shadow-sm border border-zinc-100 flex flex-col md:flex-row justify-between md:items-center gap-4"
             >
                 <div>
-                    <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">Hola, equipo de {client.companyName}</h1>
+                    <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">Hola, equipo de {client.name}</h1>
                     <p className="text-zinc-500 text-sm mt-1">Este es su panel de control corporativo. Aquí puede hacer seguimiento a sus servicios.</p>
                 </div>
                 {hasDebt ? (
@@ -80,8 +80,8 @@ export default function ClientDashboardPage() {
                     {projects.length > 0 ? (
                         <div className="space-y-4">
                             {projects.map((p, idx) => {
-                                const totalMilestones = p.milestones?.length || 0;
-                                const completedMilestones = p.milestones?.filter(m => m.completedAt !== undefined).length || 0;
+                                const totalMilestones = p.milestoneCount || 0;
+                                const completedMilestones = p.completedMilestones || 0;
                                 const progressPercentage = totalMilestones === 0 ? 0 : (completedMilestones / totalMilestones) * 100;
 
                                 return (
@@ -110,19 +110,7 @@ export default function ClientDashboardPage() {
                                                         <Progress value={progressPercentage} className="h-2" />
                                                     </div>
 
-                                                    {/* Mostrar 2 últimos hitos para transparencia */}
-                                                    {p.milestones && p.milestones.length > 0 && (
-                                                        <div className="bg-zinc-50 rounded-md p-3 border border-zinc-100 space-y-2 mt-4">
-                                                            <p className="text-[10px] uppercase font-bold text-zinc-400 tracking-wider">Hitos Clave del Proyecto</p>
-                                                            {p.milestones.slice(0, 3).map((m, i) => (
-                                                                <div key={i} className="flex items-center gap-2 text-xs">
-                                                                    <div className={`w-3 h-3 rounded-full flex-shrink-0 border ${m.completedAt !== undefined ? 'bg-indigo-500 border-indigo-600' : 'bg-white border-zinc-300'}`} />
-                                                                    <span className={m.completedAt !== undefined ? 'text-zinc-800 font-medium' : 'text-zinc-500'}>{m.name}</span>
-                                                                </div>
-                                                            ))}
-                                                            {p.milestones.length > 3 && <p className="text-[10px] text-zinc-400 italic pl-5">+ otros {p.milestones.length - 3} hitos internos</p>}
-                                                        </div>
-                                                    )}
+
                                                 </div>
                                             </CardContent>
                                         </Card>

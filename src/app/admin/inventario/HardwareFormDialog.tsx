@@ -2,8 +2,9 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
+import { Id } from "../../../../convex/_generated/dataModel";
 import { sileo } from "sileo";
 import {
     Dialog,
@@ -23,6 +24,13 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { Plus } from "lucide-react";
 
 const formSchema = z.object({
@@ -32,6 +40,7 @@ const formSchema = z.object({
     costPrice: z.coerce.number().min(0, "Debe ser mayor a 0"),
     salePrice: z.coerce.number().min(0, "Debe ser mayor a 0"),
     minStockAlert: z.coerce.number().min(0),
+    accountingAccountId: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -49,17 +58,25 @@ export function HardwareFormDialog() {
             costPrice: 0,
             salePrice: 0,
             minStockAlert: 5,
+            accountingAccountId: undefined,
         },
     });
 
+    const movementAccounts = useQuery(api.accounting.getMovementAccounts) || [];
+    const inventoryAccounts = movementAccounts.filter(acc => acc.code.startsWith("20") || acc.type === "activo");
+
     async function onSubmit(values: FormValues) {
         try {
-            await addHardwareModel(values);
-            sileo.success({ title: "Modelo de Hardware registrado en catálogo" });
+            const { accountingAccountId, ...rest } = values;
+            await addHardwareModel({
+                ...rest,
+                accountingAccountId: accountingAccountId as Id<"accountingAccounts"> | undefined
+            });
+            sileo.success({ title: "Modelo añadido al catálogo" });
             setOpen(false);
             form.reset();
         } catch (error: any) {
-            sileo.error({ title: error.message || "Error al registrar" });
+            sileo.error({ title: error.message || `Error al guardar` });
         }
     }
 
@@ -161,6 +178,31 @@ export function HardwareFormDialog() {
                                     <FormControl>
                                         <Input type="number" {...field} />
                                     </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control as any}
+                            name="accountingAccountId"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Cuenta Contable (Inventario)</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger className="bg-white">
+                                                <SelectValue placeholder="Seleccione cuenta (ej: 20x)" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {inventoryAccounts.map(acc => (
+                                                <SelectItem key={acc._id} value={acc._id}>
+                                                    {acc.code} - {acc.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                     <FormMessage />
                                 </FormItem>
                             )}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery, useMutation } from "convex/react";
-import { api } from "../../../../../convex/_generated/api";
+import { api } from "../../../../convex/_generated/api";
 import { BookOpen, ChevronRight, ChevronDown, Search, Plus, Download, Layers, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";

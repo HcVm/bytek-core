@@ -86,7 +86,7 @@ export const calculateMonthlyIGV = query({
         // IGV Ventas (Débito Fiscal) — Facturas emitidas en el mes
         const invoices = await ctx.db.query("invoices").collect();
         const monthInvoices = invoices.filter(inv => {
-            const invoiceDate = new Date(inv.dueDate);
+            const invoiceDate = new Date(inv._creationTime);
             return invoiceDate.getFullYear() === args.year && invoiceDate.getMonth() + 1 === args.month;
         });
         const totalSales = monthInvoices.reduce((sum, inv) => sum + inv.amount, 0);
@@ -139,7 +139,7 @@ export const calculateMonthlyIncomeTax = query({
     handler: async (ctx, args) => {
         const invoices = await ctx.db.query("invoices").collect();
         const monthInvoices = invoices.filter(inv => {
-            const invoiceDate = new Date(inv.dueDate);
+            const invoiceDate = new Date(inv._creationTime);
             return invoiceDate.getFullYear() === args.year && invoiceDate.getMonth() + 1 === args.month;
         });
 

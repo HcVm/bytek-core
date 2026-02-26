@@ -49,7 +49,9 @@ export default defineSchema({
         fileId: v.string(), // ID del archivo guardado en Convex Storage (o URL si es externo)
         uploadedBy: v.id("users"),
         departmentId: v.optional(v.id("departments")), // Si es undefined, es público para toda la empresa
-        category: v.union(v.literal("policy"), v.literal("manual"), v.literal("memo"), v.literal("other")),
+        category: v.union(v.literal("policy"), v.literal("manual"), v.literal("memo"), v.literal("wiki"), v.literal("procedimiento"), v.literal("guia_tecnica"), v.literal("other")),
+        tags: v.optional(v.array(v.string())),       // Etiquetas para búsqueda
+        content: v.optional(v.string()),              // Contenido markdown para wiki
         createdAt: v.number(),
     }).index("by_department", ["departmentId"]),
 
@@ -158,6 +160,7 @@ export default defineSchema({
         costPrice: v.number(),
         salePrice: v.number(),
         minStockAlert: v.number(),
+        accountingAccountId: v.optional(v.id("accountingAccounts")), // Cuenta contable vinculada
     }).index("sku", ["sku"]),
 
     serialNumbers: defineTable({
@@ -296,12 +299,17 @@ export default defineSchema({
     }).index("by_user", ["userId"]).index("by_status", ["status"]),
 
     payrollRuns: defineTable({
-        periodMonth: v.number(), // 1 al 12
+        period: v.string(),             // "2026-02" format
+        periodMonth: v.number(),        // 1 al 12
         periodYear: v.number(),
-        totalAmount: v.number(), // Total liquidado en el mes
+        totalGross: v.number(),         // Total bruto
+        totalDeductions: v.number(),    // Total deducciones (pensión + IR)
+        totalNet: v.number(),           // Total neto a pagar
+        totalAmount: v.number(),        // Legacy: Total liquidado en el mes
+        employeeCount: v.number(),      // Cantidad de empleados procesados
         status: v.union(v.literal("borrador"), v.literal("pagado")),
         createdAt: v.number(),
-        executedBy: v.id("users"), // El administrador que corrió el motor
+        executedBy: v.id("users"),      // El administrador que corrió el motor
     }).index("by_period", ["periodYear", "periodMonth"]),
 
     // ==========================================
@@ -350,9 +358,10 @@ export default defineSchema({
         projectId: v.optional(v.id("projects")),
         amount: v.number(),
         billingType: v.union(
-            v.literal("recurring"), // Mantenimientos, Hosting
-            v.literal("one_time"),  // Hardware, Paquete Básico
-            v.literal("milestone")  // Software a medida
+            v.literal("recurring"),        // Mantenimientos, Hosting
+            v.literal("one_time"),         // Hardware, Paquete Básico
+            v.literal("milestone"),        // Software a medida
+            v.literal("time_materials")    // Factura T&M basada en timesheets
         ),
         status: v.union(
             v.literal("pending"),
@@ -361,6 +370,7 @@ export default defineSchema({
         ),
         dueDate: v.number(),
         paymentGatewayReference: v.optional(v.string()), // ID de Izipay/MercadoPago
+        timeEntryIds: v.optional(v.array(v.string())),   // IDs de horas facturadas (T&M)
     }).index("by_client", ["clientId"]),
 
     // ==========================================
@@ -545,11 +555,220 @@ export default defineSchema({
     budgets: defineTable({
         name: v.string(),              // "Presupuesto Operativo Q1 2026"
         year: v.number(),
+        month: v.optional(v.number()), // Mes específico (1-12) para presupuestos mensuales
+        type: v.union(
+            v.literal("operativo"),     // Ingresos y gastos operativos
+            v.literal("capital"),       // Inversiones en equipos y software
+            v.literal("proyecto"),      // Presupuesto por proyecto
+            v.literal("personal"),      // Planificación de contrataciones y compensaciones
+            v.literal("forecast")       // Forecast de flujo de caja
+        ),
         costCenterId: v.optional(v.id("costCenters")),
+        projectId: v.optional(v.id("projects")),     // Para presupuestos tipo "proyecto"
         accountId: v.id("accountingAccounts"),  // A qué cuenta aplica
         budgetedAmount: v.number(),
         actualAmount: v.number(),       // Se actualiza automáticamente
         variance: v.number(),           // Diferencia
         status: v.union(v.literal("activo"), v.literal("cerrado")),
-    }).index("by_year", ["year"]).index("by_center", ["costCenterId"]),
+    }).index("by_year", ["year"]).index("by_center", ["costCenterId"]).index("by_type", ["type"]),
+
+    // ==========================================
+    // TASAS DE CAMBIO (Multi-Moneda)
+    // ==========================================
+    exchangeRates: defineTable({
+        fromCurrency: v.union(v.literal("PEN"), v.literal("USD")),
+        toCurrency: v.union(v.literal("PEN"), v.literal("USD")),
+        buyRate: v.number(),             // Tipo de cambio compra
+        sellRate: v.number(),            // Tipo de cambio venta
+        date: v.string(),                // "2026-02-25"
+        source: v.union(v.literal("manual"), v.literal("sunat"), v.literal("sbs")),
+        createdAt: v.number(),
+    }).index("by_date", ["date"]).index("by_currencies", ["fromCurrency", "toCurrency"]),
+
+    // ==========================================
+    // ACTIVOS FIJOS (Depreciación)
+    // ==========================================
+    fixedAssets: defineTable({
+        name: v.string(),                // "Laptop Dell XPS 15"
+        category: v.union(v.literal("equipo_computo"), v.literal("mobiliario"), v.literal("vehiculo"), v.literal("software"), v.literal("otro")),
+        accountingAccountId: v.id("accountingAccounts"), // Cuenta contable (33x)
+        depreciationAccountId: v.id("accountingAccounts"), // Cuenta depreciación (39x)
+        acquisitionDate: v.string(),     // "2026-01-15"
+        acquisitionCost: v.number(),
+        usefulLifeMonths: v.number(),    // Vida útil en meses
+        depreciationMethod: v.union(v.literal("lineal"), v.literal("acelerada")),
+        accumulatedDepreciation: v.number(), // Depreciación acumulada
+        residualValue: v.optional(v.number()), // Valor residual
+        assignedTo: v.optional(v.id("users")),
+        isActive: v.boolean(),
+    }).index("by_category", ["category"]).index("by_active", ["isActive"]),
+
+    // ==========================================
+    // REGISTRO DE HORAS (Timesheets)
+    // ==========================================
+    timeEntries: defineTable({
+        userId: v.id("users"),
+        projectId: v.id("projects"),
+        taskId: v.optional(v.id("tasks")),
+        date: v.string(),                // "2026-02-25"
+        hours: v.number(),               // Ej: 4.5
+        description: v.string(),
+        billable: v.boolean(),           // ¿Se factura al cliente?
+        hourlyRate: v.optional(v.number()), // Tarifa por hora (si billable)
+        status: v.union(v.literal("draft"), v.literal("approved"), v.literal("invoiced")),
+        approvedBy: v.optional(v.id("users")),
+        createdAt: v.number(),
+    }).index("by_user", ["userId"]).index("by_project", ["projectId"]).index("by_status", ["status"]).index("by_date", ["date"]),
+
+    // ==========================================
+    // DETALLE DE NÓMINA (Boleta por empleado)
+    // ==========================================
+    payrollDetails: defineTable({
+        payrollRunId: v.id("payrollRuns"),
+        userId: v.id("users"),
+        grossSalary: v.number(),
+        essaludAmount: v.number(),       // 9% aporte patronal
+        pensionType: v.union(v.literal("onp"), v.literal("afp"), v.literal("ninguno")),
+        pensionAmount: v.number(),       // ONP 13% o AFP ~12.5%
+        incomeTaxAmount: v.number(),     // IR 5ta categoría
+        otherDeductions: v.optional(v.number()),
+        netPay: v.number(),              // Neto a pagar
+    }).index("by_payroll", ["payrollRunId"]).index("by_user", ["userId"]),
+
+    // ==========================================
+    // TICKETS DE SOPORTE (Clientes)
+    // ==========================================
+    supportTickets: defineTable({
+        clientId: v.id("clients"),
+        subject: v.string(),
+        description: v.string(),
+        priority: v.union(v.literal("baja"), v.literal("media"), v.literal("alta"), v.literal("critica")),
+        status: v.union(v.literal("abierto"), v.literal("en_progreso"), v.literal("resuelto"), v.literal("cerrado")),
+        assignedTo: v.optional(v.id("users")),
+        createdAt: v.number(),
+        resolvedAt: v.optional(v.number()),
+    }).index("by_client", ["clientId"]).index("by_status", ["status"]),
+
+    // ==========================================
+    // SLAs DE CONTRATOS
+    // ==========================================
+    contractSLAs: defineTable({
+        contractDocumentId: v.id("legalDocuments"),  // Contrato padre
+        metricName: v.string(),          // "Tiempo de respuesta", "Uptime"
+        targetValue: v.number(),         // 99.9, 4, etc.
+        unit: v.union(v.literal("horas"), v.literal("porcentaje"), v.literal("minutos")),
+        measurementPeriod: v.union(v.literal("mensual"), v.literal("trimestral"), v.literal("anual")),
+        penaltyClause: v.optional(v.string()),  // Descripción de penalidad
+        currentValue: v.optional(v.number()),    // Valor medido actual
+        isCompliant: v.optional(v.boolean()),    // ¿Cumple?
+    }).index("by_contract", ["contractDocumentId"]),
+
+    // ==========================================
+    // GESTIÓN DE PROVEEDORES Y COSTOS CLOUD
+    // ==========================================
+    vendors: defineTable({
+        name: v.string(),
+        category: v.union(v.literal("cloud"), v.literal("software"), v.literal("contractor"), v.literal("hardware")),
+        contactName: v.optional(v.string()),
+        email: v.optional(v.string()),
+        status: v.union(v.literal("active"), v.literal("inactive")),
+    }).index("by_category", ["category"]),
+
+    vendorEvaluations: defineTable({
+        vendorId: v.id("vendors"),
+        criteria: v.string(),
+        score: v.number(), // 1 a 5
+        evaluatedBy: v.id("users"),
+        date: v.number(),
+        notes: v.optional(v.string()),
+    }).index("by_vendor", ["vendorId"]),
+
+    cloudCosts: defineTable({
+        vendorId: v.id("vendors"),
+        projectId: v.optional(v.id("projects")),
+        month: v.number(),
+        year: v.number(),
+        amount: v.number(),
+        serviceName: v.string(), // e.g. "EC2", "S3", "Azure VMs"
+    }).index("by_vendor", ["vendorId"]).index("by_project", ["projectId"]),
+
+    // ==========================================
+    // RECURSOS HUMANOS AVANZADO (TALENTO & ATS)
+    // ==========================================
+    jobPostings: defineTable({
+        title: v.string(),
+        departmentId: v.optional(v.id("departments")),
+        status: v.union(v.literal("open"), v.literal("closed"), v.literal("draft")),
+        requirements: v.string(),
+        openings: v.number(),
+        createdAt: v.number(),
+    }).index("by_status", ["status"]),
+
+    candidates: defineTable({
+        name: v.string(),
+        email: v.string(),
+        phone: v.optional(v.string()),
+        jobPostingId: v.id("jobPostings"),
+        status: v.union(v.literal("new"), v.literal("screening"), v.literal("interview"), v.literal("offer"), v.literal("hired"), v.literal("rejected")),
+        score: v.optional(v.number()), // Evaluación general
+        resumeUrl: v.optional(v.string()), // ID in Convex storage o URL
+        appliedAt: v.number(),
+    }).index("by_posting", ["jobPostingId"]).index("by_status", ["status"]),
+
+    evaluations: defineTable({
+        userId: v.id("users"), // El evaluado
+        evaluatorId: v.id("users"), // El evaluador
+        period: v.string(), // "2026-Q1"
+        type: v.union(v.literal("360"), v.literal("peer"), v.literal("manager")),
+        score: v.number(), // 1 a 5
+        feedback: v.string(),
+        createdAt: v.number(),
+    }).index("by_user", ["userId"]).index("by_evaluator", ["evaluatorId"]),
+
+    skills: defineTable({
+        userId: v.id("users"),
+        skillName: v.string(), // "React", "AWS", "Python"
+        proficiencyLevel: v.union(v.literal("beginner"), v.literal("intermediate"), v.literal("advanced"), v.literal("expert")),
+        isCertified: v.boolean(),
+    }).index("by_user", ["userId"]).index("by_skill", ["skillName"]),
+
+    trainings: defineTable({
+        title: v.string(),
+        provider: v.string(),
+        cost: v.number(),
+        date: v.number(),
+        status: v.union(v.literal("planned"), v.literal("in_progress"), v.literal("completed")),
+    }).index("by_status", ["status"]),
+
+    trainingAttendees: defineTable({
+        trainingId: v.id("trainings"),
+        userId: v.id("users"),
+        completedAt: v.optional(v.number()),
+        score: v.optional(v.number()),
+    }).index("by_training", ["trainingId"]).index("by_user", ["userId"]),
+
+    // ==========================================
+    // INVENTARIOS Y ACTIVOS INTANGIBLES
+    // ==========================================
+    hardwareAssets: defineTable({
+        serialNumber: v.string(),
+        type: v.union(v.literal("laptop"), v.literal("desktop"), v.literal("monitor"), v.literal("mobile"), v.literal("networking")),
+        model: v.string(),
+        assignedTo: v.optional(v.id("users")), // Si null, está en stock
+        status: v.union(v.literal("available"), v.literal("assigned"), v.literal("maintenance"), v.literal("retired")),
+        purchaseDate: v.number(),
+        value: v.number(),
+        accountingAccountId: v.optional(v.id("accountingAccounts")), // Cuenta 33x
+        depreciationAccountId: v.optional(v.id("accountingAccounts")), // Cuenta 39x
+    }).index("by_status", ["status"]).index("by_assignee", ["assignedTo"]),
+
+    softwareLicenses: defineTable({
+        softwareName: v.string(),
+        provider: v.string(),
+        licenseType: v.union(v.literal("user"), v.literal("device"), v.literal("site")),
+        totalLicenses: v.number(),
+        assignedUsers: v.array(v.id("users")),
+        expirationDate: v.optional(v.number()),
+        costPerUser: v.number(),
+    }).index("by_expiration", ["expirationDate"]),
 });

@@ -228,3 +228,165 @@ export const getCashFlow = query({
         };
     }
 });
+
+// =============================================
+// FLUJO DE CAJA PROYECTADO — 12 MESES
+// =============================================
+
+export const getCashFlowProjection = query({
+    args: {
+        months: v.optional(v.number()), // Default 12
+    },
+    handler: async (ctx, args) => {
+        const projectionMonths = args.months || 12;
+        const today = new Date();
+        const projection: Array<{
+            month: string;
+            projectedInflows: number;
+            projectedOutflows: number;
+            projectedBalance: number;
+            details: { arInflows: number; recurringInflows: number; apOutflows: number; payrollEstimate: number; fixedCosts: number };
+        }> = [];
+
+        // Datos base
+        const receivables = await ctx.db.query("accountsReceivable").collect();
+        const payables = await ctx.db.query("accountsPayable").collect();
+        const bankAccounts = await ctx.db.query("bankAccounts").collect();
+        const allTransactions = await ctx.db.query("bankTransactions").collect();
+
+        // Saldo actual total
+        let runningBalance = bankAccounts.reduce((s, a) => s + a.currentBalance, 0);
+
+        // Estimar gastos fijos mensuales (promedio de los últimos 3 meses de egresos)
+        const threeMonthsAgo = new Date(today);
+        threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+        const recentOutflows = allTransactions.filter(t => {
+            const tDate = new Date(t.date);
+            return t.type === "egreso" && tDate >= threeMonthsAgo && tDate <= today;
+        });
+        const avgMonthlyOutflow = recentOutflows.length > 0
+            ? recentOutflows.reduce((s, t) => s + t.amount, 0) / 3
+            : 0;
+
+        // Estimar ingresos recurrentes (promedio de los últimos 3 meses de ingresos)
+        const recentInflows = allTransactions.filter(t => {
+            const tDate = new Date(t.date);
+            return t.type === "ingreso" && tDate >= threeMonthsAgo && tDate <= today;
+        });
+        const avgMonthlyInflow = recentInflows.length > 0
+            ? recentInflows.reduce((s, t) => s + t.amount, 0) / 3
+            : 0;
+
+        // Estimar nómina mensual
+        const employees = await ctx.db.query("employeeProfiles").collect();
+        const activeEmployees = employees.filter(e => e.status === "activo");
+        const monthlyPayroll = activeEmployees.reduce((s, e) => s + (e.baseSalary || 0), 0) * 1.09; // incluir EsSalud
+
+        for (let i = 0; i < projectionMonths; i++) {
+            const monthDate = new Date(today);
+            monthDate.setMonth(monthDate.getMonth() + i + 1);
+            const monthStr = `${monthDate.getFullYear()}-${String(monthDate.getMonth() + 1).padStart(2, "0")}`;
+
+            // CxC que vencen este mes
+            const arThisMonth = receivables
+                .filter(r => r.status !== "cobrado" && r.dueDate.startsWith(monthStr))
+                .reduce((s, r) => s + r.pendingAmount, 0);
+
+            // CxP que vencen este mes
+            const apThisMonth = payables
+                .filter(p => p.status !== "pagado" && p.dueDate.startsWith(monthStr))
+                .reduce((s, p) => s + p.pendingAmount, 0);
+
+            // Ingresos proyectados = AR del mes + ingresos recurrentes estimados
+            const projectedInflows = arThisMonth + (i >= 1 ? avgMonthlyInflow * 0.3 : 0); // Solo 30% adicional estimado
+
+            // Egresos proyectados = AP del mes + nómina + gastos fijos estimados
+            const fixedCosts = i >= 1 ? avgMonthlyOutflow * 0.5 : 0; // 50% de gastos variables estimados
+            const projectedOutflows = apThisMonth + monthlyPayroll + fixedCosts;
+
+            runningBalance += projectedInflows - projectedOutflows;
+
+            projection.push({
+                month: monthStr,
+                projectedInflows: Math.round(projectedInflows * 100) / 100,
+                projectedOutflows: Math.round(projectedOutflows * 100) / 100,
+                projectedBalance: Math.round(runningBalance * 100) / 100,
+                details: {
+                    arInflows: Math.round(arThisMonth * 100) / 100,
+                    recurringInflows: Math.round((i >= 1 ? avgMonthlyInflow * 0.3 : 0) * 100) / 100,
+                    apOutflows: Math.round(apThisMonth * 100) / 100,
+                    payrollEstimate: Math.round(monthlyPayroll * 100) / 100,
+                    fixedCosts: Math.round(fixedCosts * 100) / 100,
+                },
+            });
+        }
+
+        return {
+            currentBalance: Math.round(bankAccounts.reduce((s, a) => s + a.currentBalance, 0) * 100) / 100,
+            projection,
+            assumptions: {
+                avgMonthlyInflow: Math.round(avgMonthlyInflow * 100) / 100,
+                avgMonthlyOutflow: Math.round(avgMonthlyOutflow * 100) / 100,
+                monthlyPayroll: Math.round(monthlyPayroll * 100) / 100,
+                activeEmployees: activeEmployees.length,
+            }
+        };
+    }
+});
+
+export const getCashFlowScenario = query({
+    args: {
+        collectionDelayPercent: v.number(), // % de retraso en cobros (ej: 30 = 30% se retrasan)
+        extraCostPercent: v.number(),       // % de costos adicionales (ej: 15 = 15% extra)
+    },
+    handler: async (ctx, args) => {
+        const today = new Date();
+        const bankAccounts = await ctx.db.query("bankAccounts").collect();
+        const receivables = await ctx.db.query("accountsReceivable").collect();
+        const payables = await ctx.db.query("accountsPayable").collect();
+        const allTransactions = await ctx.db.query("bankTransactions").collect();
+
+        let runningBalance = bankAccounts.reduce((s, a) => s + a.currentBalance, 0);
+
+        const threeMonthsAgo = new Date(today);
+        threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+        const recentOutflows = allTransactions.filter(t => {
+            const tDate = new Date(t.date);
+            return t.type === "egreso" && tDate >= threeMonthsAgo && tDate <= today;
+        });
+        const avgMonthlyOutflow = recentOutflows.length > 0 ? recentOutflows.reduce((s, t) => s + t.amount, 0) / 3 : 0;
+
+        const employees = await ctx.db.query("employeeProfiles").collect();
+        const activeEmployees = employees.filter(e => e.status === "activo");
+        const monthlyPayroll = activeEmployees.reduce((s, e) => s + (e.baseSalary || 0), 0) * 1.09;
+
+        const scenario: Array<{ month: string; balance: number }> = [];
+
+        for (let i = 0; i < 12; i++) {
+            const monthDate = new Date(today);
+            monthDate.setMonth(monthDate.getMonth() + i + 1);
+            const monthStr = `${monthDate.getFullYear()}-${String(monthDate.getMonth() + 1).padStart(2, "0")}`;
+
+            const arThisMonth = receivables
+                .filter(r => r.status !== "cobrado" && r.dueDate.startsWith(monthStr))
+                .reduce((s, r) => s + r.pendingAmount, 0);
+
+            const apThisMonth = payables
+                .filter(p => p.status !== "pagado" && p.dueDate.startsWith(monthStr))
+                .reduce((s, p) => s + p.pendingAmount, 0);
+
+            // Aplicar escenario: reducir ingresos y aumentar egresos
+            const adjustedInflows = arThisMonth * (1 - args.collectionDelayPercent / 100);
+            const adjustedOutflows = (apThisMonth + monthlyPayroll + avgMonthlyOutflow * 0.5) * (1 + args.extraCostPercent / 100);
+
+            runningBalance += adjustedInflows - adjustedOutflows;
+            scenario.push({ month: monthStr, balance: Math.round(runningBalance * 100) / 100 });
+        }
+
+        return {
+            scenarioName: `Retraso cobros ${args.collectionDelayPercent}% + Costos extra ${args.extraCostPercent}%`,
+            scenario,
+            breaksEvenMonth: scenario.findIndex(s => s.balance < 0) + 1 || null,
+        };
+    }
+});

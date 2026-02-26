@@ -186,3 +186,165 @@ export const generateProjectReport = query({
         };
     }
 });
+
+// =============================================
+// RENTABILIDAD COMPARATIVA POR PROYECTO
+// =============================================
+
+export const getProjectProfitabilityComparison = query({
+    args: {},
+    handler: async (ctx) => {
+        const projects = await ctx.db.query("projects").collect();
+        const completedProjects = projects.filter(p => p.status === "completed");
+
+        const comparison = await Promise.all(completedProjects.map(async (project) => {
+            // Ingresos (facturas pagadas)
+            const invoices = await ctx.db.query("invoices")
+                .withIndex("by_client", q => q.eq("clientId", project.clientId))
+                .collect();
+            const projectInvoices = invoices.filter(i => i.projectId === project._id);
+            const revenue = projectInvoices
+                .filter(i => i.status === "paid")
+                .reduce((s, i) => s + i.amount, 0);
+
+            // Costos (gastos vinculados — simplificado)
+            const expenses = await ctx.db.query("expenses").collect();
+            const projectExpenses = expenses.filter(e => (e as any).projectId === project._id);
+            const costs = projectExpenses.reduce((s, e) => s + e.amount, 0);
+
+            // Rentabilidad
+            const profit = revenue - costs;
+            const margin = revenue > 0 ? Math.round((profit / revenue) * 10000) / 100 : 0;
+
+            const client = await ctx.db.get(project.clientId);
+
+            return {
+                projectId: project._id,
+                projectTitle: project.title,
+                clientName: client?.companyName || "Desconocido",
+                serviceUnit: (project as any).serviceUnit || "N/A",
+                revenue: Math.round(revenue * 100) / 100,
+                costs: Math.round(costs * 100) / 100,
+                profit: Math.round(profit * 100) / 100,
+                margin,
+                budget: (project as any).budget || 0,
+                budgetVariance: (project as any).budget ? Math.round((((project as any).budget - costs) / (project as any).budget) * 10000) / 100 : 0,
+            };
+        }));
+
+        // Ordenar por rentabilidad
+        comparison.sort((a, b) => b.margin - a.margin);
+
+        const avgMargin = comparison.length > 0
+            ? Math.round(comparison.reduce((s, p) => s + p.margin, 0) / comparison.length * 100) / 100
+            : 0;
+
+        return {
+            projects: comparison,
+            summary: {
+                totalProjects: comparison.length,
+                averageMargin: avgMargin,
+                totalRevenue: Math.round(comparison.reduce((s, p) => s + p.revenue, 0) * 100) / 100,
+                totalCosts: Math.round(comparison.reduce((s, p) => s + p.costs, 0) * 100) / 100,
+                totalProfit: Math.round(comparison.reduce((s, p) => s + p.profit, 0) * 100) / 100,
+            }
+        };
+    }
+});
+
+// =============================================
+// MÉTRICAS ÁGILES (Velocity, Cycle Time, Burndown)
+// =============================================
+
+export const getAgileMetrics = query({
+    args: { boardId: v.id("boards") },
+    handler: async (ctx, args) => {
+        const board = await ctx.db.get(args.boardId);
+        if (!board) throw new Error("Board no encontrado.");
+
+        // Obtener sprints del board
+        const sprints = await ctx.db.query("sprints")
+            .withIndex("by_board", q => q.eq("boardId", args.boardId))
+            .order("desc")
+            .collect();
+
+        // Obtener todas las tareas del board
+        const tasks = await ctx.db.query("tasks")
+            .withIndex("by_board", q => q.eq("boardId", args.boardId))
+            .collect();
+
+        // 1. VELOCITY: Story points completados por sprint (últimos 5)
+        const recentSprints = sprints.slice(0, 5);
+        const velocity = recentSprints.map(sprint => {
+            const sprintTasks = tasks.filter(t => t.sprintId === sprint._id);
+            const completedPoints = sprintTasks
+                .filter(t => t.status === "done")
+                .reduce((s, t) => s + (t.storyPoints || 0), 0);
+            const totalPoints = sprintTasks.reduce((s, t) => s + (t.storyPoints || 0), 0);
+
+            return {
+                sprintName: sprint.name,
+                completedPoints,
+                totalPoints,
+                completionRate: totalPoints > 0 ? Math.round((completedPoints / totalPoints) * 10000) / 100 : 0,
+            };
+        });
+
+        const avgVelocity = velocity.length > 0
+            ? Math.round(velocity.reduce((s, v) => s + v.completedPoints, 0) / velocity.length * 100) / 100
+            : 0;
+
+        // 2. CYCLE TIME: Promedio de días de creación → completado
+        const completedTasks = tasks.filter(t => t.status === "done" && t._creationTime);
+        const cycleTimes = completedTasks.map(t => {
+            const created = t._creationTime;
+            const completed = t.updatedAt || Date.now();
+            return (completed - created) / (1000 * 60 * 60 * 24); // días
+        });
+        const avgCycleTime = cycleTimes.length > 0
+            ? Math.round(cycleTimes.reduce((s, d) => s + d, 0) / cycleTimes.length * 100) / 100
+            : 0;
+
+        // 3. BURNDOWN: Sprint activo
+        const activeSprint = sprints.find(s => s.status === "active");
+        let burndownData: Array<{ point: string; remaining: number }> = [];
+
+        if (activeSprint) {
+            const sprintTasks = tasks.filter(t => t.sprintId === activeSprint._id);
+            const totalPoints = sprintTasks.reduce((s, t) => s + (t.storyPoints || 0), 0);
+            const completedPoints = sprintTasks
+                .filter(t => t.status === "done")
+                .reduce((s, t) => s + (t.storyPoints || 0), 0);
+            const inProgressPoints = sprintTasks
+                .filter(t => t.status === "in_progress")
+                .reduce((s, t) => s + (t.storyPoints || 0), 0);
+
+            burndownData = [
+                { point: "Total", remaining: totalPoints },
+                { point: "En Progreso", remaining: totalPoints - completedPoints },
+                { point: "Pendiente", remaining: totalPoints - completedPoints - inProgressPoints },
+            ];
+        }
+
+        // 4. Task distribution
+        const tasksByStatus = {
+            todo: tasks.filter(t => t.status === "todo").length,
+            in_progress: tasks.filter(t => t.status === "in_progress").length,
+            in_review: tasks.filter(t => t.status === "review").length,
+            done: tasks.filter(t => t.status === "done").length,
+        };
+
+        return {
+            boardName: board.title,
+            velocity,
+            avgVelocity,
+            avgCycleTime,
+            activeSprint: activeSprint ? {
+                name: activeSprint.name,
+                burndown: burndownData,
+            } : null,
+            tasksByStatus,
+            totalTasks: tasks.length,
+        };
+    }
+});

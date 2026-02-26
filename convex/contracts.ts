@@ -206,3 +206,98 @@ export const generateContract = query({
         };
     }
 });
+
+// =============================================
+// SLAs DE CONTRATOS
+// =============================================
+
+export const createContractSLA = mutation({
+    args: {
+        contractDocumentId: v.id("legalDocuments"),
+        metricName: v.string(),
+        targetValue: v.number(),
+        unit: v.union(v.literal("horas"), v.literal("porcentaje"), v.literal("minutos")),
+        measurementPeriod: v.union(v.literal("mensual"), v.literal("trimestral"), v.literal("anual")),
+        penaltyClause: v.optional(v.string()),
+    },
+    handler: async (ctx, args) => {
+        return await ctx.db.insert("contractSLAs", {
+            ...args,
+            currentValue: undefined,
+            isCompliant: undefined,
+        });
+    }
+});
+
+export const getContractSLAs = query({
+    args: { contractDocumentId: v.id("legalDocuments") },
+    handler: async (ctx, args) => {
+        return await ctx.db.query("contractSLAs")
+            .withIndex("by_contract", q => q.eq("contractDocumentId", args.contractDocumentId))
+            .collect();
+    }
+});
+
+export const updateSLACompliance = mutation({
+    args: {
+        slaId: v.id("contractSLAs"),
+        currentValue: v.number(),
+    },
+    handler: async (ctx, args) => {
+        const sla = await ctx.db.get(args.slaId);
+        if (!sla) throw new Error("SLA no encontrado.");
+
+        let isCompliant = false;
+        if (sla.unit === "porcentaje") {
+            isCompliant = args.currentValue >= sla.targetValue;
+        } else {
+            // Para horas/minutos, menor es mejor (tiempo de respuesta)
+            isCompliant = args.currentValue <= sla.targetValue;
+        }
+
+        await ctx.db.patch(args.slaId, {
+            currentValue: args.currentValue,
+            isCompliant,
+        });
+
+        return { isCompliant };
+    }
+});
+
+export const getSLADashboard = query({
+    args: {},
+    handler: async (ctx) => {
+        const allSLAs = await ctx.db.query("contractSLAs").collect();
+
+        const withContract = await Promise.all(allSLAs.map(async (sla) => {
+            const contract = await ctx.db.get(sla.contractDocumentId);
+            return {
+                ...sla,
+                contractTitle: contract?.title || "Desconocido",
+            };
+        }));
+
+        const total = withContract.length;
+        const compliant = withContract.filter(s => s.isCompliant === true).length;
+        const nonCompliant = withContract.filter(s => s.isCompliant === false).length;
+        const pending = withContract.filter(s => s.isCompliant === undefined).length;
+
+        return {
+            slas: withContract,
+            summary: {
+                total,
+                compliant,
+                nonCompliant,
+                pending,
+                complianceRate: total > 0 ? Math.round((compliant / (total - pending)) * 10000) / 100 : 0,
+            }
+        };
+    }
+});
+
+export const deleteContractSLA = mutation({
+    args: { slaId: v.id("contractSLAs") },
+    handler: async (ctx, args) => {
+        await ctx.db.delete(args.slaId);
+    }
+});

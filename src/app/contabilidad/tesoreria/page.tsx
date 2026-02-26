@@ -1,10 +1,11 @@
 "use client";
 
 import { useQuery } from "convex/react";
-import { api } from "../../../../../convex/_generated/api";
+import { api } from "../../../../convex/_generated/api";
 import { Landmark, Plus, ArrowUpRight, ArrowDownRight, CreditCard } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/utils";
+import { BankAccountFormDialog } from "./BankAccountFormDialog";
 
 export default function TesoreriaPage() {
     const bankAccounts = useQuery(api.treasury.getBankAccounts) || [];
@@ -51,7 +52,10 @@ export default function TesoreriaPage() {
 
                     {/* Bank Accounts Grid */}
                     <div>
-                        <h2 className="text-lg font-bold text-slate-900 mb-4">Cuentas Bancarias</h2>
+                        <div className="flex items-center justify-between mb-4">
+                            <h2 className="text-lg font-bold text-slate-900">Cuentas Bancarias</h2>
+                            <BankAccountFormDialog />
+                        </div>
                         {bankAccounts.length === 0 ? (
                             <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center text-slate-400">
                                 <Landmark className="w-12 h-12 mb-4 opacity-20 mx-auto" />

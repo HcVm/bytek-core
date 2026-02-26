@@ -57,16 +57,39 @@ export const getBalanceSheet = query({
 
         const allAccounts = Object.values(accountBalances);
 
+        // Ingresos, costos y gastos for dynamic equity/tax calculation
+        const ingresos = allAccounts.filter(a => a.type === "ingreso");
+        const costos = allAccounts.filter(a => a.type === "costo");
+        const gastos = allAccounts.filter(a => a.type === "gasto");
+
+        const totalIngresos = ingresos.reduce((s, a) => s + a.balance, 0);
+        const totalCostos = costos.reduce((s, a) => s + a.balance, 0);
+        const totalGastos = gastos.reduce((s, a) => s + a.balance, 0);
+
+        const utilidadBruta = totalIngresos - totalCostos;
+        const utilidadOperativa = utilidadBruta - totalGastos;
+        const impuestoRenta = utilidadOperativa > 0 ? Math.round(utilidadOperativa * 0.295 * 100) / 100 : 0;
+        const utilidadNeta = Math.round((utilidadOperativa - impuestoRenta) * 100) / 100;
+
         // Clasificar por tipo
         const activos = allAccounts
-            .filter(a => a.type === "activo")
-            .sort((a, b) => a.code.localeCompare(b.code));
+            .filter(a => a.type === "activo");
         const pasivos = allAccounts
-            .filter(a => a.type === "pasivo")
-            .sort((a, b) => a.code.localeCompare(b.code));
+            .filter(a => a.type === "pasivo");
         const patrimonio = allAccounts
-            .filter(a => a.type === "patrimonio")
-            .sort((a, b) => a.code.localeCompare(b.code));
+            .filter(a => a.type === "patrimonio");
+
+        // Inyectar cálculos de Cierre de Periodo
+        if (impuestoRenta > 0) {
+            pasivos.push({ code: "4017", name: "Impuesto a la Renta (Calculado)", type: "pasivo", nature: "acreedora", balance: impuestoRenta });
+        }
+        if (utilidadNeta !== 0) {
+            patrimonio.push({ code: "5911", name: "Utilidad/Pérdida del Ejercicio (Calculado)", type: "patrimonio", nature: utilidadNeta > 0 ? "acreedora" : "deudora", balance: utilidadNeta });
+        }
+
+        activos.sort((a, b) => a.code.localeCompare(b.code));
+        pasivos.sort((a, b) => a.code.localeCompare(b.code));
+        patrimonio.sort((a, b) => a.code.localeCompare(b.code));
 
         const totalActivos = Math.round(activos.reduce((s, a) => s + a.balance, 0) * 100) / 100;
         const totalPasivos = Math.round(pasivos.reduce((s, a) => s + a.balance, 0) * 100) / 100;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery, useMutation } from "convex/react";
-import { api } from "../../../../../convex/_generated/api";
+import { api } from "../../../../convex/_generated/api";
 import { FileSpreadsheet, Plus, CheckCircle2, CircleDashed, XCircle, Eye, Filter, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";

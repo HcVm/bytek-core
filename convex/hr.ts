@@ -241,3 +241,203 @@ export const resolveLeaveRequest = mutation({
         });
     }
 });
+
+// ==========================================
+// MOTOR DE NÓMINA — Cálculo Automático
+// ==========================================
+
+// UIT 2026 = S/ 5,350
+const UIT_2026 = 5350;
+
+/**
+ * Calcula IR 5ta Categoría anual y devuelve el mensual.
+ * Escalas progresivas (Perú):
+ * - Hasta 5 UIT: 8%
+ * - 5-20 UIT: 14%
+ * - 20-35 UIT: 17%
+ * - 35-45 UIT: 20%
+ * - +45 UIT: 30%
+ */
+function calculateIR5ta(annualGross: number): number {
+    // Deducción de 7 UIT anuales
+    const deduction7UIT = 7 * UIT_2026;
+    const taxableIncome = Math.max(0, annualGross - deduction7UIT);
+
+    if (taxableIncome <= 0) return 0;
+
+    let tax = 0;
+    const brackets = [
+        { limit: 5 * UIT_2026, rate: 0.08 },
+        { limit: 20 * UIT_2026, rate: 0.14 },
+        { limit: 35 * UIT_2026, rate: 0.17 },
+        { limit: 45 * UIT_2026, rate: 0.20 },
+        { limit: Infinity, rate: 0.30 },
+    ];
+
+    let remaining = taxableIncome;
+    let previousLimit = 0;
+
+    for (const bracket of brackets) {
+        const bracketSize = bracket.limit - previousLimit;
+        const taxableInBracket = Math.min(remaining, bracketSize);
+        tax += taxableInBracket * bracket.rate;
+        remaining -= taxableInBracket;
+        previousLimit = bracket.limit;
+        if (remaining <= 0) break;
+    }
+
+    // Retorno mensual (dividido entre 12)
+    return Math.round((tax / 12) * 100) / 100;
+}
+
+export const runPayroll = mutation({
+    args: {
+        periodMonth: v.number(),
+        periodYear: v.number(),
+        executedBy: v.id("users"),
+    },
+    handler: async (ctx, args) => {
+        // Verificar que no exista planilla para este periodo
+        const existingRuns = await ctx.db.query("payrollRuns").collect();
+        const alreadyExists = existingRuns.find(r =>
+            r.period === `${args.periodYear}-${String(args.periodMonth).padStart(2, "0")}`
+        );
+        if (alreadyExists) {
+            throw new Error(`Ya existe una planilla para ${args.periodMonth}/${args.periodYear}.`);
+        }
+
+        // Obtener empleados activos en planilla
+        const employees = await ctx.db.query("employeeProfiles").collect();
+        const activeEmployees = employees.filter(e => e.status === "activo" && e.contractType === "planilla");
+
+        if (activeEmployees.length === 0) {
+            throw new Error("No hay empleados activos en planilla.");
+        }
+
+        // Crear el run
+        const periodStr = `${args.periodYear}-${String(args.periodMonth).padStart(2, "0")}`;
+        const payrollRunId = await ctx.db.insert("payrollRuns", {
+            period: periodStr,
+            periodMonth: args.periodMonth,
+            periodYear: args.periodYear,
+            status: "borrador",
+            totalGross: 0,
+            totalDeductions: 0,
+            totalNet: 0,
+            totalAmount: 0,
+            employeeCount: activeEmployees.length,
+            executedBy: args.executedBy,
+            createdAt: Date.now(),
+        });
+
+        let totalGross = 0;
+        let totalDeductions = 0;
+        let totalNet = 0;
+        let totalEsSalud = 0;
+
+        for (const emp of activeEmployees) {
+            const grossSalary = emp.baseSalary || 0;
+            const annualGross = grossSalary * 12; // Simplificación: 12 meses
+
+            // EsSalud (9% aporte patronal — NO descuenta al trabajador)
+            const essaludAmount = Math.round(grossSalary * 0.09 * 100) / 100;
+
+            // Pensión
+            let pensionType: "onp" | "afp" | "ninguno" = "ninguno";
+            let pensionAmount = 0;
+
+            if (emp.healthInsurance === "onp") {
+                pensionType = "onp";
+                pensionAmount = Math.round(grossSalary * 0.13 * 100) / 100;
+            } else if (emp.healthInsurance === "afp") {
+                pensionType = "afp";
+                pensionAmount = Math.round(grossSalary * 0.125 * 100) / 100; // Promedio AFP
+            }
+
+            // IR 5ta Categoría
+            const incomeTaxAmount = calculateIR5ta(annualGross);
+
+            // Neto = Bruto - Pensión - IR
+            const netPay = Math.round((grossSalary - pensionAmount - incomeTaxAmount) * 100) / 100;
+
+            await ctx.db.insert("payrollDetails", {
+                payrollRunId,
+                userId: emp.userId,
+                grossSalary,
+                essaludAmount,
+                pensionType,
+                pensionAmount,
+                incomeTaxAmount,
+                netPay,
+            });
+
+            totalGross += grossSalary;
+            totalDeductions += pensionAmount + incomeTaxAmount;
+            totalNet += netPay;
+            totalEsSalud += essaludAmount;
+        }
+
+        // Actualizar totales del run
+        await ctx.db.patch(payrollRunId, {
+            totalGross: Math.round(totalGross * 100) / 100,
+            totalDeductions: Math.round(totalDeductions * 100) / 100,
+            totalNet: Math.round(totalNet * 100) / 100,
+            totalAmount: Math.round(totalNet * 100) / 100,
+        });
+
+        return {
+            payrollRunId,
+            employeeCount: activeEmployees.length,
+            totalGross: Math.round(totalGross * 100) / 100,
+            totalEsSalud: Math.round(totalEsSalud * 100) / 100,
+            totalDeductions: Math.round(totalDeductions * 100) / 100,
+            totalNet: Math.round(totalNet * 100) / 100,
+        };
+    }
+});
+
+export const getPayrollDetail = query({
+    args: { payrollRunId: v.id("payrollRuns") },
+    handler: async (ctx, args) => {
+        const run = await ctx.db.get(args.payrollRunId);
+        if (!run) throw new Error("Planilla no encontrada.");
+
+        const details = await ctx.db.query("payrollDetails")
+            .withIndex("by_payroll", q => q.eq("payrollRunId", args.payrollRunId))
+            .collect();
+
+        const enriched = await Promise.all(details.map(async (d) => {
+            const user = await ctx.db.get(d.userId);
+            return {
+                ...d,
+                employeeName: user?.name || "Desconocido",
+            };
+        }));
+
+        return {
+            run,
+            details: enriched,
+        };
+    }
+});
+
+export const getPayrollRuns = query({
+    handler: async (ctx) => {
+        const runs = await ctx.db.query("payrollRuns").order("desc").collect();
+
+        return await Promise.all(runs.map(async (run) => {
+            const user = await ctx.db.get(run.executedBy);
+            return {
+                ...run,
+                executedByName: user?.name || "Sistema",
+            };
+        }));
+    }
+});
+
+export const markPayrollAsPaid = mutation({
+    args: { payrollRunId: v.id("payrollRuns") },
+    handler: async (ctx, args) => {
+        await ctx.db.patch(args.payrollRunId, { status: "pagado" });
+    }
+});
