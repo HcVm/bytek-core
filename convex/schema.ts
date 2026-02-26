@@ -362,4 +362,194 @@ export default defineSchema({
         dueDate: v.number(),
         paymentGatewayReference: v.optional(v.string()), // ID de Izipay/MercadoPago
     }).index("by_client", ["clientId"]),
+
+    // ==========================================
+    // GASTOS OPERATIVOS (OPEX)
+    // ==========================================
+    expenses: defineTable({
+        title: v.string(),
+        category: v.union(v.literal("nube"), v.literal("servicios"), v.literal("hardware"), v.literal("viaticos"), v.literal("alquiler"), v.literal("marketing"), v.literal("caja_chica"), v.literal("planilla"), v.literal("otro")),
+        amount: v.number(),
+        currency: v.union(v.literal("PEN"), v.literal("USD")),
+        expenseDate: v.number(),
+        status: v.union(v.literal("pendiente"), v.literal("pagado")),
+        projectId: v.optional(v.id("projects")),
+        providerName: v.optional(v.string()),
+        registeredBy: v.id("users"),
+        costCenterId: v.optional(v.id("costCenters")),
+        journalEntryId: v.optional(v.id("journalEntries")),
+        createdAt: v.number(),
+    }).index("by_status", ["status"]).index("by_date", ["expenseDate"]),
+
+    // ==========================================
+    // SISTEMA CONTABLE COMPLETO
+    // ==========================================
+
+    // Plan Contable General Empresarial (PCGE Perú)
+    accountingAccounts: defineTable({
+        code: v.string(),           // "10", "1011", "101101" (jerárquico)
+        name: v.string(),           // "Efectivo y equivalentes de efectivo"
+        type: v.union(
+            v.literal("activo"),
+            v.literal("pasivo"),
+            v.literal("patrimonio"),
+            v.literal("ingreso"),
+            v.literal("gasto"),
+            v.literal("costo"),
+            v.literal("cuentas_orden")
+        ),
+        parentCode: v.optional(v.string()),   // Código padre para jerarquía
+        level: v.number(),                     // 1=clase, 2=rubro, 3=cuenta, 4=subcuenta, 5=divisionaria
+        isActive: v.boolean(),
+        acceptsMovements: v.boolean(),         // Solo cuentas de detalle aceptan movimientos
+        nature: v.union(v.literal("deudora"), v.literal("acreedora")),
+        description: v.optional(v.string()),
+    }).index("by_code", ["code"]).index("by_type", ["type"]).index("by_parent", ["parentCode"]),
+
+    // Periodos Contables
+    accountingPeriods: defineTable({
+        year: v.number(),
+        month: v.number(),              // 1-12, 13 = cierre anual
+        status: v.union(v.literal("abierto"), v.literal("cerrado")),
+        closedBy: v.optional(v.id("users")),
+        closedAt: v.optional(v.number()),
+    }).index("by_year_month", ["year", "month"]),
+
+    // Asientos Contables (Journal Entries) — Partida Doble
+    journalEntries: defineTable({
+        entryNumber: v.string(),        // "ASIENTO-2026-000001"
+        date: v.string(),               // "2026-02-25"
+        periodId: v.id("accountingPeriods"),
+        description: v.string(),
+        type: v.union(
+            v.literal("apertura"),       // Asiento de apertura
+            v.literal("operacion"),      // Operaciones normales
+            v.literal("ajuste"),         // Ajustes contables
+            v.literal("cierre"),         // Cierre de periodo
+            v.literal("reclasificacion") // Reclasificaciones
+        ),
+        status: v.union(v.literal("borrador"), v.literal("contabilizado"), v.literal("anulado")),
+        sourceModule: v.optional(v.string()),    // "invoices", "expenses", "payroll"
+        sourceId: v.optional(v.string()),        // ID del documento origen
+        createdBy: v.id("users"),
+        approvedBy: v.optional(v.id("users")),
+        totalDebit: v.number(),          // Suma total debe
+        totalCredit: v.number(),         // Suma total haber
+        createdAt: v.number(),
+    }).index("by_period", ["periodId"]).index("by_date", ["date"]).index("by_number", ["entryNumber"]),
+
+    // Líneas de Asiento (Detalle Debe/Haber)
+    journalEntryLines: defineTable({
+        entryId: v.id("journalEntries"),
+        accountCode: v.string(),         // Código de cuenta contable
+        accountId: v.id("accountingAccounts"),
+        description: v.optional(v.string()),
+        debit: v.number(),               // Monto al DEBE
+        credit: v.number(),              // Monto al HABER
+        costCenterId: v.optional(v.id("costCenters")),
+        documentReference: v.optional(v.string()), // "FAC-001-000234"
+    }).index("by_entry", ["entryId"]).index("by_account", ["accountId"]),
+
+    // Centros de Costo
+    costCenters: defineTable({
+        code: v.string(),           // "CC-ADMIN", "CC-U1-DIGITAL"
+        name: v.string(),           // "Administración", "Unidad Digital"
+        type: v.union(v.literal("administrativo"), v.literal("operativo"), v.literal("proyecto")),
+        projectId: v.optional(v.id("projects")),
+        isActive: v.boolean(),
+    }).index("by_code", ["code"]),
+
+    // Cuentas Bancarias
+    bankAccounts: defineTable({
+        bankName: v.string(),       // "BCP", "Interbank", "BBVA"
+        accountNumber: v.string(),  // "193-xxxxxxx-xxx"
+        accountType: v.union(v.literal("corriente"), v.literal("ahorros"), v.literal("detraccion"), v.literal("caja_chica")),
+        currency: v.union(v.literal("PEN"), v.literal("USD")),
+        currentBalance: v.number(),
+        accountingAccountId: v.id("accountingAccounts"), // Vinculado al plan de cuentas
+        isActive: v.boolean(),
+    }).index("by_bank", ["bankName"]),
+
+    // Movimientos Bancarios
+    bankTransactions: defineTable({
+        bankAccountId: v.id("bankAccounts"),
+        date: v.string(),
+        type: v.union(v.literal("ingreso"), v.literal("egreso"), v.literal("transferencia")),
+        description: v.string(),
+        amount: v.number(),
+        reference: v.optional(v.string()),     // Nro operación bancaria
+        reconciled: v.boolean(),               // Ya conciliado
+        journalEntryId: v.optional(v.id("journalEntries")),
+        createdAt: v.number(),
+    }).index("by_account", ["bankAccountId"]).index("by_date", ["date"]).index("by_reconciled", ["reconciled"]),
+
+    // Cuentas por Cobrar (Accounts Receivable)
+    accountsReceivable: defineTable({
+        clientId: v.id("clients"),
+        invoiceId: v.optional(v.id("invoices")),
+        documentType: v.union(v.literal("factura"), v.literal("boleta"), v.literal("nota_debito"), v.literal("otro")),
+        documentNumber: v.string(),
+        issueDate: v.string(),
+        dueDate: v.string(),
+        originalAmount: v.number(),
+        pendingAmount: v.number(),
+        currency: v.union(v.literal("PEN"), v.literal("USD")),
+        status: v.union(v.literal("pendiente"), v.literal("parcial"), v.literal("cobrado"), v.literal("vencido"), v.literal("incobrable")),
+        journalEntryId: v.optional(v.id("journalEntries")),
+    }).index("by_client", ["clientId"]).index("by_status", ["status"]).index("by_due", ["dueDate"]),
+
+    // Cuentas por Pagar (Accounts Payable)
+    accountsPayable: defineTable({
+        providerName: v.string(),
+        documentType: v.union(v.literal("factura"), v.literal("recibo"), v.literal("nota_credito"), v.literal("otro")),
+        documentNumber: v.string(),
+        issueDate: v.string(),
+        dueDate: v.string(),
+        originalAmount: v.number(),
+        pendingAmount: v.number(),
+        currency: v.union(v.literal("PEN"), v.literal("USD")),
+        category: v.string(),        // nube, hardware, servicios, etc.
+        status: v.union(v.literal("pendiente"), v.literal("parcial"), v.literal("pagado"), v.literal("vencido")),
+        journalEntryId: v.optional(v.id("journalEntries")),
+        expenseId: v.optional(v.string()),  // Vinculado al gasto original
+    }).index("by_status", ["status"]).index("by_due", ["dueDate"]),
+
+    // Pagos y Cobros
+    payments: defineTable({
+        type: v.union(v.literal("cobro"), v.literal("pago")),
+        receivableId: v.optional(v.id("accountsReceivable")),
+        payableId: v.optional(v.id("accountsPayable")),
+        bankAccountId: v.id("bankAccounts"),
+        amount: v.number(),
+        paymentDate: v.string(),
+        paymentMethod: v.union(v.literal("transferencia"), v.literal("cheque"), v.literal("efectivo"), v.literal("yape_plin"), v.literal("tarjeta")),
+        reference: v.optional(v.string()),
+        journalEntryId: v.optional(v.id("journalEntries")),
+        createdAt: v.number(),
+    }).index("by_receivable", ["receivableId"]).index("by_payable", ["payableId"]),
+
+    // Obligaciones Tributarias
+    taxObligations: defineTable({
+        period: v.string(),            // "2026-02"
+        type: v.union(v.literal("igv"), v.literal("renta_mensual"), v.literal("renta_anual"), v.literal("essalud"), v.literal("onp"), v.literal("afp"), v.literal("detraccion")),
+        baseAmount: v.number(),        // Base imponible
+        taxAmount: v.number(),         // Monto del impuesto
+        creditAmount: v.optional(v.number()),  // Crédito fiscal (IGV compras)
+        netPayable: v.number(),        // Monto neto a pagar
+        dueDate: v.string(),
+        status: v.union(v.literal("por_declarar"), v.literal("declarado"), v.literal("pagado")),
+        pdtReference: v.optional(v.string()),  // Nro de orden PDT/SUNAT
+    }).index("by_period", ["period"]).index("by_type", ["type"]),
+
+    // Presupuestos
+    budgets: defineTable({
+        name: v.string(),              // "Presupuesto Operativo Q1 2026"
+        year: v.number(),
+        costCenterId: v.optional(v.id("costCenters")),
+        accountId: v.id("accountingAccounts"),  // A qué cuenta aplica
+        budgetedAmount: v.number(),
+        actualAmount: v.number(),       // Se actualiza automáticamente
+        variance: v.number(),           // Diferencia
+        status: v.union(v.literal("activo"), v.literal("cerrado")),
+    }).index("by_year", ["year"]).index("by_center", ["costCenterId"]),
 });
