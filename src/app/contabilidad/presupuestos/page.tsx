@@ -48,17 +48,17 @@ export default function PresupuestosPage() {
     };
 
     return (
-        <div className="flex flex-col h-full bg-slate-50 overflow-hidden">
-            <div className="bg-white border-b border-slate-200 px-8 py-6 shrink-0 z-10 shadow-sm">
+        <div className="flex flex-col h-full bg-slate-50 dark:bg-zinc-950 overflow-hidden">
+            <div className="bg-white dark:bg-zinc-900 border-b border-slate-200 dark:border-zinc-800 px-8 py-6 shrink-0 z-10 shadow-sm">
                 <div className="flex justify-between items-start max-w-7xl mx-auto w-full">
                     <div>
                         <div className="flex items-center gap-3 mb-1">
                             <div className="w-10 h-10 bg-amber-600 rounded-xl flex items-center justify-center text-white shadow-md">
                                 <BadgeDollarSign className="w-5 h-5" />
                             </div>
-                            <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">Presupuestos</h1>
+                            <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Presupuestos</h1>
                         </div>
-                        <p className="text-slate-500 font-medium pl-14">Control presupuestal por tipo, centro de costos y cuenta contable — {currentYear}</p>
+                        <p className="text-slate-500 dark:text-zinc-400 font-medium pl-14">Control presupuestal por tipo, centro de costos y cuenta contable — {currentYear}</p>
                     </div>
                     <Button onClick={() => setShowForm(true)} className="bg-amber-600 hover:bg-amber-700 text-white gap-2">
                         <Plus className="w-4 h-4" /> Nuevo presupuesto
@@ -72,25 +72,25 @@ export default function PresupuestosPage() {
                     {/* Comparativa general */}
                     {comparison && (
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                            <div className="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-lg relative overflow-hidden">
+                            <div className="bg-slate-900 dark:bg-zinc-900 p-6 rounded-2xl border border-slate-800 dark:border-zinc-800 shadow-lg relative overflow-hidden">
                                 <div className="absolute right-0 top-0 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl -mr-10 -mt-10" />
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 relative z-10">Presupuestado Total</p>
+                                <p className="text-xs font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider mb-1 relative z-10">Presupuestado Total</p>
                                 <h3 className="text-2xl font-black text-white relative z-10">{formatCurrency(comparison.totals.budgeted)}</h3>
                             </div>
-                            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                                <p className="text-xs font-bold text-slate-500 uppercase mb-1">Ejecutado</p>
-                                <h3 className="text-2xl font-black text-slate-900">{formatCurrency(comparison.totals.actual)}</h3>
+                            <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm">
+                                <p className="text-xs font-bold text-slate-500 dark:text-zinc-400 uppercase mb-1">Ejecutado</p>
+                                <h3 className="text-2xl font-black text-slate-900 dark:text-white">{formatCurrency(comparison.totals.actual)}</h3>
                             </div>
-                            <div className={`p-6 rounded-2xl border-2 shadow-sm ${comparison.totals.variance >= 0 ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'}`}>
-                                <p className="text-xs font-bold text-slate-500 uppercase mb-1">Varianza</p>
-                                <h3 className={`text-2xl font-black ${comparison.totals.variance >= 0 ? 'text-emerald-700' : 'text-red-700'}`}>
+                            <div className={`p-6 rounded-2xl border-2 shadow-sm ${comparison.totals.variance >= 0 ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/50' : 'bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-900/50'}`}>
+                                <p className="text-xs font-bold text-slate-50 dark:text-zinc-400 uppercase mb-1">Varianza</p>
+                                <h3 className={`text-2xl font-black ${comparison.totals.variance >= 0 ? 'text-emerald-700 dark:text-emerald-400' : 'text-red-700 dark:text-red-400'}`}>
                                     {formatCurrency(comparison.totals.variance)}
                                 </h3>
                             </div>
-                            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                                <p className="text-xs font-bold text-slate-500 uppercase mb-1">% Ejecución</p>
-                                <h3 className="text-2xl font-black text-slate-900">{comparison.totals.executionPercent}%</h3>
-                                <div className="w-full bg-slate-200 rounded-full h-2 mt-2">
+                            <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm">
+                                <p className="text-xs font-bold text-slate-500 dark:text-zinc-400 uppercase mb-1">% Ejecución</p>
+                                <h3 className="text-2xl font-black text-slate-900 dark:text-white">{comparison.totals.executionPercent}%</h3>
+                                <div className="w-full bg-slate-200 dark:bg-zinc-800 rounded-full h-2 mt-2">
                                     <div className="bg-amber-600 h-2 rounded-full transition-all" style={{ width: `${Math.min(comparison.totals.executionPercent, 100)}%` }} />
                                 </div>
                             </div>
@@ -103,13 +103,13 @@ export default function PresupuestosPage() {
                             <h2 className="text-lg font-bold text-slate-900 mb-4">Ejecución por Tipo</h2>
                             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
                                 {comparison.byType.map((bt: any) => (
-                                    <div key={bt.type} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
-                                        <Badge className={`${typeColors[bt.type] || 'bg-slate-100 text-slate-700'} text-[10px] mb-3`}>
+                                    <div key={bt.type} className="bg-white dark:bg-zinc-900 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm p-5">
+                                        <Badge className={`${typeColors[bt.type] || 'bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300'} text-[10px] mb-3`}>
                                             {typeLabels[bt.type] || bt.type}
                                         </Badge>
-                                        <p className="text-lg font-black text-slate-900">{bt.executionPercent}%</p>
-                                        <p className="text-[10px] text-slate-400">{formatCurrency(bt.actual)} / {formatCurrency(bt.budgeted)}</p>
-                                        <div className="w-full bg-slate-200 rounded-full h-1.5 mt-2">
+                                        <p className="text-lg font-black text-slate-900 dark:text-white">{bt.executionPercent}%</p>
+                                        <p className="text-[10px] text-slate-400 dark:text-zinc-500">{formatCurrency(bt.actual)} / {formatCurrency(bt.budgeted)}</p>
+                                        <div className="w-full bg-slate-200 dark:bg-zinc-800 rounded-full h-1.5 mt-2">
                                             <div className={`h-1.5 rounded-full ${bt.executionPercent > 100 ? 'bg-red-500' : 'bg-amber-500'}`}
                                                 style={{ width: `${Math.min(bt.executionPercent, 100)}%` }} />
                                         </div>
@@ -121,29 +121,29 @@ export default function PresupuestosPage() {
 
                     {/* Lista de presupuestos */}
                     <div>
-                        <h2 className="text-lg font-bold text-slate-900 mb-4">Detalle de Presupuestos</h2>
-                        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                        <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Detalle de Presupuestos</h2>
+                        <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm overflow-hidden">
                             {!budgets || budgets.length === 0 ? (
-                                <div className="p-16 text-center text-slate-400">
+                                <div className="p-16 text-center text-slate-400 dark:text-zinc-600">
                                     <CircleDollarSign className="w-12 h-12 mb-4 opacity-20 mx-auto" />
                                     <p className="font-medium">Sin presupuestos para {currentYear}.</p>
                                     <p className="text-sm">Crea un presupuesto para empezar el control.</p>
                                 </div>
                             ) : (
-                                <div className="divide-y divide-slate-50">
+                                <div className="divide-y divide-slate-50 dark:divide-zinc-800">
                                     {budgets.map((b: any) => (
-                                        <div key={b._id} className="flex items-center gap-4 px-5 py-4 hover:bg-slate-50/80 transition-colors">
+                                        <div key={b._id} className="flex items-center gap-4 px-5 py-4 hover:bg-slate-50/80 dark:hover:bg-zinc-800/50 transition-colors">
                                             <div className={`w-2 h-10 rounded-full ${b.executionPercent > 100 ? 'bg-red-500' : b.executionPercent > 80 ? 'bg-amber-500' : 'bg-emerald-500'}`} />
                                             <div className="flex-1 min-w-0">
-                                                <p className="text-sm font-bold text-slate-900">{b.name}</p>
-                                                <p className="text-[10px] text-slate-400">
+                                                <p className="text-sm font-bold text-slate-900 dark:text-white">{b.name}</p>
+                                                <p className="text-[10px] text-slate-400 dark:text-zinc-500">
                                                     {b.accountCode} · {b.accountName} · {b.costCenterName}
                                                 </p>
                                             </div>
-                                            <Badge className={`${typeColors[b.type] || ''} text-[10px]`}>{typeLabels[b.type] || b.type}</Badge>
+                                            <Badge className={`${typeColors[b.type] || ''} text-[10px] dark:border-zinc-700`}>{typeLabels[b.type] || b.type}</Badge>
                                             <div className="text-right min-w-[120px]">
-                                                <p className="text-sm font-black text-slate-900">{formatCurrency(b.actualAmount)}</p>
-                                                <p className="text-[10px] text-slate-400">de {formatCurrency(b.budgetedAmount)}</p>
+                                                <p className="text-sm font-black text-slate-900 dark:text-white">{formatCurrency(b.actualAmount)}</p>
+                                                <p className="text-[10px] text-slate-400 dark:text-zinc-500">de {formatCurrency(b.budgetedAmount)}</p>
                                             </div>
                                             <div className="w-24">
                                                 <div className="flex items-center gap-1 justify-end">
@@ -152,7 +152,7 @@ export default function PresupuestosPage() {
                                                     ) : (
                                                         <TrendingUp className="w-3 h-3 text-red-500" />
                                                     )}
-                                                    <span className={`text-xs font-bold ${b.variance >= 0 ? 'text-emerald-700' : 'text-red-700'}`}>
+                                                    <span className={`text-xs font-bold ${b.variance >= 0 ? 'text-emerald-700 dark:text-emerald-400' : 'text-red-700 dark:text-red-400'}`}>
                                                         {b.executionPercent}%
                                                     </span>
                                                 </div>
@@ -166,49 +166,56 @@ export default function PresupuestosPage() {
 
                     {/* Modal de creación */}
                     {showForm && (
-                        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 space-y-4">
+                        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                            <div className="bg-white dark:bg-zinc-900 rounded-3xl shadow-2xl w-full max-w-lg p-8 space-y-6 border border-slate-200 dark:border-zinc-800 animate-in zoom-in-95 duration-200">
                                 <div className="flex items-center justify-between mb-2">
-                                    <h3 className="text-lg font-bold text-slate-900">Nuevo Presupuesto</h3>
-                                    <Button variant="ghost" size="icon" onClick={() => setShowForm(false)}><X className="w-4 h-4" /></Button>
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 bg-amber-100 dark:bg-amber-500/10 rounded-xl flex items-center justify-center text-amber-600 dark:text-amber-500">
+                                            <BadgeDollarSign className="w-5 h-5" />
+                                        </div>
+                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">Nuevo Presupuesto</h3>
+                                    </div>
+                                    <Button variant="ghost" size="icon" onClick={() => setShowForm(false)} className="rounded-full dark:text-zinc-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800"><X className="w-5 h-5" /></Button>
                                 </div>
-                                <div className="space-y-3">
-                                    <div>
-                                        <Label className="text-xs font-bold text-slate-600">Nombre</Label>
-                                        <Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Presupuesto Operativo Q1" />
+                                <div className="space-y-4">
+                                    <div className="space-y-1.5">
+                                        <Label className="text-xs font-bold text-slate-600 dark:text-zinc-400 uppercase tracking-wider pl-1">Nombre del Presupuesto</Label>
+                                        <Input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Presupuesto Operativo Q1" className="h-11 dark:bg-zinc-950 dark:border-zinc-800 dark:text-white rounded-xl shadow-sm" />
                                     </div>
-                                    <div>
-                                        <Label className="text-xs font-bold text-slate-600">Tipo</Label>
-                                        <Select value={form.type} onValueChange={v => setForm({ ...form, type: v })}>
-                                            <SelectTrigger><SelectValue /></SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="operativo">Operativo</SelectItem>
-                                                <SelectItem value="capital">Capital</SelectItem>
-                                                <SelectItem value="proyecto">Proyecto</SelectItem>
-                                                <SelectItem value="personal">Personal</SelectItem>
-                                                <SelectItem value="forecast">Forecast</SelectItem>
-                                            </SelectContent>
-                                        </Select>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-1.5">
+                                            <Label className="text-xs font-bold text-slate-600 dark:text-zinc-400 uppercase tracking-wider pl-1">Tipo</Label>
+                                            <Select value={form.type} onValueChange={v => setForm({ ...form, type: v })}>
+                                                <SelectTrigger className="h-11 dark:bg-zinc-950 dark:border-zinc-800 dark:text-white rounded-xl"><SelectValue /></SelectTrigger>
+                                                <SelectContent className="dark:bg-zinc-900 dark:border-zinc-800">
+                                                    <SelectItem value="operativo">Operativo</SelectItem>
+                                                    <SelectItem value="capital">Capital</SelectItem>
+                                                    <SelectItem value="proyecto">Proyecto</SelectItem>
+                                                    <SelectItem value="personal">Personal</SelectItem>
+                                                    <SelectItem value="forecast">Forecast</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        <div className="space-y-1.5">
+                                            <Label className="text-xs font-bold text-slate-600 dark:text-zinc-400 uppercase tracking-wider pl-1">Monto (S/)</Label>
+                                            <Input type="number" value={form.budgetedAmount} onChange={e => setForm({ ...form, budgetedAmount: e.target.value })} placeholder="50000" className="h-11 dark:bg-zinc-950 dark:border-zinc-800 dark:text-white rounded-xl shadow-sm" />
+                                        </div>
                                     </div>
-                                    <div>
-                                        <Label className="text-xs font-bold text-slate-600">Cuenta Contable</Label>
+                                    <div className="space-y-1.5">
+                                        <Label className="text-xs font-bold text-slate-600 dark:text-zinc-400 uppercase tracking-wider pl-1">Cuenta Contable</Label>
                                         <Select value={form.accountId} onValueChange={v => setForm({ ...form, accountId: v })}>
-                                            <SelectTrigger><SelectValue placeholder="Seleccionar cuenta..." /></SelectTrigger>
-                                            <SelectContent>
+                                            <SelectTrigger className="h-11 dark:bg-zinc-950 dark:border-zinc-800 dark:text-white rounded-xl"><SelectValue placeholder="Seleccionar cuenta..." /></SelectTrigger>
+                                            <SelectContent className="dark:bg-zinc-900 dark:border-zinc-800">
                                                 {accountingAccounts.filter((a: any) => a.acceptsMovements).map((a: any) => (
                                                     <SelectItem key={a._id} value={a._id}>{a.code} — {a.name}</SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </Select>
                                     </div>
-                                    <div>
-                                        <Label className="text-xs font-bold text-slate-600">Monto Presupuestado (S/)</Label>
-                                        <Input type="number" value={form.budgetedAmount} onChange={e => setForm({ ...form, budgetedAmount: e.target.value })} placeholder="50000" />
-                                    </div>
                                 </div>
-                                <div className="flex justify-end gap-2 pt-2">
-                                    <Button variant="outline" onClick={() => setShowForm(false)}>Cancelar</Button>
-                                    <Button onClick={handleCreate} className="bg-amber-600 hover:bg-amber-700 text-white">Crear presupuesto</Button>
+                                <div className="flex gap-3 pt-4">
+                                    <Button variant="outline" onClick={() => setShowForm(false)} className="flex-1 h-11 rounded-xl dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-800">Cancelar</Button>
+                                    <Button onClick={handleCreate} className="flex-1 h-11 bg-amber-600 hover:bg-amber-700 text-white rounded-xl shadow-lg transition-all active:scale-95">Crear Presupuesto</Button>
                                 </div>
                             </div>
                         </div>

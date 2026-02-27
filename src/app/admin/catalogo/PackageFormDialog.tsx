@@ -103,7 +103,7 @@ export function PackageFormDialog({
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 {trigger || (
-                    <Button className="bg-zinc-900 text-white hover:bg-zinc-800">
+                    <Button className="bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200">
                         <Plus className="w-4 h-4 mr-2" />
                         Nuevo Paquete
                     </Button>
@@ -217,7 +217,7 @@ export function PackageFormDialog({
                             )}
                         />
 
-                        <Button type="submit" className="w-full bg-zinc-900 hover:bg-zinc-800 text-white">
+                        <Button type="submit" className="w-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200">
                             {isEditing ? 'Guardar Cambios' : 'Crear Paquete'}
                         </Button>
                     </form>

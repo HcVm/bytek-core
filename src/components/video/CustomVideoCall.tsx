@@ -44,8 +44,8 @@ export function CustomVideoCall({ roomUrl, onLeave }: { roomUrl: string, onLeave
 
     if (!callObject || joinState === "joining") {
         return (
-            <div className="flex h-[80vh] w-full items-center justify-center bg-zinc-950 rounded-2xl border border-zinc-800 shadow-2xl">
-                <div className="text-zinc-400 flex flex-col items-center gap-6">
+            <div className="flex h-[80vh] w-full items-center justify-center bg-zinc-50 dark:bg-zinc-950 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-2xl">
+                <div className="text-zinc-600 dark:text-zinc-400 flex flex-col items-center gap-6">
                     <div className="w-10 h-10 rounded-full border-4 border-indigo-500 border-t-transparent animate-spin" />
                     <span className="font-medium tracking-wide">Conectando a sala segura...</span>
                 </div>
@@ -55,10 +55,10 @@ export function CustomVideoCall({ roomUrl, onLeave }: { roomUrl: string, onLeave
 
     if (joinState === "error") {
         return (
-            <div className="flex h-[80vh] w-full items-center justify-center bg-zinc-950 rounded-2xl border border-red-900/50 shadow-2xl">
-                <div className="text-red-400 flex flex-col items-center gap-6 p-8 bg-red-950/20 rounded-xl">
+            <div className="flex h-[80vh] w-full items-center justify-center bg-zinc-50 dark:bg-zinc-950 rounded-2xl border border-red-200 dark:border-red-900/50 shadow-2xl">
+                <div className="text-red-600 dark:text-red-400 flex flex-col items-center gap-6 p-8 bg-red-100/50 dark:bg-red-950/20 rounded-xl">
                     <p className="font-semibold text-lg">Error al conectar a la videollamada.</p>
-                    <p className="text-sm text-red-400/70 text-center max-w-sm mb-4">Verifique su conexión a internet o los permisos de cámara y micrófono de su navegador.</p>
+                    <p className="text-sm text-red-600/70 dark:text-red-400/70 text-center max-w-sm mb-4">Verifique su conexión a internet o los permisos de cámara y micrófono de su navegador.</p>
                     <Button onClick={onLeave} variant="outline" className="text-zinc-900 bg-white hover:bg-zinc-200 font-bold px-8">Regresar</Button>
                 </div>
             </div>
@@ -67,22 +67,22 @@ export function CustomVideoCall({ roomUrl, onLeave }: { roomUrl: string, onLeave
 
     return (
         <DailyProvider callObject={callObject}>
-            <div className="flex flex-col h-[80vh] w-full bg-zinc-950 text-white relative rounded-2xl overflow-hidden shadow-2xl border border-zinc-800">
+            <div className="flex flex-col h-[80vh] w-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-white relative rounded-2xl overflow-hidden shadow-2xl border border-zinc-200 dark:border-zinc-800">
                 {/* Header */}
-                <div className="absolute top-0 left-0 right-0 p-5 bg-gradient-to-b from-black/80 to-transparent z-10 flex justify-between items-center">
+                <div className="absolute top-0 left-0 right-0 p-5 bg-gradient-to-b from-white/90 dark:from-black/80 to-transparent z-10 flex justify-between items-center">
                     <div className="flex items-center gap-3">
-                        <span className="font-bold text-white tracking-widest text-lg">BYTEK</span>
+                        <span className="font-bold text-zinc-900 dark:text-white tracking-widest text-lg">BYTEK</span>
                         <span className="bg-red-500 text-white text-[10px] px-2.5 py-0.5 rounded-full animate-pulse uppercase font-bold tracking-wider shadow-[0_0_10px_rgba(239,68,68,0.5)]">En vivo</span>
                     </div>
                 </div>
 
                 {/* Video Grid */}
-                <div className="flex-1 relative overflow-hidden bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-zinc-950">
+                <div className="flex-1 relative overflow-hidden bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-zinc-100 dark:bg-zinc-950">
                     <VideoGrid />
                 </div>
 
                 {/* Call Controls */}
-                <div className="h-24 bg-zinc-900/90 backdrop-blur-md border-t border-zinc-800/50 flex items-center justify-center gap-6 px-6 relative z-10 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+                <div className="h-24 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border-t border-zinc-200/50 dark:border-zinc-800/50 flex items-center justify-center gap-6 px-6 relative z-10 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
                     <CallControls onLeave={onLeave} />
                 </div>
             </div>
@@ -99,20 +99,20 @@ function VideoGrid() {
     return (
         <div className="w-full h-full flex flex-col lg:flex-row gap-4 p-4 md:p-6 pt-20 pb-6 items-center justify-center overflow-hidden">
             {/* Local Video */}
-            <div className={`relative ${remoteParticipantIds.length === 0 ? 'w-full max-w-4xl max-h-[70vh]' : 'w-full lg:w-1/2'} aspect-video rounded-3xl overflow-hidden bg-zinc-900 shadow-2xl border border-zinc-800/80 transition-all duration-700 ease-in-out`}>
+            <div className={`relative ${remoteParticipantIds.length === 0 ? 'w-full max-w-4xl max-h-[70vh]' : 'w-full lg:w-1/2'} aspect-video rounded-3xl overflow-hidden bg-zinc-200 dark:bg-zinc-900 shadow-2xl border border-zinc-300/80 dark:border-zinc-800/80 transition-all duration-700 ease-in-out`}>
                 <ParticipantTile participantId={localSessionId} isLocal />
             </div>
 
             {/* Remote Videos */}
             {remoteParticipantIds.length === 0 ? (
-                <div className="w-full lg:w-1/2 aspect-video flex flex-col items-center justify-center rounded-3xl bg-zinc-900/40 border border-zinc-800/50 border-dashed backdrop-blur-sm">
-                    <Users className="w-16 h-16 text-zinc-700 mb-6" />
-                    <p className="text-zinc-500 font-medium text-lg tracking-wide">Esperando al otro participante...</p>
-                    <p className="text-zinc-600 text-sm mt-2">La sala está abierta y segura.</p>
+                <div className="w-full lg:w-1/2 aspect-video flex flex-col items-center justify-center rounded-3xl bg-zinc-100/40 dark:bg-zinc-900/40 border border-zinc-300/50 dark:border-zinc-800/50 border-dashed backdrop-blur-sm">
+                    <Users className="w-16 h-16 text-zinc-400 dark:text-zinc-700 mb-6" />
+                    <p className="text-zinc-500 dark:text-zinc-400 font-medium text-lg tracking-wide">Esperando al otro participante...</p>
+                    <p className="text-zinc-400 dark:text-zinc-600 text-sm mt-2">La sala está abierta y segura.</p>
                 </div>
             ) : (
                 remoteParticipantIds.map(id => (
-                    <div key={id} className="relative aspect-video max-h-full rounded-3xl overflow-hidden bg-zinc-900 shadow-2xl ring-2 ring-indigo-500/30 w-full lg:w-1/2 transition-all duration-700 ease-in-out">
+                    <div key={id} className="relative aspect-video max-h-full rounded-3xl overflow-hidden bg-zinc-200 dark:bg-zinc-900 shadow-2xl ring-2 ring-indigo-500/30 w-full lg:w-1/2 transition-all duration-700 ease-in-out">
                         <ParticipantTile participantId={id} />
                     </div>
                 ))
@@ -141,7 +141,7 @@ function ParticipantTile({ participantId, isLocal = false }: { participantId: st
     }, [audioState.track, isLocal]);
 
     return (
-        <div className="w-full h-full relative bg-zinc-900 flex items-center justify-center overflow-hidden group">
+        <div className="w-full h-full relative bg-zinc-200 dark:bg-zinc-900 flex items-center justify-center overflow-hidden group">
             <video
                 ref={videoRef}
                 autoPlay
@@ -151,9 +151,9 @@ function ParticipantTile({ participantId, isLocal = false }: { participantId: st
             />
 
             {!videoState.track && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-900 z-0">
-                    <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-zinc-800 flex items-center justify-center mb-4 border-2 border-zinc-700 shadow-inner">
-                        <Users className="w-12 h-12 sm:w-16 sm:h-16 text-zinc-600" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-200 dark:bg-zinc-900 z-0">
+                    <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-zinc-300 dark:bg-zinc-800 flex items-center justify-center mb-4 border-2 border-zinc-400 dark:border-zinc-700 shadow-inner">
+                        <Users className="w-12 h-12 sm:w-16 sm:h-16 text-zinc-500 dark:text-zinc-600" />
                     </div>
                 </div>
             )}
@@ -162,7 +162,7 @@ function ParticipantTile({ participantId, isLocal = false }: { participantId: st
 
             {/* In-Call Overlays */}
             <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 flex gap-3 z-10 transition-transform duration-300 group-hover:translate-y-[-4px]">
-                <div className="bg-black/50 backdrop-blur-md px-4 py-2 rounded-xl text-sm font-semibold text-white shadow-lg border border-white/5 tracking-wide">
+                <div className="bg-white/80 dark:bg-black/50 backdrop-blur-md px-4 py-2 rounded-xl text-sm font-semibold text-zinc-900 dark:text-white shadow-lg border border-zinc-200 dark:border-white/5 tracking-wide">
                     {isLocal ? "Tú" : "Participante"}
                 </div>
             </div>
@@ -202,10 +202,10 @@ function CallControls({ onLeave }: { onLeave: () => void }) {
                 variant={isMicOn ? "secondary" : "destructive"}
                 size="icon"
                 title={isMicOn ? "Silenciar micrófono" : "Activar micrófono"}
-                className={`rounded-2xl shadow-xl transition-all duration-300 ${isMicOn ? 'w-14 h-14 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700' : 'w-14 h-14 bg-amber-500 hover:bg-amber-600 text-zinc-950'}`}
+                className={`rounded-2xl shadow-xl transition-all duration-300 ${isMicOn ? 'w-14 h-14 bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 border border-zinc-300 dark:border-zinc-700' : 'w-14 h-14 bg-amber-500 hover:bg-amber-600 text-zinc-950'}`}
                 onClick={toggleMic}
             >
-                {isMicOn ? <Mic className="w-6 h-6 text-zinc-300" /> : <MicOff className="w-6 h-6 text-zinc-900" />}
+                {isMicOn ? <Mic className="w-6 h-6 text-zinc-700 dark:text-zinc-300" /> : <MicOff className="w-6 h-6 text-zinc-900" />}
             </Button>
 
             <Button
@@ -220,10 +220,10 @@ function CallControls({ onLeave }: { onLeave: () => void }) {
                 variant={isCamOn ? "secondary" : "destructive"}
                 size="icon"
                 title={isCamOn ? "Apagar video" : "Encender video"}
-                className={`rounded-2xl shadow-xl transition-all duration-300 ${isCamOn ? 'w-14 h-14 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700' : 'w-14 h-14 bg-amber-500 hover:bg-amber-600 text-zinc-950'}`}
+                className={`rounded-2xl shadow-xl transition-all duration-300 ${isCamOn ? 'w-14 h-14 bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 border border-zinc-300 dark:border-zinc-700' : 'w-14 h-14 bg-amber-500 hover:bg-amber-600 text-zinc-950'}`}
                 onClick={toggleCam}
             >
-                {isCamOn ? <Video className="w-6 h-6 text-zinc-300" /> : <VideoOff className="w-6 h-6 text-zinc-900" />}
+                {isCamOn ? <Video className="w-6 h-6 text-zinc-700 dark:text-zinc-300" /> : <VideoOff className="w-6 h-6 text-zinc-900" />}
             </Button>
         </div>
     );

@@ -92,7 +92,7 @@ export default function ProyectoDetallePage() {
             <div className="flex justify-between items-start mb-8">
                 <div>
                     <div className="flex items-center gap-3 mb-2">
-                        <h1 className="text-3xl font-bold tracking-tight text-zinc-900">{project.title}</h1>
+                        <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">{project.title}</h1>
                         <Badge variant="outline" className="bg-white">
                             {project.status.replace("_", " ").toUpperCase()}
                         </Badge>
@@ -124,7 +124,7 @@ export default function ProyectoDetallePage() {
                                     <div className="flex-1">
                                         <label
                                             htmlFor={`milestone-${i}`}
-                                            className={`text-sm font-medium leading-none cursor-pointer ${milestone.completedAt ? 'text-zinc-900 line-through' : 'text-zinc-900'}`}
+                                            className={`text-sm font-medium leading-none cursor-pointer ${milestone.completedAt ? 'text-zinc-900 dark:text-zinc-100 line-through' : 'text-zinc-900 dark:text-zinc-100'}`}
                                         >
                                             {milestone.name}
                                         </label>

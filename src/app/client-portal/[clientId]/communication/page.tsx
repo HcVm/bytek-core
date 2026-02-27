@@ -34,7 +34,7 @@ export default function ClientCommunicationPage() {
 
     if (messages === undefined) {
         return (
-            <div className="flex h-[80vh] items-center justify-center text-zinc-400">
+            <div className="flex h-[80vh] items-center justify-center text-zinc-400 dark:text-zinc-600">
                 <Activity className="w-6 h-6 animate-pulse mr-2" />
                 <span>Cargando historial de comunicaciones...</span>
             </div>
@@ -122,23 +122,23 @@ export default function ClientCommunicationPage() {
                 className="mb-6 flex flex-col md:flex-row gap-4 justify-between md:items-center"
             >
                 <div>
-                    <h1 className="text-2xl font-bold text-zinc-900 tracking-tight flex items-center gap-2">
-                        <MessageCircle className="w-6 h-6 text-indigo-600" /> Centro de Comunicación
+                    <h1 className="text-2xl font-bold text-zinc-900 dark:text-white tracking-tight flex items-center gap-2">
+                        <MessageCircle className="w-6 h-6 text-indigo-600 dark:text-indigo-400" /> Centro de Comunicación
                     </h1>
-                    <p className="text-zinc-500 text-sm mt-1">Converse con nuestro equipo de soporte, comparta documentos o coordine reuniones.</p>
+                    <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-1">Converse con nuestro equipo de soporte, comparta documentos o coordine reuniones.</p>
                 </div>
                 <Link href={`/client-portal/${clientId}`}>
-                    <Button variant="outline" className="text-zinc-600 hover:text-indigo-600">
+                    <Button variant="outline" className="text-zinc-600 dark:text-zinc-400 hover:text-indigo-600 dark:hover:text-indigo-400 border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
                         <ChevronLeft className="w-4 h-4 mr-1" /> Volver al Dashboard
                     </Button>
                 </Link>
             </motion.div>
 
-            <Card className="flex-1 flex flex-col overflow-hidden border-zinc-200 shadow-sm">
-                <CardContent className="flex-1 overflow-y-auto p-6 space-y-6 bg-zinc-50/50">
+            <Card className="flex-1 flex flex-col overflow-hidden border-zinc-200 dark:border-zinc-800 shadow-sm bg-white dark:bg-zinc-900">
+                <CardContent className="flex-1 overflow-y-auto p-6 space-y-6 bg-zinc-50/50 dark:bg-zinc-950/50">
                     {messages.length === 0 ? (
-                        <div className="h-full flex flex-col items-center justify-center text-zinc-400 space-y-3">
-                            <MessageCircle className="w-12 h-12 text-zinc-200" />
+                        <div className="h-full flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-600 space-y-3">
+                            <MessageCircle className="w-12 h-12 text-zinc-200 dark:text-zinc-800" />
                             <p>No hay mensajes todavía. ¡Comienza a conversar!</p>
                         </div>
                     ) : (
@@ -150,10 +150,10 @@ export default function ClientCommunicationPage() {
                                 transition={{ delay: 0.05 * Math.min(idx, 10) }}
                                 className={`flex ${msg.isFromClient ? 'justify-end' : 'justify-start'}`}
                             >
-                                <div className={`max-w-[80%] rounded-2xl p-4 ${msg.isFromClient ? 'bg-indigo-600 text-white rounded-br-none' : 'bg-white border text-zinc-800 rounded-bl-none shadow-sm'}`}>
+                                <div className={`max-w-[80%] rounded-2xl p-4 ${msg.isFromClient ? 'bg-indigo-600 dark:bg-indigo-600 text-white rounded-br-none' : 'bg-white dark:bg-zinc-800 border dark:border-zinc-700 text-zinc-800 dark:text-zinc-200 rounded-bl-none shadow-sm'}`}>
 
                                     {!msg.isFromClient && (
-                                        <div className="text-xs font-semibold mb-1 text-zinc-500">
+                                        <div className="text-xs font-semibold mb-1 text-zinc-500 dark:text-zinc-400">
                                             {msg.senderName}
                                         </div>
                                     )}
@@ -169,9 +169,9 @@ export default function ClientCommunicationPage() {
                                                 href={msg.fileUrl || "#"}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className={`flex items-center gap-2 p-3 rounded-xl border transition-colors ${msg.isFromClient ? 'bg-indigo-700/50 border-indigo-500 hover:bg-indigo-700' : 'bg-zinc-50 border-zinc-200 hover:bg-zinc-100'}`}
+                                                className={`flex items-center gap-2 p-3 rounded-xl border transition-colors ${msg.isFromClient ? 'bg-indigo-700/50 border-indigo-500 hover:bg-indigo-700' : 'bg-zinc-50 dark:bg-zinc-900/50 border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-900'}`}
                                             >
-                                                <FileIcon className={`w-5 h-5 ${msg.isFromClient ? 'text-indigo-200' : 'text-zinc-500'}`} />
+                                                <FileIcon className={`w-5 h-5 ${msg.isFromClient ? 'text-indigo-200' : 'text-zinc-500 dark:text-zinc-400'}`} />
                                                 <span className="text-sm font-medium truncate max-w-[200px]">{msg.fileName}</span>
                                             </a>
                                         </div>
@@ -180,24 +180,24 @@ export default function ClientCommunicationPage() {
                                     {msg.type === "meeting" && (
                                         <div className="space-y-3">
                                             <p className="whitespace-pre-wrap text-sm">{msg.content}</p>
-                                            <div className={`p-4 rounded-xl border ${msg.isFromClient ? 'bg-indigo-700/50 border-indigo-500' : 'bg-amber-50 border-amber-200'}`}>
+                                            <div className={`p-4 rounded-xl border ${msg.isFromClient ? 'bg-indigo-700/50 border-indigo-500' : 'bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900/50'}`}>
                                                 <div className="flex items-start justify-between gap-3">
                                                     <div className="flex items-start gap-3">
-                                                        <CalendarPlus className={`w-5 h-5 mt-0.5 ${msg.isFromClient ? 'text-indigo-200' : 'text-amber-600'}`} />
+                                                        <CalendarPlus className={`w-5 h-5 mt-0.5 ${msg.isFromClient ? 'text-indigo-200' : 'text-amber-600 dark:text-amber-400'}`} />
                                                         <div>
-                                                            <h4 className={`font-semibold text-sm ${msg.isFromClient ? 'text-white' : 'text-amber-900'}`}>Propuesta de Reunión</h4>
-                                                            <p className={`font-medium ${msg.isFromClient ? 'text-indigo-100' : 'text-amber-800'}`}>{msg.meetingTitle}</p>
+                                                            <h4 className={`font-semibold text-sm ${msg.isFromClient ? 'text-white' : 'text-amber-900 dark:text-amber-100'}`}>Propuesta de Reunión</h4>
+                                                            <p className={`font-medium ${msg.isFromClient ? 'text-indigo-100' : 'text-amber-800 dark:text-amber-200'}`}>{msg.meetingTitle}</p>
                                                             {msg.meetingDate && (
-                                                                <p className={`text-xs mt-1 ${msg.isFromClient ? 'text-indigo-200' : 'text-amber-700'}`}>
+                                                                <p className={`text-xs mt-1 ${msg.isFromClient ? 'text-indigo-200' : 'text-amber-700 dark:text-amber-400'}`}>
                                                                     {new Date(msg.meetingDate).toLocaleString()}
                                                                 </p>
                                                             )}
                                                         </div>
                                                     </div>
                                                     {msg.meetingStatus && (
-                                                        <div className={`text-[10px] uppercase font-bold px-2 py-1 rounded-full ${msg.meetingStatus === "confirmed" ? "bg-emerald-100 text-emerald-700" :
-                                                            msg.meetingStatus === "pending" ? "bg-amber-100 text-amber-700" :
-                                                                "bg-zinc-100 text-zinc-700"
+                                                        <div className={`text-[10px] uppercase font-bold px-2 py-1 rounded-full ${msg.meetingStatus === "confirmed" ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400" :
+                                                            msg.meetingStatus === "pending" ? "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400" :
+                                                                "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-400"
                                                             }`}>
                                                             {msg.meetingStatus === "confirmed" ? "Confirmada" :
                                                                 msg.meetingStatus === "completed" ? "Finalizada" :
@@ -207,7 +207,7 @@ export default function ClientCommunicationPage() {
                                                 </div>
 
                                                 {msg.meetingStatus === "confirmed" && msg.meetingLink && (
-                                                    <div className="mt-4 pt-4 border-t border-dashed border-amber-200">
+                                                    <div className="mt-4 pt-4 border-t border-dashed border-amber-200 dark:border-amber-900/50">
                                                         <Link href={`/client-portal/${clientId}/communication/meeting/${msg._id}`} className="block w-full">
                                                             <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm transition-all flex items-center justify-center gap-2">
                                                                 <Video className="w-4 h-4" /> Entrar a Sala Nativa
@@ -219,7 +219,7 @@ export default function ClientCommunicationPage() {
                                         </div>
                                     )}
 
-                                    <div className={`text-[10px] mt-2 flex justify-end ${msg.isFromClient ? 'text-indigo-200' : 'text-zinc-400'}`}>
+                                    <div className={`text-[10px] mt-2 flex justify-end ${msg.isFromClient ? 'text-indigo-200' : 'text-zinc-400 dark:text-zinc-500'}`}>
                                         {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </div>
                                 </div>
@@ -228,29 +228,29 @@ export default function ClientCommunicationPage() {
                     )}
                 </CardContent>
 
-                <CardFooter className="p-4 bg-white border-t space-y-4 flex flex-col">
+                <CardFooter className="p-4 bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 space-y-4 flex flex-col">
                     {showMeetingProposal && (
-                        <div className="w-full bg-zinc-50 p-4 rounded-xl border border-zinc-200 space-y-3 relative">
-                            <h4 className="font-semibold text-sm text-zinc-900 flex items-center gap-2">
-                                <CalendarPlus className="w-4 h-4 text-indigo-600" /> Agendar Reunión
+                        <div className="w-full bg-zinc-50 dark:bg-zinc-950 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 space-y-3 relative">
+                            <h4 className="font-semibold text-sm text-zinc-900 dark:text-white flex items-center gap-2">
+                                <CalendarPlus className="w-4 h-4 text-indigo-600 dark:text-indigo-400" /> Agendar Reunión
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-1">
-                                    <label className="text-xs font-medium text-zinc-600">Tema</label>
+                                    <label className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Tema</label>
                                     <Input
                                         placeholder="Ej. Revisión de avances"
                                         value={meetingTitle}
                                         onChange={(e) => setMeetingTitle(e.target.value)}
-                                        className="h-8 text-sm"
+                                        className="h-8 text-sm bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white"
                                     />
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-xs font-medium text-zinc-600">Fecha y Hora Propuesta</label>
+                                    <label className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Fecha y Hora Propuesta</label>
                                     <Input
                                         type="datetime-local"
                                         value={meetingDate}
                                         onChange={(e) => setMeetingDate(e.target.value)}
-                                        className="h-8 text-sm"
+                                        className="h-8 text-sm bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white"
                                     />
                                 </div>
                             </div>
@@ -301,7 +301,7 @@ export default function ClientCommunicationPage() {
                             placeholder="Escribe tu mensaje aquí..."
                             value={newMessage}
                             onChange={(e) => setNewMessage(e.target.value)}
-                            className="min-h-[80px] resize-none flex-1 focus-visible:ring-indigo-500"
+                            className="min-h-[80px] resize-none flex-1 focus-visible:ring-indigo-500 bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white"
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter' && !e.shiftKey) {
                                     e.preventDefault();

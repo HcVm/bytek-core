@@ -120,10 +120,10 @@ export default function CatalogPage() {
 
     const getTypeColor = (t: string) => {
         switch (t) {
-            case 'service': return 'bg-purple-100 text-purple-700';
-            case 'subscription': return 'bg-emerald-100 text-emerald-700';
-            case 'hardware': return 'bg-orange-100 text-orange-700';
-            default: return 'bg-zinc-100 text-zinc-700';
+            case 'service': return 'bg-purple-100 dark:bg-purple-900/20 text-purple-700 dark:text-purple-400';
+            case 'subscription': return 'bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400';
+            case 'hardware': return 'bg-orange-100 dark:bg-orange-900/20 text-orange-700 dark:text-orange-400';
+            default: return 'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-400';
         }
     };
 
@@ -131,8 +131,8 @@ export default function CatalogPage() {
         <div className="p-8 h-full flex flex-col overflow-y-auto w-full">
             <div className="flex justify-between items-center mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-zinc-900">Catálogo de Servicios</h1>
-                    <p className="text-zinc-500 mt-2">Gestiona el inventario de software, horas operativas y equipamiento (hardware) ofertados por BYTEK.</p>
+                    <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">Catálogo de Servicios</h1>
+                    <p className="text-zinc-500 dark:text-zinc-400 mt-2">Gestiona el inventario de software, horas operativas y equipamiento (hardware) ofertados por BYTEK.</p>
                 </div>
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger asChild>
@@ -195,7 +195,7 @@ export default function CatalogPage() {
 
                             <div className="flex justify-end gap-3 pt-4">
                                 <Button type="button" variant="ghost" onClick={() => setIsDialogOpen(false)}>Cancelar</Button>
-                                <Button type="submit" className="bg-zinc-900 text-white hover:bg-zinc-800">Guardar Cambios</Button>
+                                <Button type="submit" className="bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200">Guardar Cambios</Button>
                             </div>
                         </form>
                     </DialogContent>
@@ -205,42 +205,42 @@ export default function CatalogPage() {
             {!packages ? (
                 <div className="flex flex-col items-center justify-center p-20 text-zinc-400">
                     <PackageSearch className="w-10 h-10 mb-4 animate-pulse" />
-                    <p>Sincronizando catálogo con el servidor principal...</p>
+                    <p className="dark:text-zinc-500">Sincronizando catálogo con el servidor principal...</p>
                 </div>
             ) : packages.length === 0 ? (
-                <div className="border-2 border-dashed border-zinc-200 rounded-xl p-12 text-center text-zinc-500">
-                    <Settings2 className="w-12 h-12 mx-auto mb-4 text-zinc-300" />
-                    <h3 className="text-lg font-medium text-zinc-900">Catálogo Vacío</h3>
-                    <p className="mt-1">Registra los primeros servicios y hardware de BYTEK para nutrir las Oportunidades y Cotizaciones.</p>
+                <div className="border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-xl p-12 text-center text-zinc-500">
+                    <Settings2 className="w-12 h-12 mx-auto mb-4 text-zinc-300 dark:text-zinc-700" />
+                    <h3 className="text-lg font-medium text-zinc-900 dark:text-white">Catálogo Vacío</h3>
+                    <p className="mt-1 dark:text-zinc-400">Registra los primeros servicios y hardware de BYTEK para nutrir las Oportunidades y Cotizaciones.</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {packages.map(pkg => (
-                        <div key={pkg._id} className={`bg-white border rounded-xl p-5 shadow-sm transition-shadow hover:shadow-md flex flex-col ${!pkg.active ? 'opacity-60 grayscale' : 'border-zinc-200'}`}>
+                        <div key={pkg._id} className={`bg-white dark:bg-zinc-900 border rounded-xl p-5 shadow-sm transition-shadow hover:shadow-md flex flex-col ${!pkg.active ? 'opacity-60 grayscale' : 'border-zinc-200 dark:border-zinc-800'}`}>
                             <div className="flex justify-between items-start mb-3">
                                 <Badge className={`${getTypeColor(pkg.type)} capitalize font-semibold shadow-none text-[10px]`}>
                                     {pkg.type === 'service' ? 'Servicio' : pkg.type === 'subscription' ? 'Suscripción' : 'Hardware'}
                                 </Badge>
-                                {!pkg.active && <span className="text-xs text-red-500 font-bold bg-red-50 px-2 rounded-full">INACTIVO</span>}
+                                {!pkg.active && <span className="text-xs text-red-500 dark:text-red-400 font-bold bg-red-50 dark:bg-red-950/20 px-2 rounded-full">INACTIVO</span>}
                             </div>
 
-                            <h3 className="font-bold text-zinc-900 text-lg leading-tight mb-1">{pkg.name}</h3>
-                            <p className="text-zinc-600 text-xs font-medium uppercase tracking-wider mb-3">{getUnitLabel(pkg.unit)}</p>
+                            <h3 className="font-bold text-zinc-900 dark:text-white text-lg leading-tight mb-1">{pkg.name}</h3>
+                            <p className="text-zinc-600 dark:text-zinc-400 text-xs font-medium uppercase tracking-wider mb-3">{getUnitLabel(pkg.unit)}</p>
 
-                            <p className="text-zinc-500 text-sm line-clamp-3 mb-4 flex-1">
+                            <p className="text-zinc-500 dark:text-zinc-400 text-sm line-clamp-3 mb-4 flex-1">
                                 {pkg.description || "Sin descripción proporcionada."}
                             </p>
 
-                            <div className="border-t border-zinc-100 pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div className="border-t border-zinc-100 dark:border-zinc-800 pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                 <div>
-                                    <p className="text-xs text-zinc-400 font-medium">Desde</p>
-                                    <p className="font-bold text-lg text-emerald-600">{formatCurrency(pkg.basePrice)}</p>
+                                    <p className="text-xs text-zinc-400 dark:text-zinc-500 font-medium">Desde</p>
+                                    <p className="font-bold text-lg text-emerald-600 dark:text-emerald-500">{formatCurrency(pkg.basePrice)}</p>
                                 </div>
                                 <div className="flex gap-1 justify-end">
-                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-400 hover:text-indigo-600 hover:bg-indigo-50" onClick={() => openEditDialog(pkg)}>
+                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-400 dark:text-zinc-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20" onClick={() => openEditDialog(pkg)}>
                                         <Pencil className="h-4 w-4" />
                                     </Button>
-                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-400 hover:text-red-600 hover:bg-red-50" onClick={() => handleDelete(pkg._id)}>
+                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-400 dark:text-zinc-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20" onClick={() => handleDelete(pkg._id)}>
                                         <Trash2 className="h-4 w-4" />
                                     </Button>
                                 </div>

@@ -75,7 +75,7 @@ export default function PlanCuentasPage() {
         return (
             <div key={account._id}>
                 <div
-                    className={`flex items-center gap-3 px-4 py-2.5 border-b border-slate-50 hover:bg-slate-50/80 transition-colors cursor-pointer ${depth === 0 ? 'bg-slate-50/50 font-semibold' : ''}`}
+                    className={`flex items-center gap-3 px-4 py-2.5 border-b border-slate-50 dark:border-zinc-800 hover:bg-slate-50/80 dark:hover:bg-zinc-800/50 transition-colors cursor-pointer ${depth === 0 ? 'bg-slate-50/50 dark:bg-zinc-800/30 font-semibold' : ''}`}
                     style={{ paddingLeft: `${16 + depth * 24}px` }}
                     onClick={() => hasChildren && toggleExpand(account.code)}
                 >
@@ -87,11 +87,11 @@ export default function PlanCuentasPage() {
                         )}
                     </div>
 
-                    <span className={`font-mono text-sm ${depth === 0 ? 'text-slate-900 font-bold text-base' : 'text-slate-600'} min-w-[60px]`}>
+                    <span className={`font-mono text-sm ${depth === 0 ? 'text-slate-900 dark:text-white font-bold text-base' : 'text-slate-600 dark:text-zinc-400'} min-w-[60px]`}>
                         {account.code}
                     </span>
 
-                    <span className={`flex-1 text-sm ${depth === 0 ? 'text-slate-900' : 'text-slate-700'}`}>
+                    <span className={`flex-1 text-sm ${depth === 0 ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-zinc-300'}`}>
                         {account.name}
                     </span>
 
@@ -124,16 +124,16 @@ export default function PlanCuentasPage() {
     }, {});
 
     return (
-        <div className="flex flex-col h-full bg-slate-50 overflow-hidden">
+        <div className="flex flex-col h-full bg-slate-50 dark:bg-zinc-950 overflow-hidden">
             {/* Header */}
-            <div className="bg-white border-b border-slate-200 px-8 py-6 shrink-0 z-10 shadow-sm">
+            <div className="bg-white dark:bg-zinc-900 border-b border-slate-200 dark:border-zinc-800 px-8 py-6 shrink-0 z-10 shadow-sm">
                 <div className="flex justify-between items-start max-w-7xl mx-auto w-full">
                     <div>
                         <div className="flex items-center gap-3 mb-1">
                             <div className="w-10 h-10 bg-amber-600 rounded-xl flex items-center justify-center text-white shadow-md">
                                 <BookOpen className="w-5 h-5" />
                             </div>
-                            <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">Plan de Cuentas</h1>
+                            <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Plan de Cuentas</h1>
                         </div>
                         <p className="text-slate-500 font-medium pl-14">Plan Contable General Empresarial (PCGE) — Base normativa SUNAT.</p>
                     </div>
@@ -159,10 +159,10 @@ export default function PlanCuentasPage() {
                     {accounts.length === 0 ? (
                         <div className="flex-1 flex items-center justify-center">
                             <div className="text-center max-w-md">
-                                <div className="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <div className="w-20 h-20 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
                                     <AlertCircle className="w-10 h-10 text-amber-500" />
                                 </div>
-                                <h2 className="text-2xl font-bold text-slate-900 mb-3">Plan de Cuentas Vacío</h2>
+                                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">Plan de Cuentas Vacío</h2>
                                 <p className="text-slate-500 mb-6">No hay cuentas contables registradas. Presiona el botón para cargar el PCGE (Plan Contable General Empresarial) con las cuentas base para una empresa de tecnología.</p>
                                 <button
                                     onClick={handleSeed}
@@ -179,9 +179,9 @@ export default function PlanCuentasPage() {
                             {/* Summary Cards */}
                             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-6">
                                 {Object.entries(TYPE_LABELS).map(([key, label]) => (
-                                    <div key={key} className="bg-white p-3 rounded-xl border border-slate-200 shadow-sm text-center">
-                                        <p className="text-xs font-bold text-slate-500 uppercase mb-1">{label}</p>
-                                        <p className="text-xl font-black text-slate-900">{countByType[key] || 0}</p>
+                                    <div key={key} className="bg-white dark:bg-zinc-900 p-3 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-sm text-center">
+                                        <p className="text-xs font-bold text-slate-500 dark:text-zinc-400 uppercase mb-1">{label}</p>
+                                        <p className="text-xl font-black text-slate-900 dark:text-white">{countByType[key] || 0}</p>
                                     </div>
                                 ))}
                             </div>
@@ -194,7 +194,7 @@ export default function PlanCuentasPage() {
                                         placeholder="Buscar por código o nombre..."
                                         value={searchTerm}
                                         onChange={e => setSearchTerm(e.target.value)}
-                                        className="pl-9 h-10 bg-white border-slate-200"
+                                        className="pl-9 h-10 bg-white dark:bg-zinc-900 border-slate-200 dark:border-zinc-800"
                                     />
                                 </div>
                                 <div className="flex items-center gap-2">
@@ -211,8 +211,8 @@ export default function PlanCuentasPage() {
                             </div>
 
                             {/* Table */}
-                            <div className="flex-1 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-                                <div className="grid grid-cols-12 gap-4 px-4 py-3 border-b border-slate-100 bg-slate-50/50 text-xs font-bold uppercase tracking-wider text-slate-500">
+                            <div className="flex-1 bg-white dark:bg-zinc-900 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm overflow-hidden flex flex-col">
+                                <div className="grid grid-cols-12 gap-4 px-4 py-3 border-b border-slate-100 dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-800/30 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400">
                                     <div className="col-span-1">Código</div>
                                     <div className="col-span-6">Nombre de la Cuenta</div>
                                     <div className="col-span-2">Tipo</div>

@@ -56,20 +56,20 @@ export default function GlobalBacklog() {
         <div className="p-8 max-w-6xl mx-auto space-y-8">
             <header className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">Backlog Global</h1>
-                    <p className="text-slate-500 mt-1">Tareas sin sprint asignado. Revisa y planifica la capacidad de cada iteración.</p>
+                    <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Backlog Global</h1>
+                    <p className="text-slate-500 dark:text-zinc-400 mt-1">Tareas sin sprint asignado. Revisa y planifica la capacidad de cada iteración.</p>
                 </div>
-                <Badge variant="outline" className="text-sm px-4 py-2 border-slate-300 gap-2">
+                <Badge variant="outline" className="text-sm px-4 py-2 border-slate-300 dark:border-zinc-700 dark:text-zinc-300 gap-2 bg-white dark:bg-zinc-900 shadow-sm">
                     <ListTodo className="w-4 h-4" />
                     {backlogTasks.length} tareas pendientes
                 </Badge>
             </header>
 
             {backlogTasks.length === 0 ? (
-                <div className="border-2 border-dashed border-slate-200 rounded-xl p-16 text-center">
-                    <ListTodo className="w-12 h-12 mx-auto mb-4 text-slate-300" />
-                    <h3 className="text-lg font-bold text-slate-800">Backlog Limpio</h3>
-                    <p className="text-slate-500 mt-1">Todas las tareas están asignadas a sprints. ¡Excelente trabajo!</p>
+                <div className="border-2 border-dashed border-slate-200 dark:border-zinc-800 rounded-xl p-16 text-center bg-white dark:bg-zinc-900/50 shadow-sm">
+                    <ListTodo className="w-12 h-12 mx-auto mb-4 text-slate-300 dark:text-zinc-700" />
+                    <h3 className="text-lg font-bold text-slate-800 dark:text-white">Backlog Limpio</h3>
+                    <p className="text-slate-500 dark:text-zinc-400 mt-1">Todas las tareas están asignadas a sprints. ¡Excelente trabajo!</p>
                 </div>
             ) : (
                 Object.entries(tasksByBoard).map(([boardTitle, tasks]) => {
@@ -77,30 +77,30 @@ export default function GlobalBacklog() {
                     const availableSprints = allSprints?.filter(s => s.boardId === boardId) || [];
 
                     return (
-                        <div key={boardTitle} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                            <div className="bg-slate-50 px-5 py-3 border-b border-slate-200 flex items-center justify-between">
+                        <div key={boardTitle} className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl overflow-hidden shadow-sm">
+                            <div className="bg-slate-50 dark:bg-zinc-900/50 px-5 py-3 border-b border-slate-200 dark:border-zinc-800 flex items-center justify-between">
                                 <div className="flex items-center gap-2">
                                     <div className="w-2 h-2 rounded-full bg-indigo-500"></div>
-                                    <span className="font-bold text-sm text-slate-800">{boardTitle}</span>
+                                    <span className="font-bold text-sm text-slate-800 dark:text-zinc-200">{boardTitle}</span>
                                 </div>
-                                <span className="text-xs text-slate-500">
+                                <span className="text-xs text-slate-500 dark:text-zinc-500 font-medium">
                                     {tasks.reduce((a: number, t: any) => a + (t.storyPoints || 0), 0)} SP total
                                 </span>
                             </div>
-                            <div className="divide-y divide-slate-100">
+                            <div className="divide-y divide-slate-100 dark:divide-zinc-800">
                                 {tasks.map((task: any) => (
-                                    <div key={task._id} className="px-5 py-3.5 flex items-center gap-4 hover:bg-slate-50/50 transition-colors">
+                                    <div key={task._id} className="px-5 py-3.5 flex items-center gap-4 hover:bg-slate-50/50 dark:hover:bg-zinc-800/50 transition-colors group">
                                         <div className="shrink-0">{getTypeIcon(task.type || "task")}</div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="font-medium text-sm text-slate-900 truncate">{task.title}</p>
-                                            <p className="text-xs text-slate-500 mt-0.5">
+                                            <p className="font-medium text-sm text-slate-900 dark:text-zinc-100 truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{task.title}</p>
+                                            <p className="text-xs text-slate-500 dark:text-zinc-500 mt-0.5">
                                                 {task.assigneeName || "Sin asignar"} · {task.storyPoints || 0} SP
                                             </p>
                                         </div>
-                                        <Badge className={`${getPriorityColor(task.priority)} text-[10px] font-bold uppercase border shadow-none`}>
+                                        <Badge className={`${getPriorityColor(task.priority)} text-[10px] font-bold uppercase border dark:border-zinc-800/50 shadow-none`}>
                                             {task.priority}
                                         </Badge>
-                                        <Badge variant="outline" className="text-[10px] uppercase border-slate-200 shadow-none">
+                                        <Badge variant="outline" className="text-[10px] uppercase border-slate-200 dark:border-zinc-800 dark:text-zinc-400 shadow-none">
                                             {task.status.replace("_", " ")}
                                         </Badge>
                                         <div className="ml-4 w-48">
@@ -111,10 +111,10 @@ export default function GlobalBacklog() {
                                                         .catch(() => sileo.error({ title: "Error al asignar" }));
                                                 }}
                                             >
-                                                <SelectTrigger className="h-8 text-xs bg-slate-50">
+                                                <SelectTrigger className="h-8 text-xs bg-slate-50 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-300">
                                                     <SelectValue placeholder="Asignar a Sprint" />
                                                 </SelectTrigger>
-                                                <SelectContent>
+                                                <SelectContent className="dark:bg-zinc-950 dark:border-zinc-800">
                                                     {availableSprints.length === 0 ? (
                                                         <SelectItem value="none" disabled>No hay sprints disponibles</SelectItem>
                                                     ) : (

@@ -15,14 +15,14 @@ export default function CuentasCobrarPage() {
     const totalPendiente = receivables.reduce((s, r) => s + r.pendingAmount, 0);
 
     return (
-        <div className="flex flex-col h-full bg-slate-50 overflow-hidden">
-            <div className="bg-white border-b border-slate-200 px-8 py-6 shrink-0 z-10 shadow-sm">
+        <div className="flex flex-col h-full bg-slate-50 dark:bg-zinc-950 overflow-hidden">
+            <div className="bg-white dark:bg-zinc-900 border-b border-slate-200 dark:border-zinc-800 px-8 py-6 shrink-0 z-10 shadow-sm">
                 <div className="max-w-7xl mx-auto w-full">
                     <div className="flex items-center gap-3 mb-1">
                         <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center text-white shadow-md">
                             <HandCoins className="w-5 h-5" />
                         </div>
-                        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">Cuentas por Cobrar</h1>
+                        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Cuentas por Cobrar</h1>
                     </div>
                     <p className="text-slate-500 font-medium pl-14">Gestión de facturación y cobranza. Reporte de antigüedad de saldos.</p>
                 </div>
@@ -37,24 +37,24 @@ export default function CuentasCobrarPage() {
                             <p className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-1 relative z-10">Total por Cobrar</p>
                             <h3 className="text-2xl font-black text-white relative z-10">{formatCurrency(totalPendiente)}</h3>
                         </div>
-                        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                            <p className="text-sm font-bold text-slate-500 uppercase mb-1">Pendientes</p>
-                            <h3 className="text-2xl font-black text-slate-900">{pendientes.length}</h3>
+                        <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm">
+                            <p className="text-sm font-bold text-slate-500 dark:text-zinc-400 uppercase mb-1">Pendientes</p>
+                            <h3 className="text-2xl font-black text-slate-900 dark:text-white">{pendientes.length}</h3>
                         </div>
-                        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                            <p className="text-sm font-bold text-slate-500 uppercase mb-1">Pagos Parciales</p>
-                            <h3 className="text-2xl font-black text-amber-700">{parciales.length}</h3>
+                        <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm">
+                            <p className="text-sm font-bold text-slate-500 dark:text-zinc-400 uppercase mb-1">Pagos Parciales</p>
+                            <h3 className="text-2xl font-black text-amber-700 dark:text-amber-500">{parciales.length}</h3>
                         </div>
-                        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                            <p className="text-sm font-bold text-slate-500 uppercase mb-1">Total Documentos</p>
-                            <h3 className="text-2xl font-black text-slate-900">{receivables.length}</h3>
+                        <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm">
+                            <p className="text-sm font-bold text-slate-500 dark:text-zinc-400 uppercase mb-1">Total Documentos</p>
+                            <h3 className="text-2xl font-black text-slate-900 dark:text-white">{receivables.length}</h3>
                         </div>
                     </div>
 
                     {/* Aging Report */}
                     {aging && (
                         <div>
-                            <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                            <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                                 <AlertTriangle className="w-5 h-5 text-amber-500" /> Antigüedad de Saldos
                             </h2>
                             <div className="grid grid-cols-5 gap-3">
@@ -76,9 +76,9 @@ export default function CuentasCobrarPage() {
                     )}
 
                     {/* List */}
-                    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                        <div className="p-4 bg-slate-50 border-b border-slate-100">
-                            <h3 className="font-bold text-slate-800">Documentos por Cobrar</h3>
+                    <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+                        <div className="p-4 bg-slate-50 dark:bg-zinc-800/50 border-b border-slate-100 dark:border-zinc-800">
+                            <h3 className="font-bold text-slate-800 dark:text-zinc-200">Documentos por Cobrar</h3>
                         </div>
 
                         {receivables.length === 0 ? (
@@ -89,15 +89,15 @@ export default function CuentasCobrarPage() {
                         ) : (
                             <div className="divide-y divide-slate-50">
                                 {receivables.map((r: any) => (
-                                    <div key={r._id} className="flex items-center gap-4 px-5 py-3 hover:bg-slate-50/80 transition-colors">
+                                    <div key={r._id} className="flex items-center gap-4 px-5 py-3 hover:bg-slate-50/80 dark:hover:bg-zinc-800/50 transition-colors">
                                         <div className="flex-1">
-                                            <p className="text-sm font-medium text-slate-700">{r.clientName}</p>
-                                            <p className="text-[10px] text-slate-400">{r.documentType.toUpperCase()} {r.documentNumber} · Vence: {r.dueDate}</p>
+                                            <p className="text-sm font-medium text-slate-700 dark:text-zinc-300">{r.clientName}</p>
+                                            <p className="text-[10px] text-slate-400 dark:text-zinc-500">{r.documentType.toUpperCase()} {r.documentNumber} · Vence: {r.dueDate}</p>
                                         </div>
                                         <Badge variant="outline" className={`text-[10px] ${r.status === 'pendiente' ? 'text-amber-600 border-amber-200' : r.status === 'parcial' ? 'text-blue-600 border-blue-200' : 'text-emerald-600 border-emerald-200'}`}>
                                             {r.status}
                                         </Badge>
-                                        <span className="text-sm font-black text-slate-900">{formatCurrency(r.pendingAmount)}</span>
+                                        <span className="text-sm font-black text-slate-900 dark:text-white">{formatCurrency(r.pendingAmount)}</span>
                                     </div>
                                 ))}
                             </div>

@@ -81,12 +81,12 @@ export default function SprintManager() {
         <div className="p-8 max-w-6xl mx-auto space-y-8">
             <header className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">Sprint Manager</h1>
-                    <p className="text-slate-500 mt-1">Planifica, activa y cierra iteraciones para tu equipo.</p>
+                    <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Sprint Manager</h1>
+                    <p className="text-slate-500 dark:text-zinc-400 mt-1">Planifica, activa y cierra iteraciones para tu equipo.</p>
                 </div>
                 <div className="flex items-center gap-3">
                     <select
-                        className="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white text-slate-800"
+                        className="border border-zinc-200 dark:border-zinc-800 rounded-lg px-3 py-2 text-sm bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200"
                         value={activeBoardId || ""}
                         onChange={e => setSelectedBoardId(e.target.value as Id<"boards">)}
                     >
@@ -98,21 +98,21 @@ export default function SprintManager() {
                         <DialogTrigger asChild>
                             <Button className="bg-indigo-600 hover:bg-indigo-700 text-white"><Plus className="w-4 h-4 mr-2" /> Nuevo Sprint</Button>
                         </DialogTrigger>
-                        <DialogContent className="sm:max-w-[450px]">
+                        <DialogContent className="sm:max-w-[450px] dark:bg-zinc-950 dark:border-zinc-800">
                             <DialogHeader>
-                                <DialogTitle>Crear Sprint</DialogTitle>
-                                <DialogDescription>Define las fechas y objetivos de la nueva iteración.</DialogDescription>
+                                <DialogTitle className="dark:text-white">Crear Sprint</DialogTitle>
+                                <DialogDescription className="dark:text-zinc-400">Define las fechas y objetivos de la nueva iteración.</DialogDescription>
                             </DialogHeader>
                             <form onSubmit={handleCreateSprint} className="space-y-4 pt-2">
-                                <div className="space-y-2"><Label>Nombre del Sprint</Label><Input value={sprintName} onChange={e => setSprintName(e.target.value)} required placeholder="Sprint 4 - Integraciones" /></div>
-                                <div className="space-y-2"><Label>Meta / Goal (opcional)</Label><Textarea value={sprintGoal} onChange={e => setSprintGoal(e.target.value)} placeholder="Completar el módulo de pagos..." className="resize-none" /></div>
+                                <div className="space-y-2"><Label className="dark:text-zinc-300">Nombre del Sprint</Label><Input value={sprintName} onChange={e => setSprintName(e.target.value)} required placeholder="Sprint 4 - Integraciones" className="dark:bg-zinc-900 dark:border-zinc-800 dark:text-white" /></div>
+                                <div className="space-y-2"><Label className="dark:text-zinc-300">Meta / Goal (opcional)</Label><Textarea value={sprintGoal} onChange={e => setSprintGoal(e.target.value)} placeholder="Completar el módulo de pagos..." className="resize-none dark:bg-zinc-900 dark:border-zinc-800 dark:text-white" /></div>
                                 <div className="grid grid-cols-2 gap-4">
-                                    <div className="space-y-2"><Label>Fecha Inicio</Label><Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} required /></div>
-                                    <div className="space-y-2"><Label>Fecha Fin</Label><Input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} required /></div>
+                                    <div className="space-y-2"><Label className="dark:text-zinc-300">Fecha Inicio</Label><Input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} required className="dark:bg-zinc-900 dark:border-zinc-800 dark:text-white" /></div>
+                                    <div className="space-y-2"><Label className="dark:text-zinc-300">Fecha Fin</Label><Input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} required className="dark:bg-zinc-900 dark:border-zinc-800 dark:text-white" /></div>
                                 </div>
                                 <div className="flex justify-end gap-3 pt-2">
-                                    <Button type="button" variant="ghost" onClick={() => setIsDialogOpen(false)}>Cancelar</Button>
-                                    <Button type="submit" className="bg-zinc-900 text-white hover:bg-zinc-800">Crear Sprint</Button>
+                                    <button type="button" onClick={() => setIsDialogOpen(false)} className="px-4 py-2 text-sm font-medium text-slate-600 dark:text-zinc-400 hover:bg-slate-50 dark:hover:bg-zinc-900 rounded-lg">Cancelar</button>
+                                    <Button type="submit" className="bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200">Crear Sprint</Button>
                                 </div>
                             </form>
                         </DialogContent>
@@ -121,10 +121,10 @@ export default function SprintManager() {
             </header>
 
             {!sprints || sprints.length === 0 ? (
-                <div className="border-2 border-dashed border-slate-200 rounded-xl p-16 text-center">
-                    <GitMerge className="w-12 h-12 mx-auto mb-4 text-slate-300" />
-                    <h3 className="text-lg font-bold text-slate-800">Sin Sprints</h3>
-                    <p className="text-slate-500 mt-1">Crea el primer sprint para comenzar a asignar tareas a iteraciones temporales.</p>
+                <div className="border-2 border-dashed border-slate-200 dark:border-zinc-800 rounded-xl p-16 text-center bg-white dark:bg-zinc-900/50 shadow-sm">
+                    <GitMerge className="w-12 h-12 mx-auto mb-4 text-slate-300 dark:text-zinc-700" />
+                    <h3 className="text-lg font-bold text-slate-800 dark:text-white">Sin Sprints</h3>
+                    <p className="text-slate-500 dark:text-zinc-400 mt-1">Crea el primer sprint para comenzar a asignar tareas a iteraciones temporales.</p>
                 </div>
             ) : (
                 <div className="space-y-6">
@@ -136,15 +136,15 @@ export default function SprintManager() {
                         const progress = totalSP > 0 ? (doneSP / totalSP) * 100 : 0;
 
                         return (
-                            <div key={sprint._id} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                                <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+                            <div key={sprint._id} className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden shadow-sm">
+                                <div className="px-6 py-4 border-b border-slate-100 dark:border-zinc-800 flex items-center justify-between bg-slate-50/50 dark:bg-zinc-900/50">
                                     <div className="flex items-center gap-3">
                                         {getStatusIcon(sprint.status)}
                                         <div>
-                                            <h3 className="font-bold text-slate-900">{sprint.name}</h3>
-                                            <p className="text-xs text-slate-500 mt-0.5">
+                                            <h3 className="font-bold text-slate-900 dark:text-zinc-100">{sprint.name}</h3>
+                                            <p className="text-xs text-slate-500 dark:text-zinc-500 mt-0.5">
                                                 {new Date(sprint.startDate).toLocaleDateString('es-PE')} — {new Date(sprint.endDate).toLocaleDateString('es-PE')}
-                                                {sprint.goal && <span className="text-slate-400 ml-2">· {sprint.goal}</span>}
+                                                {sprint.goal && <span className="text-slate-400 dark:text-zinc-600 ml-2">· {sprint.goal}</span>}
                                             </p>
                                         </div>
                                     </div>
@@ -153,12 +153,12 @@ export default function SprintManager() {
                                             {sprint.status === 'planned' ? 'Planificado' : sprint.status === 'active' ? 'Activo' : 'Cerrado'}
                                         </Badge>
                                         {sprint.status === "planned" && (
-                                            <Button size="sm" variant="outline" className="text-xs border-emerald-200 text-emerald-600 hover:bg-emerald-50" onClick={() => handleStatusChange(sprint._id, "active")}>
+                                            <Button size="sm" variant="outline" className="text-xs border-emerald-200 dark:border-emerald-900/50 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20" onClick={() => handleStatusChange(sprint._id, "active")}>
                                                 <Play className="w-3 h-3 mr-1" /> Activar
                                             </Button>
                                         )}
                                         {sprint.status === "active" && (
-                                            <Button size="sm" variant="outline" className="text-xs border-blue-200 text-blue-600 hover:bg-blue-50" onClick={() => handleStatusChange(sprint._id, "closed")}>
+                                            <Button size="sm" variant="outline" className="text-xs border-blue-200 dark:border-blue-900/50 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20" onClick={() => handleStatusChange(sprint._id, "closed")}>
                                                 <Square className="w-3 h-3 mr-1" /> Cerrar
                                             </Button>
                                         )}
@@ -167,20 +167,20 @@ export default function SprintManager() {
 
                                 <div className="px-6 py-4">
                                     <div className="flex items-center gap-4 mb-4">
-                                        <div className="flex-1 bg-slate-100 rounded-full h-2">
-                                            <div className="bg-indigo-500 rounded-full h-2 transition-all" style={{ width: `${progress}%` }}></div>
+                                        <div className="flex-1 bg-slate-100 dark:bg-zinc-800 rounded-full h-2 overflow-hidden shadow-inner">
+                                            <div className="bg-indigo-500 dark:bg-indigo-600 rounded-full h-2 transition-all shadow-[0_0_10px_rgba(79,70,229,0.3)]" style={{ width: `${progress}%` }}></div>
                                         </div>
-                                        <span className="text-sm font-bold text-slate-700">{Math.round(progress)}%</span>
-                                        <span className="text-xs text-slate-500">{doneSP}/{totalSP} SP</span>
+                                        <span className="text-sm font-bold text-slate-700 dark:text-zinc-300">{Math.round(progress)}%</span>
+                                        <span className="text-xs text-slate-500 dark:text-zinc-500 font-medium">{doneSP}/{totalSP} SP</span>
                                     </div>
                                     <div className="grid grid-cols-4 gap-3">
                                         {["todo", "in_progress", "review", "done"].map(status => {
                                             const count = sprintTasks.filter(t => t.status === status).length;
                                             const labels: Record<string, string> = { todo: "To Do", in_progress: "In Progress", review: "Review", done: "Done" };
                                             return (
-                                                <div key={status} className="bg-slate-50 rounded-lg p-3 text-center">
-                                                    <p className="text-2xl font-black text-slate-900">{count}</p>
-                                                    <p className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">{labels[status]}</p>
+                                                <div key={status} className="bg-slate-50 dark:bg-zinc-800/50 rounded-lg p-3 text-center border border-transparent dark:border-zinc-800/50">
+                                                    <p className="text-2xl font-black text-slate-900 dark:text-white">{count}</p>
+                                                    <p className="text-[10px] uppercase font-bold text-slate-500 dark:text-zinc-500 tracking-wider font-mono">{labels[status]}</p>
                                                 </div>
                                             );
                                         })}

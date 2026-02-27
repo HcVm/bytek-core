@@ -114,16 +114,16 @@ export function TicketDetailDialog({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-4xl p-0 h-[85vh] flex flex-col gap-0 overflow-hidden bg-zinc-50">
+            <DialogContent className="max-w-4xl p-0 h-[85vh] flex flex-col gap-0 overflow-hidden bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800">
 
                 {/* Cabecera del Ticket */}
-                <div className="bg-white px-6 py-4 border-b border-zinc-200 flex flex-col gap-3 shrink-0">
+                <div className="bg-white dark:bg-zinc-900 px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 flex flex-col gap-3 shrink-0">
                     <div className="flex justify-between items-start">
                         <div>
-                            <span className="text-xs font-semibold text-zinc-500 mb-1 block uppercase tracking-wider">
+                            <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mb-1 block uppercase tracking-wider">
                                 TICKET #{requestId?.slice(-6)} • DIRIGIDO A: {targetDept?.name}
                             </span>
-                            <DialogTitle className="text-2xl font-bold text-zinc-900 leading-tight">
+                            <DialogTitle className="text-2xl font-bold text-zinc-900 dark:text-white leading-tight">
                                 {request.title}
                             </DialogTitle>
                         </div>
@@ -141,7 +141,7 @@ export function TicketDetailDialog({
                             <div className="flex items-center gap-2">
                                 <div className="w-40">
                                     <Select value={transferDeptId} onValueChange={setTransferDeptId}>
-                                        <SelectTrigger className="h-8 text-xs">
+                                        <SelectTrigger className="h-8 text-xs dark:bg-zinc-800 dark:border-zinc-700">
                                             <SelectValue placeholder="Derivar a..." />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -170,7 +170,7 @@ export function TicketDetailDialog({
                             </Button>
                         )}
                     </div>
-                    <div className="text-sm text-zinc-600 bg-zinc-50 p-3 rounded-md border border-zinc-100 italic">
+                    <div className="text-sm text-zinc-600 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-800/50 p-3 rounded-md border border-zinc-100 dark:border-zinc-700 italic">
                         "{request.description}"
                     </div>
                 </div>
@@ -180,15 +180,15 @@ export function TicketDetailDialog({
                     <div className="space-y-6 max-w-3xl mx-auto pb-4">
                         {/* Mensaje Base Inicial */}
                         <div className="flex gap-4">
-                            <div className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center shrink-0">
-                                <User className="w-4 h-4 text-zinc-500" />
+                            <div className="w-8 h-8 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center shrink-0">
+                                <User className="w-4 h-4 text-zinc-500 dark:text-zinc-500" />
                             </div>
                             <div className="flex-1">
                                 <div className="flex items-baseline gap-2">
-                                    <span className="font-bold text-sm text-zinc-900">{sender?.name}</span>
-                                    <span className="text-xs text-zinc-500">{format(request.createdAt, "dd MMM HH:mm")}</span>
+                                    <span className="font-bold text-sm text-zinc-900 dark:text-white">{sender?.name}</span>
+                                    <span className="text-xs text-zinc-500 dark:text-zinc-600">{format(request.createdAt, "dd MMM HH:mm")}</span>
                                 </div>
-                                <div className="mt-1 text-sm text-zinc-700 bg-white p-3 rounded-tr-xl rounded-b-xl border border-zinc-200 shadow-sm inline-block">
+                                <div className="mt-1 text-sm text-zinc-700 dark:text-zinc-300 bg-white dark:bg-zinc-900 p-3 rounded-tr-xl rounded-b-xl border border-zinc-200 dark:border-zinc-800 shadow-sm inline-block">
                                     Ticket generado e ingresado al sistema.
                                 </div>
                             </div>
@@ -201,7 +201,7 @@ export function TicketDetailDialog({
                             if (msg.isSystemMessage) {
                                 return (
                                     <div key={msg._id} className="flex justify-center my-4">
-                                        <div className="bg-zinc-100 text-zinc-500 text-xs px-4 py-1.5 rounded-full border border-zinc-200 flex items-center gap-2">
+                                        <div className="bg-zinc-100 dark:bg-zinc-800/50 text-zinc-500 dark:text-zinc-500 text-xs px-4 py-1.5 rounded-full border border-zinc-200 dark:border-zinc-800 flex items-center gap-2">
                                             <Bot className="w-3.5 h-3.5" />
                                             {msg.content} • {format(msg.createdAt, "HH:mm")}
                                         </div>
@@ -211,18 +211,18 @@ export function TicketDetailDialog({
 
                             return (
                                 <div key={msg._id} className={`flex gap-4 ${isMe ? 'flex-row-reverse' : ''}`}>
-                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${isMe ? 'bg-indigo-100 text-indigo-700' : 'bg-zinc-200 text-zinc-500'}`}>
+                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${isMe ? 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-400' : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-500'}`}>
                                         <span className="text-xs font-bold">{author?.name?.charAt(0) || <User className="w-4 h-4" />}</span>
                                     </div>
                                     <div className={`flex-1 flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
                                         <div className="flex items-baseline gap-2">
-                                            <span className="font-bold text-sm text-zinc-900">{isMe ? 'Tú' : author?.name}</span>
-                                            <span className="text-xs text-zinc-500">{format(msg.createdAt, "HH:mm")}</span>
+                                            <span className="font-bold text-sm text-zinc-900 dark:text-white">{isMe ? 'Tú' : author?.name}</span>
+                                            <span className="text-xs text-zinc-500 dark:text-zinc-600">{format(msg.createdAt, "HH:mm")}</span>
                                         </div>
                                         <div className={`mt-1 text-sm p-3 shadow-sm inline-block max-w-[85%]
                                             ${isMe
-                                                ? 'bg-indigo-600 text-white rounded-tl-xl rounded-b-xl'
-                                                : 'bg-white text-zinc-700 rounded-tr-xl rounded-b-xl border border-zinc-200'
+                                                ? 'bg-indigo-600 dark:bg-indigo-600 text-white rounded-tl-xl rounded-b-xl'
+                                                : 'bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 rounded-tr-xl rounded-b-xl border border-zinc-200 dark:border-zinc-800'
                                             }`}
                                         >
                                             {msg.content}
@@ -236,16 +236,16 @@ export function TicketDetailDialog({
                 </ScrollArea>
 
                 {/* Caja de Respuesta */}
-                <div className="bg-white p-4 border-t border-zinc-200 shrink-0">
+                <div className="bg-white dark:bg-zinc-900 p-4 border-t border-zinc-200 dark:border-zinc-800 shrink-0">
                     <form onSubmit={handleSendMessage} className="flex gap-3 max-w-3xl mx-auto">
                         <Input
                             placeholder="Escribe una respuesta o actualización..."
                             value={newMessage}
                             onChange={(e) => setNewMessage(e.target.value)}
-                            className="flex-1 bg-zinc-50"
+                            className="flex-1 bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white"
                             disabled={request.status === 'closed'}
                         />
-                        <Button type="submit" className="bg-zinc-900 hover:bg-zinc-800 text-white shrink-0" disabled={!newMessage.trim() || request.status === 'closed'}>
+                        <Button type="submit" className="bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 shrink-0 border-0" disabled={!newMessage.trim() || request.status === 'closed'}>
                             <Send className="w-4 h-4 sm:mr-2" />
                             <span className="hidden sm:inline">Enviar</span>
                         </Button>

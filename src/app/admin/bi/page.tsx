@@ -35,22 +35,22 @@ export default function AdvancedBIPage() {
     })) || [];
 
     return (
-        <div className="flex-1 overflow-y-auto bg-slate-50">
+        <div className="flex-1 overflow-y-auto bg-zinc-50 dark:bg-zinc-950">
             <div className="p-8 max-w-7xl mx-auto space-y-8">
                 {/* Header */}
                 <div className="flex justify-between items-start">
                     <div>
-                        <h1 className="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
+                        <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
                             <Activity className="w-8 h-8 text-emerald-500" />
                             Business Intelligence (BI) Avanzado
                         </h1>
-                        <p className="text-slate-500 mt-2">Métricas, márgenes, analítica predictiva y reporting gerencial.</p>
+                        <p className="text-slate-500 dark:text-zinc-400 mt-2">Métricas, márgenes, analítica predictiva y reporting gerencial.</p>
                     </div>
                 </div>
 
                 {/* Top KPIs Summary */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div className="bg-white/50 border border-slate-200 rounded-xl p-6">
+                    <div className="bg-white/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 shadow-sm">
                         <div className="flex justify-between items-start mb-4">
                             <div className="p-3 bg-emerald-500/10 rounded-lg">
                                 <DollarSign className="w-5 h-5 text-emerald-400" />
@@ -59,15 +59,15 @@ export default function AdvancedBIPage() {
                                 <ArrowUpRight className="w-3 h-3" /> 12%
                             </span>
                         </div>
-                        <h3 className="text-slate-500 font-medium text-sm">Margen Bruto Global</h3>
-                        <p className="text-2xl font-bold text-slate-900 mt-1">
+                        <h3 className="text-zinc-500 dark:text-zinc-400 font-medium text-sm">Margen Bruto Global</h3>
+                        <p className="text-2xl font-bold text-zinc-900 dark:text-white mt-1">
                             {profitability.length > 0
                                 ? (profitability.reduce((sum: number, p: any) => sum + p.grossMargin, 0) / profitability.reduce((sum: number, p: any) => sum + p.totalRevenue, 0) * 100).toFixed(1) + "%"
                                 : "0%"}
                         </p>
                     </div>
 
-                    <div className="bg-white/50 border border-slate-200 rounded-xl p-6">
+                    <div className="bg-white/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 shadow-sm">
                         <div className="flex justify-between items-start mb-4">
                             <div className="p-3 bg-red-500/10 rounded-lg">
                                 <Users className="w-5 h-5 text-red-400" />
@@ -76,13 +76,13 @@ export default function AdvancedBIPage() {
                                 <ArrowDownRight className="w-3 h-3" /> 2.1%
                             </span>
                         </div>
-                        <h3 className="text-slate-500 font-medium text-sm">Rotación HR (Churn)</h3>
-                        <p className="text-2xl font-bold text-slate-900 mt-1">
+                        <h3 className="text-zinc-500 dark:text-zinc-400 font-medium text-sm">Rotación HR (Churn)</h3>
+                        <p className="text-2xl font-bold text-zinc-900 dark:text-white mt-1">
                             {hrAnalytics ? hrAnalytics.turnoverRate.toFixed(1) : 0}%
                         </p>
                     </div>
 
-                    <div className="bg-white/50 border border-slate-200 rounded-xl p-6">
+                    <div className="bg-white/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 shadow-sm">
                         <div className="flex justify-between items-start mb-4">
                             <div className="p-3 bg-indigo-500/10 rounded-lg">
                                 <Server className="w-5 h-5 text-indigo-400" />
@@ -91,20 +91,20 @@ export default function AdvancedBIPage() {
                                 Proyectado
                             </span>
                         </div>
-                        <h3 className="text-slate-500 font-medium text-sm">Costo Cloud Next Month</h3>
-                        <p className="text-2xl font-bold text-slate-900 mt-1">
+                        <h3 className="text-zinc-500 dark:text-zinc-400 font-medium text-sm">Costo Cloud Next Month</h3>
+                        <p className="text-2xl font-bold text-zinc-900 dark:text-white mt-1">
                             ${cloudAnalysis.predictedNextMonth.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                         </p>
                     </div>
 
-                    <div className="bg-white/50 border border-slate-200 rounded-xl p-6">
+                    <div className="bg-white/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 shadow-sm">
                         <div className="flex justify-between items-start mb-4">
                             <div className="p-3 bg-amber-500/10 rounded-lg">
                                 <Briefcase className="w-5 h-5 text-amber-400" />
                             </div>
                         </div>
-                        <h3 className="text-slate-500 font-medium text-sm">Tiempo Medio Contratación</h3>
-                        <p className="text-2xl font-bold text-slate-900 mt-1">
+                        <h3 className="text-zinc-500 dark:text-zinc-400 font-medium text-sm">Tiempo Medio Contratación</h3>
+                        <p className="text-2xl font-bold text-zinc-900 dark:text-white mt-1">
                             {hrAnalytics ? hrAnalytics.avgTimeToHireDays : 0} Días
                         </p>
                     </div>
@@ -112,9 +112,9 @@ export default function AdvancedBIPage() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     {/* Chart 1: Project Profitability */}
-                    <div className="bg-white border border-slate-200 rounded-xl p-6 col-span-1 lg:col-span-2">
+                    <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 col-span-1 lg:col-span-2 shadow-sm">
                         <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-lg font-bold text-slate-900">Rentabilidad por Proyecto (Ingresos vs Gastos)</h2>
+                            <h2 className="text-lg font-bold text-zinc-900 dark:text-white">Rentabilidad por Proyecto (Ingresos vs Gastos)</h2>
                         </div>
                         <div className="h-80 w-full">
                             {projectData.length > 0 ? (
@@ -123,11 +123,11 @@ export default function AdvancedBIPage() {
                                         data={projectData}
                                         margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                                     >
-                                        <CartesianGrid strokeDasharray="3 3" stroke="#3f3f46" vertical={false} />
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#3f3f46" vertical={false} opacity={0.3} />
                                         <XAxis dataKey="name" stroke="#a1a1aa" fontSize={12} tickLine={false} axisLine={false} />
                                         <YAxis stroke="#a1a1aa" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
                                         <RechartsTooltip
-                                            contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', color: '#fff' }}
+                                            contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', color: '#fff', borderRadius: '8px' }}
                                             itemStyle={{ color: '#e4e4e7' }}
                                         />
                                         <Legend wrapperStyle={{ paddingTop: '20px' }} />
@@ -136,7 +136,7 @@ export default function AdvancedBIPage() {
                                     </BarChart>
                                 </ResponsiveContainer>
                             ) : (
-                                <div className="w-full h-full flex flex-col items-center justify-center text-zinc-500 border border-dashed border-slate-200 rounded-lg bg-white/50">
+                                <div className="w-full h-full flex flex-col items-center justify-center text-zinc-500 border border-dashed border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50/50 dark:bg-zinc-950/50">
                                     <TrendingUp className="w-8 h-8 mb-2 opacity-50" />
                                     <p>No hay suficientes datos financieros para graficar.</p>
                                 </div>
@@ -145,9 +145,9 @@ export default function AdvancedBIPage() {
                     </div>
 
                     {/* Chart 2: Cloud Cost Trend & Prediction */}
-                    <div className="bg-white border border-slate-200 rounded-xl p-6">
+                    <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 shadow-sm">
                         <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-lg font-bold text-slate-900">Análisis y Predicción Costos Cloud</h2>
+                            <h2 className="text-lg font-bold text-zinc-900 dark:text-white">Análisis y Predicción Costos Cloud</h2>
                         </div>
                         <div className="h-64 w-full">
                             {cloudData.filter(d => d.CostoReal !== null || d.Prediccion !== null).length > 1 ? (
@@ -156,11 +156,11 @@ export default function AdvancedBIPage() {
                                         data={cloudData}
                                         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                                     >
-                                        <CartesianGrid strokeDasharray="3 3" stroke="#3f3f46" vertical={false} />
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#3f3f46" vertical={false} opacity={0.3} />
                                         <XAxis dataKey="name" stroke="#a1a1aa" fontSize={12} tickLine={false} axisLine={false} />
                                         <YAxis stroke="#a1a1aa" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
                                         <RechartsTooltip
-                                            contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', color: '#fff' }}
+                                            contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', color: '#fff', borderRadius: '8px' }}
                                         />
                                         <Legend />
                                         <Line type="monotone" dataKey="CostoReal" stroke="#6366f1" strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 6 }} />
@@ -168,7 +168,7 @@ export default function AdvancedBIPage() {
                                     </LineChart>
                                 </ResponsiveContainer>
                             ) : (
-                                <div className="w-full h-full flex flex-col items-center justify-center text-zinc-500 border border-dashed border-slate-200 rounded-lg bg-white/50">
+                                <div className="w-full h-full flex flex-col items-center justify-center text-zinc-500 border border-dashed border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50/50 dark:bg-zinc-950/50">
                                     <Server className="w-8 h-8 mb-2 opacity-50" />
                                     <p>Registre al menos 2 meses de costos cloud para predecir.</p>
                                 </div>
@@ -177,9 +177,9 @@ export default function AdvancedBIPage() {
                     </div>
 
                     {/* Chart 3: HR Department Distribution */}
-                    <div className="bg-white border border-slate-200 rounded-xl p-6">
+                    <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6 shadow-sm">
                         <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-lg font-bold text-slate-900">Distribución de Empleados</h2>
+                            <h2 className="text-lg font-bold text-zinc-900 dark:text-white">Distribución de Empleados</h2>
                         </div>
                         <div className="h-64 w-full">
                             {hrDeptData.length > 0 ? (
@@ -206,7 +206,7 @@ export default function AdvancedBIPage() {
                                     </PieChart>
                                 </ResponsiveContainer>
                             ) : (
-                                <div className="w-full h-full flex flex-col items-center justify-center text-zinc-500 border border-dashed border-slate-200 rounded-lg bg-white/50">
+                                <div className="w-full h-full flex flex-col items-center justify-center text-zinc-500 border border-dashed border-zinc-200 dark:border-zinc-800 rounded-lg bg-zinc-50/50 dark:bg-zinc-950/50">
                                     <Users className="w-8 h-8 mb-2 opacity-50" />
                                     <p>No hay empleados asignados a departamentos.</p>
                                 </div>

@@ -24,10 +24,10 @@ export default function DevDashboardPage() {
 
     return (
         <div className="p-8 max-w-6xl mx-auto space-y-6">
-            <div className="flex justify-between items-end border-b border-zinc-200 pb-4">
+            <div className="flex justify-between items-end border-b border-zinc-200 dark:border-zinc-800 pb-4">
                 <div>
-                    <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900">Proyectos Ágiles</h1>
-                    <p className="text-zinc-500 mt-1">Gestión de sprints y desarrollo de software interno/externo.</p>
+                    <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">Proyectos Ágiles</h1>
+                    <p className="text-zinc-500 dark:text-zinc-400 mt-1">Gestión de sprints y desarrollo de software interno/externo.</p>
                 </div>
                 {userId && <BoardFormDialog currentUserId={userId} />}
             </div>
@@ -38,22 +38,22 @@ export default function DevDashboardPage() {
 
                     return (
                         <Link href={`/dev/pizarras/${board._id}`} key={board._id}>
-                            <div className="bg-white border rounded-xl p-5 shadow-sm hover:shadow-md transition-all cursor-pointer h-full flex flex-col">
+                            <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-5 shadow-sm hover:shadow-md transition-all cursor-pointer h-full flex flex-col group">
                                 <div className="flex items-center gap-3 mb-3">
-                                    <div className="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
+                                    <div className="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-colors shadow-sm">
                                         <KanbanSquare className="w-5 h-5" />
                                     </div>
-                                    <h3 className="font-bold text-zinc-900 text-lg leading-tight">{board.title}</h3>
+                                    <h3 className="font-bold text-zinc-900 dark:text-white text-lg leading-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{board.title}</h3>
                                 </div>
                                 <p className="text-sm text-zinc-500 mb-4 line-clamp-2 flex-grow">
                                     {board.description || "Sin descripción proporcionada."}
                                 </p>
 
-                                <div className="mt-auto pt-4 border-t border-zinc-100 flex items-center justify-between text-xs text-zinc-500">
+                                <div className="mt-auto pt-4 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
                                     <div className="flex items-center gap-1.5">
-                                        <span className="font-semibold text-zinc-700">Líder:</span> {owner?.name}
+                                        <span className="font-semibold text-zinc-700 dark:text-zinc-300">Líder:</span> {owner?.name}
                                     </div>
-                                    <div className="flex items-center gap-1 bg-zinc-100 px-2 py-1 rounded">
+                                    <div className="flex items-center gap-1 bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded text-zinc-600 dark:text-zinc-400">
                                         <Users className="w-3.5 h-3.5" />
                                         <span>{board.memberIds.length}</span>
                                     </div>
@@ -64,10 +64,10 @@ export default function DevDashboardPage() {
                 })}
 
                 {boards.length === 0 && (
-                    <div className="col-span-full py-16 text-center border-2 border-dashed border-zinc-200 rounded-2xl">
-                        <Briefcase className="w-10 h-10 text-zinc-300 mx-auto mb-3" />
-                        <h3 className="text-lg font-bold text-zinc-700">Sin Pizarras Activas</h3>
-                        <p className="text-zinc-500 max-w-sm mx-auto mt-2">No estás asignado a ningún proyecto de desarrollo actual. Crea una nueva Pizarra Kanban para comenzar.</p>
+                    <div className="col-span-full py-16 text-center border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-2xl bg-white/50 dark:bg-zinc-900/30">
+                        <Briefcase className="w-10 h-10 text-zinc-300 dark:text-zinc-700 mx-auto mb-3" />
+                        <h3 className="text-lg font-bold text-zinc-700 dark:text-zinc-200">Sin Pizarras Activas</h3>
+                        <p className="text-zinc-500 dark:text-zinc-400 max-w-sm mx-auto mt-2">No estás asignado a ningún proyecto de desarrollo actual. Crea una nueva Pizarra Kanban para comenzar.</p>
                     </div>
                 )}
             </div>

@@ -143,7 +143,7 @@ export function DocumentUploadDialog({ trigger }: { trigger?: React.ReactNode })
                                     <FormLabel>Categoría Documental</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
-                                            <SelectTrigger>
+                                            <SelectTrigger className="dark:bg-zinc-950 dark:border-zinc-800">
                                                 <SelectValue placeholder="Clasificación..." />
                                             </SelectTrigger>
                                         </FormControl>
@@ -167,7 +167,7 @@ export function DocumentUploadDialog({ trigger }: { trigger?: React.ReactNode })
                                     <FormLabel>Restringir a Departamento (Opcional)</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
-                                            <SelectTrigger>
+                                            <SelectTrigger className="dark:bg-zinc-950 dark:border-zinc-800">
                                                 <SelectValue placeholder="Público para todos..." />
                                             </SelectTrigger>
                                         </FormControl>

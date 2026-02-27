@@ -127,7 +127,7 @@ export function DepartmentFormDialog({ trigger }: { trigger?: React.ReactNode })
                                     <FormLabel>Responsable / Jefe (Opcional)</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
-                                            <SelectTrigger>
+                                            <SelectTrigger className="dark:bg-zinc-950 dark:border-zinc-800">
                                                 <SelectValue placeholder="Selecciona un líder..." />
                                             </SelectTrigger>
                                         </FormControl>

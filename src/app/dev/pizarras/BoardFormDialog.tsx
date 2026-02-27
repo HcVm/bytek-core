@@ -66,10 +66,10 @@ export function BoardFormDialog({ currentUserId }: { currentUserId: Id<"users"> 
                     Nueva Pizarra Scrum
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[425px] dark:bg-zinc-950 dark:border-zinc-800">
                 <DialogHeader>
-                    <DialogTitle>Inicializar Proyecto Ágil</DialogTitle>
-                    <DialogDescription>
+                    <DialogTitle className="text-zinc-900 dark:text-white">Inicializar Proyecto Ágil</DialogTitle>
+                    <DialogDescription className="dark:text-zinc-400">
                         Crea un tablero colaborativo para trazar las incidencias y desarrollo del software.
                     </DialogDescription>
                 </DialogHeader>
@@ -80,9 +80,9 @@ export function BoardFormDialog({ currentUserId }: { currentUserId: Id<"users"> 
                             name="title"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Nombre del Proyecto</FormLabel>
+                                    <FormLabel className="dark:text-zinc-300">Nombre del Proyecto</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Ej. E-Commerce B2B V2.0" {...field} />
+                                        <Input placeholder="Ej. E-Commerce B2B V2.0" {...field} className="dark:bg-zinc-900 dark:border-zinc-800 dark:text-white" />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -93,9 +93,9 @@ export function BoardFormDialog({ currentUserId }: { currentUserId: Id<"users"> 
                             name="description"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Objetivo del Sprint / Proyecto</FormLabel>
+                                    <FormLabel className="dark:text-zinc-300">Objetivo del Sprint / Proyecto</FormLabel>
                                     <FormControl>
-                                        <Textarea placeholder="Breve resumen del enfoque..." {...field} />
+                                        <Textarea placeholder="Breve resumen del enfoque..." {...field} className="dark:bg-zinc-900 dark:border-zinc-800 dark:text-white" />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

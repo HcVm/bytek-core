@@ -29,19 +29,19 @@ export default function AdminCommunicationsPage() {
     );
 
     return (
-        <div className="flex h-screen bg-white">
+        <div className="flex h-screen bg-white dark:bg-zinc-950">
             {/* Left Sidebar: Inbox */}
-            <div className="w-80 border-r border-zinc-200 flex flex-col bg-zinc-50/50">
-                <div className="p-4 border-b border-zinc-200">
-                    <h1 className="text-xl font-bold text-zinc-900 mb-4 flex items-center gap-2">
-                        <MessageCircle className="w-5 h-5 text-indigo-600" />
+            <div className="w-80 border-r border-zinc-200 dark:border-zinc-800 flex flex-col bg-zinc-50/50 dark:bg-zinc-900/50">
+                <div className="p-4 border-b border-zinc-200 dark:border-zinc-800">
+                    <h1 className="text-xl font-bold text-zinc-900 dark:text-white mb-4 flex items-center gap-2">
+                        <MessageCircle className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                         Comunicaciones
                     </h1>
                     <div className="relative">
                         <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
                         <Input
                             placeholder="Buscar cliente..."
-                            className="pl-9 bg-white"
+                            className="pl-9 bg-white dark:bg-zinc-800 border-zinc-200 dark:border-zinc-800"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
@@ -63,22 +63,22 @@ export default function AdminCommunicationsPage() {
                                 <button
                                     key={conv.client._id}
                                     onClick={() => setSelectedClientId(conv.client._id)}
-                                    className={`w-full p-4 text-left transition-colors hover:bg-zinc-100 flex gap-3 items-start ${selectedClientId === conv.client._id ? 'bg-indigo-50 hover:bg-indigo-50 border-l-4 border-indigo-600' : 'border-l-4 border-transparent'
+                                    className={`w-full p-4 text-left transition-colors hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 flex gap-3 items-start ${selectedClientId === conv.client._id ? 'bg-indigo-50 dark:bg-indigo-950/30 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 border-l-4 border-indigo-600' : 'border-l-4 border-transparent'
                                         }`}
                                 >
-                                    <Avatar className="w-10 h-10 border border-zinc-200">
-                                        <AvatarFallback className="bg-zinc-100 text-zinc-600">
+                                    <Avatar className="w-10 h-10 border border-zinc-200 dark:border-zinc-800">
+                                        <AvatarFallback className="bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">
                                             {conv.client.name.substring(0, 2).toUpperCase()}
                                         </AvatarFallback>
                                     </Avatar>
                                     <div className="flex-1 overflow-hidden">
                                         <div className="flex justify-between items-baseline mb-1">
-                                            <h3 className="font-semibold text-zinc-900 truncate pr-2 text-sm">{conv.client.name}</h3>
-                                            <span className="text-[10px] text-zinc-500 whitespace-nowrap">
+                                            <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 truncate pr-2 text-sm">{conv.client.name}</h3>
+                                            <span className="text-[10px] text-zinc-500 dark:text-zinc-400 whitespace-nowrap">
                                                 {new Date(conv.latestMessage.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                                             </span>
                                         </div>
-                                        <p className="text-xs text-zinc-500 truncate h-4">
+                                        <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate h-4">
                                             {conv.latestMessage.type === "text" ? conv.latestMessage.content :
                                                 conv.latestMessage.type === "meeting" ? "🗓️ Solicitud de reunión" : "📎 Archivo adjunto"}
                                         </p>
@@ -91,13 +91,13 @@ export default function AdminCommunicationsPage() {
             </div>
 
             {/* Right Side: Chat Area */}
-            <div className="flex-1 flex flex-col bg-white">
+            <div className="flex-1 flex flex-col bg-white dark:bg-zinc-950">
                 {selectedClientId ? (
                     <ChatView clientId={selectedClientId} />
                 ) : (
-                    <div className="flex-1 flex flex-col items-center justify-center text-zinc-400">
-                        <MessageCircle className="w-16 h-16 text-zinc-200 mb-4" />
-                        <h2 className="text-xl font-semibold text-zinc-600">Selecciona una conversación</h2>
+                    <div className="flex-1 flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-600">
+                        <MessageCircle className="w-16 h-16 text-zinc-200 dark:text-zinc-800 mb-4" />
+                        <h2 className="text-xl font-semibold text-zinc-600 dark:text-zinc-400">Selecciona una conversación</h2>
                         <p className="text-sm mt-2">Elige un cliente del panel lateral para ver sus mensajes.</p>
                     </div>
                 )}
@@ -170,19 +170,19 @@ function ChatView({ clientId }: { clientId: Id<"clients"> }) {
     return (
         <>
             {/* Header */}
-            <div className="h-16 px-6 border-b border-zinc-200 flex items-center justify-between bg-white z-10">
+            <div className="h-16 px-6 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between bg-white dark:bg-zinc-900 z-10">
                 <div className="flex items-center gap-3">
-                    <User className="w-5 h-5 text-indigo-600" />
+                    <User className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                     <div>
                         {/* Como no pasamos el nombe directamente, usamos Client ID de momento, O se podria pasar via prop */}
-                        <h2 className="font-semibold text-zinc-900 leading-tight">Canal del Cliente</h2>
-                        <p className="text-xs text-zinc-500">ID: {clientId.substring(0, 8)}...</p>
+                        <h2 className="font-semibold text-zinc-900 dark:text-zinc-100 leading-tight">Canal del Cliente</h2>
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400">ID: {clientId.substring(0, 8)}...</p>
                     </div>
                 </div>
             </div>
 
             {/* Message List */}
-            <ScrollArea className="flex-1 p-6 bg-zinc-50/30">
+            <ScrollArea className="flex-1 p-6 bg-zinc-50/30 dark:bg-zinc-950/30">
                 <div className="max-w-3xl mx-auto space-y-6">
                     {messages.length === 0 ? (
                         <div className="text-center text-zinc-400 py-10 text-sm">
@@ -195,8 +195,8 @@ function ChatView({ clientId }: { clientId: Id<"clients"> }) {
                             return (
                                 <div key={msg._id} className={`flex ${isStaff ? 'justify-end' : 'justify-start'}`}>
                                     <div className={`max-w-[75%] rounded-2xl p-4 shadow-sm ${isStaff
-                                        ? 'bg-indigo-600 text-white rounded-tr-none'
-                                        : 'bg-white border border-zinc-200 text-zinc-900 rounded-tl-none'
+                                        ? 'bg-indigo-600 dark:bg-indigo-700 text-white rounded-tr-none'
+                                        : 'bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 rounded-tl-none'
                                         }`}>
 
                                         {/* TEXT MESSAGE */}
@@ -206,7 +206,7 @@ function ChatView({ clientId }: { clientId: Id<"clients"> }) {
 
                                         {/* DOCUMENT MESSAGE */}
                                         {msg.type === "document" && (
-                                            <div className="flex items-center gap-3 border border-current/20 p-3 rounded-xl bg-black/5">
+                                            <div className="flex items-center gap-3 border border-current/20 p-3 rounded-xl bg-black/5 dark:bg-white/5">
                                                 <FileText className="w-8 h-8 opacity-70" />
                                                 <div className="flex-1 min-w-0">
                                                     <p className="text-sm font-medium truncate">{msg.fileName || "Documento"}</p>
@@ -228,7 +228,7 @@ function ChatView({ clientId }: { clientId: Id<"clients"> }) {
                                                     <Calendar className="w-5 h-5 opacity-80" />
                                                     <span>Solicitud de Reunión</span>
                                                 </div>
-                                                <div className="bg-black/5 rounded-xl p-3 text-sm space-y-1">
+                                                <div className="bg-black/5 dark:bg-white/5 rounded-xl p-3 text-sm space-y-1">
                                                     <p><strong>Asunto:</strong> {msg.meetingTitle || "Revisión"}</p>
                                                     <p><strong>Fecha preferida:</strong> {msg.meetingDate ? new Date(msg.meetingDate).toLocaleString() : "Sin fecha"}</p>
                                                     <p className="pt-2 italic opacity-80">{msg.content}</p>
@@ -236,8 +236,8 @@ function ChatView({ clientId }: { clientId: Id<"clients"> }) {
 
                                                 <div className="flex items-center justify-between pt-2 border-t border-current/20">
                                                     <Badge variant="outline" className={`
-                                                        ${msg.meetingStatus === "confirmed" ? "border-emerald-500 bg-emerald-50 text-emerald-700" : ""}
-                                                        ${msg.meetingStatus === "pending" ? "border-amber-500 bg-amber-50 text-amber-700" : ""}
+                                                        ${msg.meetingStatus === "confirmed" ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400" : ""}
+                                                        ${msg.meetingStatus === "pending" ? "border-amber-500 bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400" : ""}
                                                     `}>
                                                         {msg.meetingStatus === "confirmed" ? "Confirmada" : "Pendiente"}
                                                     </Badge>
@@ -277,7 +277,7 @@ function ChatView({ clientId }: { clientId: Id<"clients"> }) {
                                             </div>
                                         )}
 
-                                        <div className={`mt-2 text-[10px] ${isStaff ? 'text-indigo-200 text-right' : 'text-zinc-500'}`}>
+                                        <div className={`mt-2 text-[10px] ${isStaff ? 'text-indigo-200 dark:text-indigo-300 text-right' : 'text-zinc-500 dark:text-zinc-400'}`}>
                                             {isStaff ? "Tú" : msg.senderName || "Cliente"} • {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                         </div>
                                     </div>
@@ -290,7 +290,7 @@ function ChatView({ clientId }: { clientId: Id<"clients"> }) {
             </ScrollArea>
 
             {/* Message Input */}
-            <div className="p-4 bg-white border-t border-zinc-200">
+            <div className="p-4 bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800">
                 <form onSubmit={handleSend} className="max-w-3xl mx-auto flex items-end gap-2">
                     <Button type="button" variant="ghost" size="icon" className="shrink-0 text-zinc-500 hover:text-indigo-600">
                         <Paperclip className="w-5 h-5" />
@@ -300,7 +300,7 @@ function ChatView({ clientId }: { clientId: Id<"clients"> }) {
                             value={newMessage}
                             onChange={(e) => setNewMessage(e.target.value)}
                             placeholder="Escribe un mensaje..."
-                            className="w-full bg-zinc-50 border-zinc-200 pr-12 h-auto py-3"
+                            className="w-full bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 pr-12 h-auto py-3 focus-visible:ring-indigo-600 dark:focus-visible:ring-indigo-400"
                             disabled={isSending}
                         />
                     </div>

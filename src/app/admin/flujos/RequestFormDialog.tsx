@@ -86,7 +86,7 @@ export function RequestFormDialog({ trigger }: { trigger?: React.ReactNode }) {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 {trigger || (
-                    <Button className="bg-zinc-900 text-white hover:bg-zinc-800">
+                    <Button className="bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200">
                         <PlusCircle className="w-4 h-4 mr-2" />
                         Nuevo Requerimiento
                     </Button>
@@ -109,8 +109,8 @@ export function RequestFormDialog({ trigger }: { trigger?: React.ReactNode }) {
                                     <FormLabel>Área Destino</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="¿Hacia dónde va esta solicitud?" />
+                                            <SelectTrigger className="dark:bg-zinc-950 dark:border-zinc-800">
+                                                <SelectValue placeholder="¿Hacia dónde va esta solicitud?" className="dark:text-zinc-400" />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
@@ -131,7 +131,7 @@ export function RequestFormDialog({ trigger }: { trigger?: React.ReactNode }) {
                                 <FormItem>
                                     <FormLabel>Asunto del Requerimiento</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Ej. Solicitud de nueva Licencia Office365" {...field} />
+                                        <Input placeholder="Ej. Solicitud de nueva Licencia Office365" {...field} className="dark:bg-zinc-950 dark:border-zinc-800" />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -147,8 +147,8 @@ export function RequestFormDialog({ trigger }: { trigger?: React.ReactNode }) {
                                         <FormLabel>Nivel de Prioridad</FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Rango de importancia" />
+                                                <SelectTrigger className="dark:bg-zinc-950 dark:border-zinc-800">
+                                                    <SelectValue placeholder="Rango de importancia" className="dark:text-zinc-400" />
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
@@ -171,14 +171,14 @@ export function RequestFormDialog({ trigger }: { trigger?: React.ReactNode }) {
                                 <FormItem>
                                     <FormLabel>Cuerpo de la Solicitud</FormLabel>
                                     <FormControl>
-                                        <Textarea className="min-h-[100px]" placeholder="Detalla aquí los requerimientos exactos de manera profesional..." {...field} />
+                                        <Textarea className="min-h-[100px] dark:bg-zinc-950 dark:border-zinc-800" placeholder="Detalla aquí los requerimientos exactos de manera profesional..." {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
 
-                        <Button type="submit" className="w-full bg-zinc-900 hover:bg-zinc-800 text-white mt-4">
+                        <Button type="submit" className="w-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 mt-4">
                             Levantar Ticket
                         </Button>
                     </form>

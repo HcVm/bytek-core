@@ -83,7 +83,7 @@ export function HardwareFormDialog() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className="bg-zinc-900 text-white hover:bg-zinc-800">
+                <Button className="bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200">
                     <Plus className="w-4 h-4 mr-2" />
                     Nuevo Modelo
                 </Button>
@@ -191,8 +191,8 @@ export function HardwareFormDialog() {
                                     <FormLabel>Cuenta Contable (Inventario)</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
-                                            <SelectTrigger className="bg-white">
-                                                <SelectValue placeholder="Seleccione cuenta (ej: 20x)" />
+                                            <SelectTrigger className="bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800">
+                                                <SelectValue placeholder="Seleccione cuenta (ej: 20x)" className="dark:text-zinc-400" />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
@@ -208,7 +208,7 @@ export function HardwareFormDialog() {
                             )}
                         />
 
-                        <Button type="submit" className="w-full bg-zinc-900 text-white hover:bg-zinc-800">
+                        <Button type="submit" className="w-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200">
                             Guardar Catálogo
                         </Button>
                     </form>

@@ -56,7 +56,7 @@ export function SerialEntryDialog({ hardwareId, equipmentName }: { hardwareId: I
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" size="sm" className="h-8 text-xs bg-indigo-50 border-indigo-200 text-indigo-700 hover:bg-indigo-100 hover:text-indigo-800">
+                <Button variant="outline" size="sm" className="h-8 text-xs bg-indigo-50 dark:bg-indigo-900/20 border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors">
                     <ScanBarcode className="w-3 h-3 mr-1" />
                     Ingresar Stock
                 </Button>

@@ -107,8 +107,8 @@ export default function RiskRegistry() {
         <div className="p-8 max-w-6xl mx-auto space-y-8">
             <header className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">Registro de Riesgos</h1>
-                    <p className="text-slate-500 mt-1">Matriz de Probabilidad × Impacto (PMI) para gestión proactiva de amenazas.</p>
+                    <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Registro de Riesgos</h1>
+                    <p className="text-slate-500 dark:text-zinc-400 mt-1">Matriz de Probabilidad × Impacto (PMI) para gestión proactiva de amenazas.</p>
                 </div>
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger asChild>
@@ -124,47 +124,47 @@ export default function RiskRegistry() {
                             <div className="space-y-2"><Label>Contexto / Descripción</Label><Textarea value={description} onChange={e => setDescription(e.target.value)} className="resize-none" placeholder="Describe el escenario de riesgo..." /></div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label>Proyecto</Label>
+                                    <Label className="dark:text-zinc-300">Proyecto</Label>
                                     <Select value={projectId} onValueChange={setProjectId}>
-                                        <SelectTrigger><SelectValue placeholder="Seleccionar..." /></SelectTrigger>
-                                        <SelectContent>{projects?.map(p => <SelectItem key={p._id} value={p._id}>{p.title}</SelectItem>)}</SelectContent>
+                                        <SelectTrigger className="dark:bg-zinc-950 dark:border-zinc-800"><SelectValue placeholder="Seleccionar..." /></SelectTrigger>
+                                        <SelectContent className="dark:bg-zinc-950 dark:border-zinc-800">{projects?.map(p => <SelectItem key={p._id} value={p._id}>{p.title}</SelectItem>)}</SelectContent>
                                     </Select>
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Responsable</Label>
+                                    <Label className="dark:text-zinc-300">Responsable</Label>
                                     <Select value={ownerId} onValueChange={setOwnerId}>
-                                        <SelectTrigger><SelectValue placeholder="Asignar..." /></SelectTrigger>
-                                        <SelectContent>{allUsers?.map(u => <SelectItem key={u._id} value={u._id}>{u.name || u.email || "Usuario"}</SelectItem>)}</SelectContent>
+                                        <SelectTrigger className="dark:bg-zinc-950 dark:border-zinc-800"><SelectValue placeholder="Asignar..." /></SelectTrigger>
+                                        <SelectContent className="dark:bg-zinc-950 dark:border-zinc-800">{allUsers?.map(u => <SelectItem key={u._id} value={u._id}>{u.name || u.email || "Usuario"}</SelectItem>)}</SelectContent>
                                     </Select>
                                 </div>
                             </div>
                             <div className="grid grid-cols-3 gap-4">
                                 <div className="space-y-2">
-                                    <Label>Probabilidad</Label>
+                                    <Label className="dark:text-zinc-300">Probabilidad</Label>
                                     <Select value={probability} onValueChange={(v: any) => setProbability(v)}>
-                                        <SelectTrigger><SelectValue /></SelectTrigger>
-                                        <SelectContent>{PROB_LEVELS.map(l => <SelectItem key={l} value={l}>{LEVEL_LABELS[l]}</SelectItem>)}</SelectContent>
+                                        <SelectTrigger className="dark:bg-zinc-950 dark:border-zinc-800"><SelectValue /></SelectTrigger>
+                                        <SelectContent className="dark:bg-zinc-950 dark:border-zinc-800">{PROB_LEVELS.map(l => <SelectItem key={l} value={l}>{LEVEL_LABELS[l]}</SelectItem>)}</SelectContent>
                                     </Select>
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Impacto</Label>
+                                    <Label className="dark:text-zinc-300">Impacto</Label>
                                     <Select value={impact} onValueChange={(v: any) => setImpact(v)}>
-                                        <SelectTrigger><SelectValue /></SelectTrigger>
-                                        <SelectContent>{IMPACT_LEVELS.map(l => <SelectItem key={l} value={l}>{LEVEL_LABELS[l]}</SelectItem>)}</SelectContent>
+                                        <SelectTrigger className="dark:bg-zinc-950 dark:border-zinc-800"><SelectValue /></SelectTrigger>
+                                        <SelectContent className="dark:bg-zinc-950 dark:border-zinc-800">{IMPACT_LEVELS.map(l => <SelectItem key={l} value={l}>{LEVEL_LABELS[l]}</SelectItem>)}</SelectContent>
                                     </Select>
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Estado</Label>
+                                    <Label className="dark:text-zinc-300">Estado</Label>
                                     <Select value={status} onValueChange={(v: any) => setStatus(v)}>
-                                        <SelectTrigger><SelectValue /></SelectTrigger>
-                                        <SelectContent>{STATUS_LEVELS.map(l => <SelectItem key={l} value={l}>{STATUS_LABELS[l]}</SelectItem>)}</SelectContent>
+                                        <SelectTrigger className="dark:bg-zinc-950 dark:border-zinc-800"><SelectValue /></SelectTrigger>
+                                        <SelectContent className="dark:bg-zinc-950 dark:border-zinc-800">{STATUS_LEVELS.map(l => <SelectItem key={l} value={l}>{STATUS_LABELS[l]}</SelectItem>)}</SelectContent>
                                     </Select>
                                 </div>
                             </div>
                             <div className="space-y-2"><Label>Plan de Mitigación</Label><Textarea value={mitigation} onChange={e => setMitigation(e.target.value)} className="resize-none" placeholder="Acciones preventivas para reducir la probabilidad o impacto..." /></div>
                             <div className="flex justify-end gap-3 pt-2">
                                 <Button type="button" variant="ghost" onClick={() => setIsDialogOpen(false)}>Cancelar</Button>
-                                <Button type="submit" className="bg-zinc-900 text-white hover:bg-zinc-800">Guardar</Button>
+                                <Button type="submit" className="bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200">Guardar</Button>
                             </div>
                         </form>
                     </DialogContent>
@@ -172,9 +172,9 @@ export default function RiskRegistry() {
             </header>
 
             {/* MATRIZ VISUAL 4x4 */}
-            <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                <div className="p-4 border-b border-slate-100 bg-slate-50">
-                    <h3 className="font-bold text-sm text-slate-700">Matriz de Riesgos (Probabilidad × Impacto)</h3>
+            <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden shadow-sm">
+                <div className="p-4 border-b border-slate-100 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900/50">
+                    <h3 className="font-bold text-sm text-slate-700 dark:text-zinc-300">Matriz de Riesgos (Probabilidad × Impacto)</h3>
                 </div>
                 <div className="p-6 overflow-x-auto">
                     <div className="flex">
@@ -192,9 +192,9 @@ export default function RiskRegistry() {
                                         const key = `${prob}-${imp}`;
                                         const cellRisks = matrixData[key] || [];
                                         return (
-                                            <div key={key} className={`${MATRIX_COLORS[key]} rounded-lg p-2 min-h-[70px] flex flex-col gap-1`}>
+                                            <div key={key} className={`${MATRIX_COLORS[key]} dark:opacity-80 rounded-lg p-2 min-h-[70px] flex flex-col gap-1`}>
                                                 {cellRisks.map((r: any) => (
-                                                    <div key={r._id} className="bg-white/80 rounded px-2 py-1 text-[10px] font-medium text-slate-800 flex items-center justify-between gap-1 hover:bg-white transition cursor-pointer" onClick={() => openEdit(r)}>
+                                                    <div key={r._id} className="bg-white/80 dark:bg-zinc-900/80 rounded px-2 py-1 text-[10px] font-medium text-slate-800 dark:text-zinc-200 flex items-center justify-between gap-1 hover:bg-white dark:hover:bg-zinc-800 transition cursor-pointer" onClick={() => openEdit(r)}>
                                                         <span className="truncate">{r.title}</span>
                                                     </div>
                                                 ))}
@@ -218,19 +218,19 @@ export default function RiskRegistry() {
 
             {/* LISTADO TABULAR */}
             {risks.length > 0 && (
-                <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                    <div className="p-4 border-b border-slate-100 bg-slate-50">
-                        <h3 className="font-bold text-sm text-slate-700">Todos los Riesgos ({risks.length})</h3>
+                <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden shadow-sm">
+                    <div className="p-4 border-b border-slate-100 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900/50">
+                        <h3 className="font-bold text-sm text-slate-700 dark:text-zinc-300">Todos los Riesgos ({risks.length})</h3>
                     </div>
-                    <div className="divide-y divide-slate-100">
+                    <div className="divide-y divide-slate-100 dark:divide-zinc-800">
                         {risks.map(risk => (
-                            <div key={risk._id} className="px-5 py-4 flex items-center gap-4 hover:bg-slate-50/50 transition-colors">
+                            <div key={risk._id} className="px-5 py-4 flex items-center gap-4 hover:bg-slate-50/50 dark:hover:bg-zinc-800/50 transition-colors">
                                 <div className="flex-1 min-w-0">
-                                    <p className="font-medium text-sm text-slate-900">{risk.title}</p>
-                                    <p className="text-xs text-slate-500 mt-0.5">{risk.projectTitle} · {risk.ownerName}</p>
+                                    <p className="font-medium text-sm text-slate-900 dark:text-white">{risk.title}</p>
+                                    <p className="text-xs text-slate-500 dark:text-zinc-500 mt-0.5">{risk.projectTitle} · {risk.ownerName}</p>
                                 </div>
-                                <Badge className={`${getStatusColor(risk.status)} text-[10px] uppercase font-bold shadow-none`}>{STATUS_LABELS[risk.status]}</Badge>
-                                <Badge variant="outline" className="text-[10px] uppercase shadow-none border-slate-200">{LEVEL_LABELS[risk.probability]} / {LEVEL_LABELS[risk.impact]}</Badge>
+                                <Badge className={`${getStatusColor(risk.status)} dark:opacity-80 text-[10px] uppercase font-bold shadow-none`}>{STATUS_LABELS[risk.status]}</Badge>
+                                <Badge variant="outline" className="text-[10px] uppercase shadow-none border-slate-200 dark:border-zinc-800 dark:text-zinc-400">{LEVEL_LABELS[risk.probability]} / {LEVEL_LABELS[risk.impact]}</Badge>
                                 <div className="flex gap-1">
                                     <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-indigo-600" onClick={() => openEdit(risk)}><Pencil className="h-3.5 w-3.5" /></Button>
                                     <Button variant="ghost" size="icon" className="h-7 w-7 text-slate-400 hover:text-red-600" onClick={() => handleDelete(risk._id)}><Trash2 className="h-3.5 w-3.5" /></Button>

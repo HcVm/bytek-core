@@ -76,9 +76,9 @@ export function TaskDetailDialog({
                     <DialogDescription>Edición extendida para el Jira Clone</DialogDescription>
                 </DialogHeader>
 
-                <div className="flex items-center gap-3 px-6 py-4 border-b border-zinc-200 bg-zinc-50/80">
+                <div className="flex items-center gap-3 px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50/80 dark:bg-zinc-900/80">
                     {getTypeIcon(task.type)}
-                    <span className="text-sm font-semibold text-zinc-600 uppercase tracking-wider">{task.boardId.substring(task.boardId.length - 4)}-{task._id.substring(task._id.length - 4)}</span>
+                    <span className="text-sm font-semibold text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">{task.boardId.substring(task.boardId.length - 4)}-{task._id.substring(task._id.length - 4)}</span>
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-6 space-y-6">
@@ -94,7 +94,7 @@ export function TaskDetailDialog({
                     <div className="grid grid-cols-3 gap-6">
                         <div className="col-span-2 space-y-6">
                             <div className="space-y-2">
-                                <label className="text-sm font-semibold text-zinc-900">Descripción (Contexto / Criterios)</label>
+                                <label className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Descripción (Contexto / Criterios)</label>
                                 <Textarea
                                     value={description}
                                     onChange={e => setDescription(e.target.value)}
@@ -104,7 +104,7 @@ export function TaskDetailDialog({
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-sm font-semibold text-zinc-900 flex items-center gap-1.5">
+                                <label className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
                                     <Github className="w-4 h-4" /> Pull Request Link (Dev)
                                 </label>
                                 <Input
@@ -115,7 +115,7 @@ export function TaskDetailDialog({
                             </div>
                         </div>
 
-                        <div className="col-span-1 border-l border-zinc-100 pl-6 space-y-5">
+                        <div className="col-span-1 border-l border-zinc-100 dark:border-zinc-800 pl-6 space-y-5">
                             <div className="space-y-1.5">
                                 <label className="text-xs font-bold text-zinc-500 uppercase">Estado</label>
                                 <Select value={status} onValueChange={setStatus}>
@@ -183,7 +183,7 @@ export function TaskDetailDialog({
                     </div>
                 </div>
 
-                <DialogFooter className="px-6 py-4 border-t border-zinc-200 bg-zinc-50 shrink-0">
+                <DialogFooter className="px-6 py-4 border-t border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 shrink-0">
                     <Button variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
                     <Button onClick={handleSave} className="bg-indigo-600 hover:bg-indigo-700">
                         <Save className="w-4 h-4 mr-2" /> Guardar Cambios

@@ -14,14 +14,14 @@ export default function CuentasPagarPage() {
     const totalPendiente = payables.reduce((s, p) => s + p.pendingAmount, 0);
 
     return (
-        <div className="flex flex-col h-full bg-slate-50 overflow-hidden">
-            <div className="bg-white border-b border-slate-200 px-8 py-6 shrink-0 z-10 shadow-sm">
+        <div className="flex flex-col h-full bg-slate-50 dark:bg-zinc-950 overflow-hidden">
+            <div className="bg-white dark:bg-zinc-900 border-b border-slate-200 dark:border-zinc-800 px-8 py-6 shrink-0 z-10 shadow-sm">
                 <div className="max-w-7xl mx-auto w-full">
                     <div className="flex items-center gap-3 mb-1">
                         <div className="w-10 h-10 bg-red-600 rounded-xl flex items-center justify-center text-white shadow-md">
                             <CreditCard className="w-5 h-5" />
                         </div>
-                        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">Cuentas por Pagar</h1>
+                        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Cuentas por Pagar</h1>
                     </div>
                     <p className="text-slate-500 font-medium pl-14">Gestión de obligaciones a proveedores. Control de vencimientos.</p>
                 </div>
@@ -35,19 +35,19 @@ export default function CuentasPagarPage() {
                             <p className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-1 relative z-10">Total por Pagar</p>
                             <h3 className="text-2xl font-black text-white relative z-10">{formatCurrency(totalPendiente)}</h3>
                         </div>
-                        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                            <p className="text-sm font-bold text-slate-500 uppercase mb-1">Pendientes</p>
-                            <h3 className="text-2xl font-black text-red-700">{pendientes.length}</h3>
+                        <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm">
+                            <p className="text-sm font-bold text-slate-500 dark:text-zinc-400 uppercase mb-1">Pendientes</p>
+                            <h3 className="text-2xl font-black text-red-700 dark:text-red-500">{pendientes.length}</h3>
                         </div>
-                        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                            <p className="text-sm font-bold text-slate-500 uppercase mb-1">Total Documentos</p>
-                            <h3 className="text-2xl font-black text-slate-900">{payables.length}</h3>
+                        <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm">
+                            <p className="text-sm font-bold text-slate-500 dark:text-zinc-400 uppercase mb-1">Total Documentos</p>
+                            <h3 className="text-2xl font-black text-slate-900 dark:text-white">{payables.length}</h3>
                         </div>
                     </div>
 
                     {aging && (
                         <div>
-                            <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                            <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                                 <AlertTriangle className="w-5 h-5 text-amber-500" /> Antigüedad de Saldos
                             </h2>
                             <div className="grid grid-cols-5 gap-3">
@@ -68,9 +68,9 @@ export default function CuentasPagarPage() {
                         </div>
                     )}
 
-                    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                        <div className="p-4 bg-slate-50 border-b border-slate-100">
-                            <h3 className="font-bold text-slate-800">Documentos por Pagar</h3>
+                    <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+                        <div className="p-4 bg-slate-50 dark:bg-zinc-800/50 border-b border-slate-100 dark:border-zinc-800">
+                            <h3 className="font-bold text-slate-800 dark:text-zinc-200">Documentos por Pagar</h3>
                         </div>
                         {payables.length === 0 ? (
                             <div className="p-12 text-center text-slate-400">
@@ -80,15 +80,15 @@ export default function CuentasPagarPage() {
                         ) : (
                             <div className="divide-y divide-slate-50">
                                 {payables.map((p: any) => (
-                                    <div key={p._id} className="flex items-center gap-4 px-5 py-3 hover:bg-slate-50/80 transition-colors">
+                                    <div key={p._id} className="flex items-center gap-4 px-5 py-3 hover:bg-slate-50/80 dark:hover:bg-zinc-800/50 transition-colors">
                                         <div className="flex-1">
-                                            <p className="text-sm font-medium text-slate-700">{p.providerName}</p>
-                                            <p className="text-[10px] text-slate-400">{p.documentType.toUpperCase()} {p.documentNumber} · Vence: {p.dueDate}</p>
+                                            <p className="text-sm font-medium text-slate-700 dark:text-zinc-300">{p.providerName}</p>
+                                            <p className="text-[10px] text-slate-400 dark:text-zinc-500">{p.documentType.toUpperCase()} {p.documentNumber} · Vence: {p.dueDate}</p>
                                         </div>
                                         <Badge variant="outline" className={`text-[10px] ${p.status === 'pendiente' ? 'text-red-600 border-red-200' : p.status === 'parcial' ? 'text-amber-600 border-amber-200' : 'text-emerald-600 border-emerald-200'}`}>
                                             {p.status}
                                         </Badge>
-                                        <span className="text-sm font-black text-slate-900">{formatCurrency(p.pendingAmount)}</span>
+                                        <span className="text-sm font-black text-slate-900 dark:text-white">{formatCurrency(p.pendingAmount)}</span>
                                     </div>
                                 ))}
                             </div>

@@ -51,16 +51,16 @@ export default function DashboardPage() {
     const hasFinancialData = metrics.finance.paidValue > 0 || metrics.finance.pendingValue > 0;
 
     return (
-        <div className="p-8 h-full flex flex-col overflow-y-auto">
+        <div className="p-8 h-full flex flex-col bg-zinc-50 dark:bg-zinc-950 overflow-y-auto custom-scrollbar">
             <div className="mb-8">
-                <h1 className="text-3xl font-bold tracking-tight text-zinc-900">Control Maestro BYTEK</h1>
-                <p className="text-zinc-500 mt-2">Vista panorámica y consolidada del rendimiento de todas las unidades de negocio.</p>
+                <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">Control Maestro BYTEK</h1>
+                <p className="text-zinc-500 dark:text-zinc-400 mt-2">Vista panorámica y consolidada del rendimiento de todas las unidades de negocio.</p>
             </div>
 
             {/* Fila 1: KPIs Principales (Tarjetas de Impacto) */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 {/* CRM KPI */}
-                <Card className="hover:shadow-md transition-shadow">
+                <Card className="bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 hover:shadow-md transition-shadow">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Ventas Cerradas (Won)</CardTitle>
                         <TrendingUp className="h-4 w-4 text-emerald-500" />
@@ -76,13 +76,13 @@ export default function DashboardPage() {
                 </Card>
 
                 {/* Finanzas KPI */}
-                <Card className="hover:shadow-md transition-shadow">
+                <Card className="bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 hover:shadow-md transition-shadow">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Recaudación (Cobrado)</CardTitle>
                         <Wallet className="h-4 w-4 text-indigo-500" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold text-indigo-700">
+                        <div className="text-2xl font-bold text-indigo-700 dark:text-indigo-400">
                             S/ {metrics.finance.paidValue.toLocaleString('es-PE', { minimumFractionDigits: 2 })}
                         </div>
                         <p className="text-xs text-zinc-500 mt-1">
@@ -92,7 +92,7 @@ export default function DashboardPage() {
                 </Card>
 
                 {/* Proyectos KPI */}
-                <Card className="hover:shadow-md transition-shadow">
+                <Card className="bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 hover:shadow-md transition-shadow">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Delivery Activo</CardTitle>
                         <Briefcase className="h-4 w-4 text-blue-500" />
@@ -108,7 +108,7 @@ export default function DashboardPage() {
                 </Card>
 
                 {/* Infraestructura KPI */}
-                <Card className="hover:shadow-md transition-shadow">
+                <Card className="bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 hover:shadow-md transition-shadow">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Almacén (En Físico)</CardTitle>
                         <Cpu className="h-4 w-4 text-emerald-600" />
@@ -128,7 +128,7 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
 
                 {/* Gráfico 1: Peso de Unidades de Negocio */}
-                <Card className="lg:col-span-1">
+                <Card className="lg:col-span-1 bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800">
                     <CardHeader>
                         <CardTitle className="text-base">Esfuerzo Comercial por Unidad</CardTitle>
                         <CardDescription>Oportunidades distribuidas (U1, U2, U3)</CardDescription>
@@ -137,8 +137,8 @@ export default function DashboardPage() {
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={metrics.sales.distribution} layout="vertical" margin={{ top: 0, right: 30, left: 20, bottom: 0 }}>
                                 <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                                <XAxis type="number" />
-                                <YAxis dataKey="name" type="category" width={80} style={{ fontSize: '12px' }} />
+                                <XAxis type="number" stroke="currentColor" className="text-zinc-500 dark:text-zinc-400" fontSize={10} />
+                                <YAxis dataKey="name" type="category" width={80} style={{ fontSize: '10px' }} stroke="currentColor" className="text-zinc-500 dark:text-zinc-400" />
                                 <RechartsTooltip
                                     formatter={(value: any) => [`${value} Oportunidades`, 'Volumen']}
                                     contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
@@ -150,7 +150,7 @@ export default function DashboardPage() {
                 </Card>
 
                 {/* Gráfico 2: Salud Financiera */}
-                <Card className="lg:col-span-1">
+                <Card className="lg:col-span-1 bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800">
                     <CardHeader>
                         <CardTitle className="text-base">Salud Financiera General</CardTitle>
                         <CardDescription>Ratio Cobrado vs Pendiente</CardDescription>
@@ -179,42 +179,42 @@ export default function DashboardPage() {
                                 </PieChart>
                             </ResponsiveContainer>
                         ) : (
-                            <div className="text-sm text-zinc-400">Sin datos de facturación suficientes</div>
+                            <div className="text-sm text-zinc-400 dark:text-zinc-500">Sin datos de facturación suficientes</div>
                         )}
                     </CardContent>
                 </Card>
 
                 {/* Panel de Alertas y Acciones Rápidas */}
-                <Card className="lg:col-span-1 border-indigo-100 bg-indigo-50/30">
+                <Card className="lg:col-span-1 border-indigo-100 dark:border-indigo-900/50 bg-indigo-50/30 dark:bg-indigo-950/20">
                     <CardHeader>
-                        <CardTitle className="text-base text-indigo-900">Centro de Atención Urgente</CardTitle>
-                        <CardDescription>Elementos que requieren supervisión</CardDescription>
+                        <CardTitle className="text-base text-indigo-900 dark:text-indigo-300">Centro de Atención Urgente</CardTitle>
+                        <CardDescription className="dark:text-indigo-400/70">Elementos que requieren supervisión</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-red-100 shadow-sm">
+                        <div className="flex items-center justify-between p-3 bg-white dark:bg-zinc-900/50 rounded-lg border border-red-100 dark:border-red-900/30 shadow-sm">
                             <div className="flex items-center gap-3">
-                                <div className="p-2 bg-red-100 rounded-full text-red-600">
+                                <div className="p-2 bg-red-100 dark:bg-red-900/30 rounded-full text-red-600 dark:text-red-400">
                                     <AlertTriangle className="w-4 h-4" />
                                 </div>
                                 <div>
-                                    <p className="text-sm font-medium text-zinc-900">Stock Crítico</p>
-                                    <p className="text-xs text-zinc-500">Modelos agotándose</p>
+                                    <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Stock Crítico</p>
+                                    <p className="text-xs text-zinc-500 dark:text-zinc-400">Modelos agotándose</p>
                                 </div>
                             </div>
-                            <div className="text-lg font-bold text-red-600">{metrics.inventory.lowStockCount}</div>
+                            <div className="text-lg font-bold text-red-600 dark:text-red-400">{metrics.inventory.lowStockCount}</div>
                         </div>
 
-                        <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-amber-100 shadow-sm">
+                        <div className="flex items-center justify-between p-3 bg-white dark:bg-zinc-900/50 rounded-lg border border-amber-100 dark:border-amber-900/30 shadow-sm">
                             <div className="flex items-center gap-3">
-                                <div className="p-2 bg-amber-100 rounded-full text-amber-600">
+                                <div className="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-full text-amber-600 dark:text-amber-400">
                                     <Compass className="w-4 h-4" />
                                 </div>
                                 <div>
-                                    <p className="text-sm font-medium text-zinc-900">Despachos Abiertos</p>
-                                    <p className="text-xs text-zinc-500">Técnicos movilizados</p>
+                                    <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Despachos Abiertos</p>
+                                    <p className="text-xs text-zinc-500 dark:text-zinc-400">Técnicos movilizados</p>
                                 </div>
                             </div>
-                            <div className="text-lg font-bold text-amber-600">{metrics.operations.pendingInterventions}</div>
+                            <div className="text-lg font-bold text-amber-600 dark:text-amber-400">{metrics.operations.pendingInterventions}</div>
                         </div>
 
                         <div className="pt-4">

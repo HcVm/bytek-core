@@ -54,7 +54,7 @@ export function InterventionCard({ intervention }: { intervention: any }) {
         : (intervention.type === 'support' ? "Soporte" : "Mantenimiento");
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-zinc-100 overflow-hidden mb-4 transition-all">
+        <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-zinc-100 dark:border-zinc-800 overflow-hidden mb-4 transition-all">
             {/* Cabecera / Resumen */}
             <div
                 className="p-4 cursor-pointer flex justify-between items-start"
@@ -62,17 +62,17 @@ export function InterventionCard({ intervention }: { intervention: any }) {
             >
                 <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                        <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm ${isCompleted ? "bg-emerald-100 text-emerald-700" :
-                            (isWorking ? "bg-amber-100 text-amber-700" : "bg-indigo-100 text-indigo-700")
+                        <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm ${isCompleted ? "bg-emerald-100 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400" :
+                            (isWorking ? "bg-amber-100 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400" : "bg-indigo-100 dark:bg-indigo-950/30 text-indigo-700 dark:text-indigo-400")
                             }`}>
                             {isCompleted ? "Completado" : typeLabel}
                         </span>
-                        {isEnRoute && <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-sm bg-blue-100 text-blue-700">En Ruta</span>}
+                        {isEnRoute && <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-sm bg-blue-100 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400">En Ruta</span>}
                     </div>
-                    <h3 className="font-semibold text-zinc-900 leading-tight">
+                    <h3 className="font-semibold text-zinc-900 dark:text-white leading-tight">
                         {intervention.clientName}
                     </h3>
-                    <p className="text-xs text-zinc-500 mt-0.5 line-clamp-1">
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5 line-clamp-1">
                         Ref: {intervention.projectTitle}
                     </p>
                 </div>
@@ -84,9 +84,9 @@ export function InterventionCard({ intervention }: { intervention: any }) {
 
             {/* Expansión (Detalles y Acciones) */}
             {expanded && (
-                <div className="px-4 pb-4 border-t border-zinc-50 pt-3 bg-zinc-50/50">
-                    <div className="flex items-start gap-2 text-zinc-600 mb-4">
-                        <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-zinc-400" />
+                <div className="px-4 pb-4 border-t border-zinc-50 dark:border-zinc-800 pt-3 bg-zinc-50/50 dark:bg-zinc-950/50">
+                    <div className="flex items-start gap-2 text-zinc-600 dark:text-zinc-400 mb-4">
+                        <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-zinc-400 dark:text-zinc-500" />
                         <span className="text-sm">{intervention.siteLocation}</span>
                     </div>
 
@@ -114,21 +114,21 @@ export function InterventionCard({ intervention }: { intervention: any }) {
                             )}
 
                             {isWorking && (
-                                <div className="p-3 bg-white border border-zinc-200 rounded-lg shadow-sm space-y-4">
-                                    <h4 className="text-sm font-semibold text-zinc-900 flex items-center gap-2">
-                                        <FileSignature className="w-4 h-4 text-indigo-600" />
+                                <div className="p-3 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-sm space-y-4">
+                                    <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+                                        <FileSignature className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                                         Acta de Cierre Operativo
                                     </h4>
 
                                     <div className="space-y-2">
-                                        <Label className="text-xs text-zinc-500">Números de Serie Físicos Instalados (Separados por coma)</Label>
+                                        <Label className="text-xs text-zinc-500 dark:text-zinc-400">Números de Serie Físicos Instalados (Separados por coma)</Label>
                                         <Input
                                             placeholder="Ej: HK12345, HK98765"
                                             value={serialInput}
                                             onChange={(e) => setSerialInput(e.target.value)}
-                                            className="text-sm"
+                                            className="text-sm bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white"
                                         />
-                                        <p className="text-[10px] text-zinc-400">Estos códigos se descontarán del Almacén Central automáticamente.</p>
+                                        <p className="text-[10px] text-zinc-400 dark:text-zinc-600">Estos códigos se descontarán del Almacén Central automáticamente.</p>
                                     </div>
 
                                     <div className="pt-2">
@@ -155,7 +155,7 @@ export function InterventionCard({ intervention }: { intervention: any }) {
 
                                     <Button
                                         variant="ghost"
-                                        className="w-full text-xs text-zinc-500"
+                                        className="w-full text-xs text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900"
                                         onClick={() => handleStatusChange("scheduled")}
                                     >
                                         Abortar / Reprogramar
@@ -164,11 +164,11 @@ export function InterventionCard({ intervention }: { intervention: any }) {
                             )}
                         </div>
                     ) : (
-                        <div className="bg-emerald-50 text-emerald-800 p-3 rounded-md text-xs border border-emerald-100">
+                        <div className="bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-300 p-3 rounded-md text-xs border border-emerald-100 dark:border-emerald-800">
                             <strong>Intervención Cerrada.</strong>
                             {intervention.hardwareSerials?.length > 0 && (
                                 <div className="mt-2 font-mono text-[10px] space-x-1">
-                                    <span className="font-semibold text-emerald-900">S/N Instalados:</span>
+                                    <span className="font-semibold text-emerald-900 dark:text-emerald-100">S/N Instalados:</span>
                                     {intervention.hardwareSerials.join(", ")}
                                 </div>
                             )}

@@ -1,193 +1,252 @@
 "use client";
 
-import { Activity, ShieldCheck, Cctv, Server, Rocket, ChevronRight, BarChart3, Archive } from "lucide-react";
+import {
+  Activity, ShieldCheck, Cctv, Server, Rocket, BarChart3, Archive,
+  Users, Briefcase, FileText, CheckCircle2, Clock,
+  TrendingUp, AlertTriangle, Building2, CreditCard
+} from "lucide-react";
 import Link from "next/link";
-import { motion, Variants } from "framer-motion";
+import { motion } from "framer-motion";
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
+import { formatDistanceToNow } from "date-fns";
+import { es } from "date-fns/locale";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function Home() {
 
-  // Variantes de animación general (Fade up)
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15 // Retraso en cascada para cada tarjeta
-      }
-    }
-  };
+  const metrics = useQuery(api.dashboard.getOverviewMetrics);
 
-  const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { type: "spring", stiffness: 100, damping: 15 }
-    }
+  const stats = {
+    activeProjects: metrics?.activeProjects ?? "-",
+    openTickets: metrics?.openTickets ?? "-",
+    pendingInvoices: metrics?.pendingInvoicesCount ?? "-",
+    pendingAmount: metrics?.pendingInvoicesAmount ?? 0,
+    systemUptime: "99.99%"
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white selection:bg-indigo-500/30 overflow-hidden relative">
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 selection:bg-indigo-500/30 overflow-y-auto">
+      {/* Decorative Background Elements */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-500/5 dark:bg-indigo-500/10 blur-[120px] rounded-full"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-emerald-500/5 dark:bg-emerald-500/10 blur-[120px] rounded-full"></div>
+      </div>
 
-      {/* Fondo Ambient Particle Simulado con CSS Grid / Radial */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600/10 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-purple-600/10 blur-[100px] rounded-full pointer-events-none" />
-
-      {/* Header Premium */}
-      <header className="px-8 py-5 flex items-center justify-between border-b border-white/5 bg-zinc-950/50 backdrop-blur-xl sticky top-0 z-50">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="flex items-center gap-3"
-        >
-          <div className="p-2 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-xl border border-white/5">
-            <Activity className="w-5 h-5 text-indigo-400" />
+      {/* Top Navigation Bar */}
+      <header className="px-6 py-4 flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50">
+        <div className="flex items-center gap-3">
+          <div className="p-1.5 bg-indigo-500/10 rounded-lg border border-indigo-500/20">
+            <Activity className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
           </div>
-          <span className="font-bold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-400">
+          <span className="font-bold text-lg tracking-tight text-zinc-900 dark:text-zinc-100">
             BYTEK CORE
           </span>
-        </motion.div>
+          <span className="px-2 py-0.5 ml-2 rounded text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-wider">
+            System Active
+          </span>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="flex items-center gap-6"
-        >
-          {/* Botón principal unificado -> Lleva al CRM Dashboard Gerencial */}
-          <Link href="/admin" className="group flex items-center gap-2 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-white px-5 py-2.5 rounded-full text-sm font-semibold transition-all">
-            <span>Admin Central</span>
-            <Server className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
-          <Link href="/crm" className="group flex items-center gap-2 bg-white hover:bg-zinc-100 text-zinc-950 px-5 py-2.5 rounded-full text-sm font-semibold transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]">
-            <span>CRM Comercial</span>
-            <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </motion.div>
+        <div className="flex items-center gap-4">
+          <div className="text-xs text-zinc-500 dark:text-zinc-400 flex items-center gap-1.5">
+            <Server className="w-3.5 h-3.5" /> All systems operational
+          </div>
+          <div className="h-4 w-px bg-zinc-300 dark:bg-zinc-800"></div>
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-full bg-zinc-200 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-700 flex items-center justify-center text-xs font-bold text-zinc-700 dark:text-white">
+              AD
+            </div>
+            <ThemeToggle />
+          </div>
+        </div>
       </header>
 
-      {/* Main Content con Animaciones */}
-      <main className="max-w-7xl mx-auto px-6 py-20 relative z-10">
+      {/* Main Dashboard Space */}
+      <main className="max-w-[1600px] mx-auto px-6 py-8">
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-16 text-center md:text-left"
-        >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-medium mb-6">
-            <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
-            Sistema Versión Alpha Disponible
+        {/* Header Welcome Section */}
+        <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white mb-2">Central de Operaciones</h1>
+            <p className="text-zinc-600 dark:text-zinc-400 text-sm">Resumen general del estado del sistema y accesos rápidos a módulos.</p>
           </div>
-          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-4 text-white">
-            Gestión <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Total B2B</span>
-          </h1>
-          <p className="text-zinc-400 text-xl max-w-2xl">
-            Central de operaciones corporativas 360° interconectando facturación, ventas e infraestructura de campo en una sola malla neuronal.
-          </p>
-        </motion.div>
-
-        {/* Unidades Grid (Animado con Stagger) */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="grid grid-cols-1 md:grid-cols-3 gap-6"
-        >
-          {/* U1 */}
-          <motion.div
-            variants={itemVariants}
-            whileHover={{ y: -5 }}
-            className="group relative bg-zinc-900/50 backdrop-blur-sm border border-white/5 rounded-2xl p-8 hover:border-indigo-500/30 transition-all overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="relative z-10">
-              <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-6 text-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.2)]">
-                <Rocket className="w-7 h-7" />
-              </div>
-              <h2 className="text-2xl font-bold mb-3 text-white group-hover:text-indigo-200 transition-colors">BYTEK Digital</h2>
-              <p className="text-zinc-400 text-sm leading-relaxed mb-8">
-                Gestión volumétrica de clientes comerciales, despliegue de landing pages y automatización de cobros recurrentes de mantenimiento.
-              </p>
-              <div className="flex items-center gap-2 text-sm font-semibold text-indigo-400">
-                <span className="w-8 h-[1px] bg-indigo-400/50"></span>
-                <span>Pipeline Comercial</span>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* U2 */}
-          <motion.div
-            variants={itemVariants}
-            whileHover={{ y: -5 }}
-            className="group relative bg-zinc-900/50 backdrop-blur-sm border border-white/5 rounded-2xl p-8 hover:border-purple-500/30 transition-all overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="relative z-10">
-              <div className="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-6 text-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.2)]">
-                <BarChart3 className="w-7 h-7" />
-              </div>
-              <h2 className="text-2xl font-bold mb-3 text-white group-hover:text-purple-200 transition-colors">BYTEK Solutions</h2>
-              <p className="text-zinc-400 text-sm leading-relaxed mb-8">
-                Factoría de Software a medida, facturación progresiva por hitos operativos y auditoría estricta de alcances de producto.
-              </p>
-              <div className="flex items-center gap-2 text-sm font-semibold text-purple-400">
-                <span className="w-8 h-[1px] bg-purple-400/50"></span>
-                <span>Gestión de Hitos</span>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* U3 */}
-          <motion.div
-            variants={itemVariants}
-            whileHover={{ y: -5 }}
-            className="group relative bg-zinc-900/50 backdrop-blur-sm border border-white/5 rounded-2xl p-8 hover:border-emerald-500/30 transition-all overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="relative z-10">
-              <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-6 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
-                <Server className="w-7 h-7" />
-              </div>
-              <h2 className="text-2xl font-bold mb-3 text-white group-hover:text-emerald-200 transition-colors">BYTEK Infra</h2>
-              <p className="text-zinc-400 text-sm leading-relaxed mb-8">
-                Despliegue operativo Field Service, control dinámico de inventario de equipos físicos, trazabilidad térmica y logística.
-              </p>
-              <div className="flex items-center gap-2 text-sm font-semibold text-emerald-400">
-                <span className="w-8 h-[1px] bg-emerald-400/50"></span>
-                <span>Bodega y Técnicos</span>
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
-
-        {/* Accesos Transversales y Módulos Externos */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5, duration: 0.8 }}
-          className="mt-20 pt-10 border-t border-white/5"
-        >
-          <h3 className="text-xl font-semibold mb-8 text-white/90">Ecosistema Módulos</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
-            <Link href="/crm" className="group bg-zinc-900/30 border border-white/5 rounded-xl p-5 flex flex-col items-start gap-4 hover:bg-zinc-800/50 hover:border-white/10 transition-all cursor-pointer">
-              <ShieldCheck className="w-6 h-6 text-zinc-400 group-hover:text-indigo-400 transition-colors" />
-              <span className="font-medium text-sm text-zinc-300">Dashboard de Ventas</span>
+          <div className="flex gap-3">
+            <Link href="/client-portal" className="px-4 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-md text-sm font-medium transition-colors flex items-center gap-2 text-zinc-700 dark:text-zinc-100 shadow-sm">
+              <Cctv className="w-4 h-4 text-zinc-500 dark:text-zinc-400" /> Portal Clientes
             </Link>
-            <Link href="/admin/inventario" className="group bg-zinc-900/30 border border-white/5 rounded-xl p-5 flex flex-col items-start gap-4 hover:bg-zinc-800/50 hover:border-white/10 transition-all cursor-pointer">
-              <Archive className="w-6 h-6 text-zinc-400 group-hover:text-emerald-400 transition-colors" />
-              <span className="font-medium text-sm text-zinc-300">Logística & Almacén</span>
-            </Link>
-            <Link href="/client-portal" className="group bg-zinc-900/30 border border-white/5 rounded-xl p-5 flex flex-col items-start gap-4 hover:bg-zinc-800/50 hover:border-white/10 transition-all cursor-pointer">
-              <Cctv className="w-6 h-6 text-zinc-500 group-hover:text-amber-400 transition-colors" />
-              <div className="flex flex-col">
-                <span className="font-medium text-sm text-zinc-300">Portal B2B Cliente</span>
-                <span className="text-[10px] uppercase text-amber-500 font-bold mt-1">Nuevo Modulo</span>
-              </div>
+            <Link href="/admin" className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-sm font-medium transition-colors shadow-lg shadow-indigo-900/20">
+              Entrar a Admin Central
             </Link>
           </div>
-        </motion.div>
+        </div>
+
+        {/* KPI Ribbon */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <CardKPI icon={<Briefcase />} title="Proyectos Activos" value={stats.activeProjects.toString()} trend="En ejecución" />
+          <CardKPI icon={<AlertTriangle className="text-amber-500 dark:text-amber-400" />} title="Tickets Abiertos" value={stats.openTickets.toString()} trend="Requieren atención" />
+          <CardKPI icon={<CreditCard />} title="Facturas Pendientes" value={stats.pendingInvoices.toString()} trend={`$${stats.pendingAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} PEN`} />
+          <CardKPI icon={<Server className="text-emerald-500 dark:text-emerald-400" />} title="Uptime Servidores" value={stats.systemUptime} trend="Últimos 30 días" />
+        </div>
+
+        {/* Main Grid Layout (Bento Box Style) */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+
+          {/* Left Column: Business Units */}
+          <div className="md:col-span-8 flex flex-col gap-6">
+            <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+              <Building2 className="w-5 h-5 text-zinc-500 dark:text-zinc-400" /> Unidades de Negocio
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <BusinessUnitCard
+                icon={<Rocket />}
+                title="Mando Comercial"
+                color="indigo"
+                link="/crm"
+                description="Pipeline de ventas, gestión de clientes y oportunidades."
+              />
+              <BusinessUnitCard
+                icon={<BarChart3 />}
+                title="Dev Center"
+                color="purple"
+                link="/dev"
+                description="Sprints, tareas, control de ingeniería y factoría de software."
+              />
+              <BusinessUnitCard
+                icon={<Server />}
+                title="Unidad Infra"
+                color="emerald"
+                link="/admin/inventario"
+                description="Despliegues Field Service, logística de almacén y bodegas."
+              />
+            </div>
+
+            {/* Financial & HR Access */}
+            <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2 mt-4">
+              <Archive className="w-5 h-5 text-zinc-500 dark:text-zinc-400" /> Core Administrativo
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <ModuleLink title="Contabilidad" desc="Libro Diario, PCGE" icon={<FileText />} href="/contabilidad" />
+              <ModuleLink title="Facturación" desc="Cobros y Pagos" icon={<CreditCard />} href="/contabilidad/cuentas-cobrar" />
+              <ModuleLink title="Talento HR" desc="Nóminas y Reclutamiento" icon={<Users />} href="/admin/hr" />
+              <ModuleLink title="Business Intel" desc="Reportes Gerenciales" icon={<TrendingUp />} href="/admin/bi" />
+            </div>
+          </div>
+
+          {/* Right Column: Quick Status & Activity */}
+          <div className="md:col-span-4 flex flex-col gap-6">
+            <div className="bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm border border-zinc-200 dark:border-zinc-800/80 shadow-sm rounded-xl p-5 h-full flex flex-col transition-all hover:bg-white dark:hover:bg-zinc-900/80">
+              <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-100 mb-4 flex items-center justify-between">
+                Actividad Reciente
+                <span className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 cursor-pointer hover:underline uppercase tracking-tight">Ver bitácora</span>
+              </h3>
+
+              <div className="flex-1 overflow-y-auto pr-2 flex flex-col gap-4">
+                {metrics === undefined ? (
+                  <div className="text-zinc-500 text-sm animate-pulse">Cargando actividad...</div>
+                ) : metrics.recentActivity.length > 0 ? (
+                  metrics.recentActivity.map((activity) => (
+                    <ActivityItem
+                      key={activity.id}
+                      title={activity.title}
+                      desc={activity.description}
+                      time={formatDistanceToNow(activity.timestamp, { addSuffix: true, locale: es })}
+                      colorClass={activity.color}
+                    />
+                  ))
+                ) : (
+                  <div className="text-zinc-500 text-sm">No hay actividad reciente.</div>
+                )}
+              </div>
+
+              <div className="pt-4 mt-2 border-t border-zinc-100 dark:border-zinc-800">
+                <Link href="/admin/tickets-soporte" className="w-full py-2 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-lg text-xs font-medium text-center text-zinc-700 dark:text-zinc-200 transition-colors flex items-center justify-center gap-2">
+                  <ShieldCheck className="w-4 h-4" /> Centro de Soporte
+                </Link>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </main>
     </div>
   );
 }
+
+// Subcomponents
+
+function CardKPI({ icon, title, value, trend }: { icon: React.ReactNode, title: string, value: string, trend: string }) {
+  return (
+    <div className="bg-white/50 dark:bg-zinc-900/40 backdrop-blur-sm border border-zinc-200 dark:border-zinc-800/80 shadow-sm rounded-xl p-5 hover:bg-white dark:hover:bg-zinc-800/60 transition-all hover:-translate-y-1 hover:shadow-lg dark:hover:shadow-black/50">
+      <div className="flex items-center justify-between mb-3">
+        <div className="text-zinc-500 dark:text-zinc-400">
+          {icon}
+        </div>
+      </div>
+      <div className="text-2xl font-bold text-zinc-900 dark:text-white mb-1">{value}</div>
+      <h3 className="text-sm text-zinc-600 dark:text-zinc-400 font-medium">{title}</h3>
+      <p className="text-xs text-zinc-500 mt-2">{trend}</p>
+    </div>
+  );
+}
+
+function BusinessUnitCard({ icon, title, description, color, link }: { icon: React.ReactNode, title: string, description: string, color: string, link: string }) {
+
+  const colorClasses = {
+    indigo: "bg-indigo-50 dark:bg-indigo-500/10 border-indigo-200 dark:border-indigo-500/20 text-indigo-600 dark:text-indigo-400 group-hover:border-indigo-300 dark:group-hover:border-indigo-500/50",
+    purple: "bg-purple-50 dark:bg-purple-500/10 border-purple-200 dark:border-purple-500/20 text-purple-600 dark:text-purple-400 group-hover:border-purple-300 dark:group-hover:border-purple-500/50",
+    emerald: "bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 group-hover:border-emerald-300 dark:group-hover:border-emerald-500/50",
+  };
+
+  return (
+    <Link href={link} className="group block h-full">
+      <div className="bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-md dark:hover:bg-zinc-800/80 rounded-xl p-5 transition-all h-full flex flex-col items-start cursor-pointer hover:-translate-y-1 dark:hover:shadow-xl dark:hover:shadow-black/50">
+        <div className={`w-10 h-10 rounded-lg flex items-center justify-center border mb-4 ${colorClasses[color as keyof typeof colorClasses]}`}>
+          {icon}
+        </div>
+        <h3 className="text-zinc-900 dark:text-zinc-100 font-bold mb-2 group-hover:text-indigo-600 dark:group-hover:text-white">{title}</h3>
+        <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed mb-4 flex-1">{description}</p>
+        <div className="text-[10px] uppercase font-bold tracking-wider text-zinc-500 mt-auto group-hover:text-indigo-600 dark:group-hover:text-zinc-300 flex items-center gap-1">
+          Abrir Módulo &rarr;
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+function ModuleLink({ title, desc, icon, href }: { title: string, desc: string, icon: React.ReactNode, href: string }) {
+  return (
+    <Link href={href}>
+      <div className="flex items-start gap-3 p-4 bg-white dark:bg-zinc-900/40 shadow-sm border border-zinc-200 dark:border-zinc-800 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors cursor-pointer group">
+        <div className="text-zinc-500 group-hover:text-indigo-600 dark:group-hover:text-zinc-300 mt-0.5">
+          {icon}
+        </div>
+        <div>
+          <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-200 group-hover:text-indigo-600 dark:group-hover:text-white">{title}</h4>
+          <p className="text-xs text-zinc-500">{desc}</p>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+function ActivityItem({ title, desc, time, colorClass }: { title: string, desc: string, time: string, colorClass: string }) {
+
+  return (
+    <div className="flex gap-3 items-start relative group pb-2">
+      {/* Timeline Line */}
+      <div className="absolute left-2.5 top-6 bottom-[-16px] w-px bg-zinc-200 dark:bg-zinc-800/50 group-last:hidden"></div>
+
+      <div className="relative mt-1">
+        <div className={`w-5 h-5 rounded-full border-[3px] border-white dark:border-zinc-950 flex-shrink-0 z-10 ${colorClass}`}></div>
+      </div>
+      <div className="flex-1 pb-2">
+        <div className="flex items-center justify-between">
+          <h4 className="text-xs font-semibold text-zinc-900 dark:text-zinc-200">{title}</h4>
+          <span className="text-[10px] text-zinc-500 whitespace-nowrap ml-2 capitalize">{time}</span>
+        </div>
+        <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-0.5 leading-snug">{desc}</p>
+      </div>
+    </div>
+  );
+}
+

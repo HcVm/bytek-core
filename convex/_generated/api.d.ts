@@ -20,6 +20,7 @@ import type * as clientPortal from "../clientPortal.js";
 import type * as clients from "../clients.js";
 import type * as contracts from "../contracts.js";
 import type * as daily from "../daily.js";
+import type * as dashboard from "../dashboard.js";
 import type * as departments from "../departments.js";
 import type * as documents from "../documents.js";
 import type * as exchangeRates from "../exchangeRates.js";
@@ -69,6 +70,7 @@ declare const fullApi: ApiFromModules<{
   clients: typeof clients;
   contracts: typeof contracts;
   daily: typeof daily;
+  dashboard: typeof dashboard;
   departments: typeof departments;
   documents: typeof documents;
   exchangeRates: typeof exchangeRates;

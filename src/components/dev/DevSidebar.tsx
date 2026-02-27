@@ -4,6 +4,7 @@ import { LayoutDashboard, KanbanSquare, GitMerge, FileCode2, LogOut, Settings, L
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
+import { ThemeToggle } from "../ThemeToggle";
 
 export function DevSidebar() {
     const { signOut } = useAuthActions();
@@ -21,6 +22,7 @@ export function DevSidebar() {
                         <span className="text-[10px] text-blue-400 font-medium uppercase tracking-widest block mt-0.5">Engineering Workspace</span>
                     </div>
                 </div>
+                <ThemeToggle />
             </div>
 
             <nav className="flex-1 p-4 space-y-1 overflow-y-auto">

@@ -63,10 +63,10 @@ export default function OportunidadesPage() {
 
     const getUnitBadgeColor = (unit: string) => {
         switch (unit) {
-            case 'digital': return 'bg-purple-100 text-purple-700 hover:bg-purple-200';
-            case 'solutions': return 'bg-blue-100 text-blue-700 hover:bg-blue-200';
-            case 'infra': return 'bg-orange-100 text-orange-700 hover:bg-orange-200';
-            default: return 'bg-gray-100 text-gray-700';
+            case 'digital': return 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 hover:bg-purple-200';
+            case 'solutions': return 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-200';
+            case 'infra': return 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 hover:bg-orange-200';
+            default: return 'bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-zinc-300';
         }
     };
 
@@ -74,7 +74,7 @@ export default function OportunidadesPage() {
         <div className="p-8 h-full flex flex-col">
             <div className="flex justify-between items-center mb-8">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-zinc-900">Pipeline de Ventas</h1>
+                    <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">Pipeline de Ventas</h1>
                     <p className="text-zinc-500 mt-2">Gestiona el progreso de las oportunidades comerciales.</p>
                 </div>
                 <OpportunityFormDialog />
@@ -87,10 +87,10 @@ export default function OportunidadesPage() {
                             const columnOpps = (localOpps || []).filter(opp => opp.status === column.id);
 
                             return (
-                                <div key={column.id} className="flex-shrink-0 w-80 flex flex-col bg-zinc-100 rounded-xl">
-                                    <div className="p-4 flex items-center justify-between border-b border-zinc-200">
-                                        <h3 className="font-semibold text-zinc-700">{column.title}</h3>
-                                        <Badge variant="secondary" className="bg-white text-zinc-500 rounded-full px-2 py-0.5">
+                                <div key={column.id} className="flex-shrink-0 w-80 flex flex-col bg-zinc-100 dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
+                                    <div className="p-4 flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800/60">
+                                        <h3 className="font-semibold text-zinc-700 dark:text-zinc-200">{column.title}</h3>
+                                        <Badge variant="secondary" className="bg-white dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 rounded-full px-2 py-0.5 border-zinc-100 dark:border-zinc-700">
                                             {columnOpps.length}
                                         </Badge>
                                     </div>
@@ -110,18 +110,18 @@ export default function OportunidadesPage() {
                                                                 ref={provided.innerRef}
                                                                 {...provided.draggableProps}
                                                                 {...provided.dragHandleProps}
-                                                                className={`bg-white p-4 rounded-lg shadow-sm border border-zinc-200 flex flex-col gap-2 ${snapshot.isDragging ? 'shadow-md rotate-[2deg] z-50' : ''
+                                                                className={`bg-white dark:bg-zinc-800 p-4 rounded-lg shadow-sm border border-zinc-200 dark:border-zinc-700 flex flex-col gap-2 ${snapshot.isDragging ? 'shadow-lg rotate-[2deg] z-50 dark:shadow-black' : ''
                                                                     }`}
                                                             >
                                                                 <div className="flex justify-between items-start">
                                                                     <div className="flex items-center gap-1">
-                                                                        <span className="text-xs font-medium text-zinc-500 truncate max-w-[150px]">
+                                                                        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400 truncate max-w-[150px]">
                                                                             {opp.clientName}
                                                                         </span>
                                                                         <OpportunityFormDialog
                                                                             initialData={opp as any}
                                                                             trigger={
-                                                                                <Button variant="ghost" size="icon" className="h-5 w-5 text-zinc-400 hover:text-indigo-600 ml-1">
+                                                                                <Button variant="ghost" size="icon" className="h-5 w-5 text-zinc-400 dark:text-zinc-500 hover:text-indigo-600 dark:hover:text-indigo-400 ml-1">
                                                                                     <Pencil className="w-3 h-3" />
                                                                                 </Button>
                                                                             }
@@ -131,12 +131,12 @@ export default function OportunidadesPage() {
                                                                         {opp.serviceUnit}
                                                                     </Badge>
                                                                 </div>
-                                                                <p className="font-medium text-sm text-zinc-900 line-clamp-2">
+                                                                <p className="font-medium text-sm text-zinc-900 dark:text-zinc-100 line-clamp-2">
                                                                     {/* Idealmente aquí el nombre del paquete/oportunidad */}
                                                                     {opp.packageId.replace(/_/g, ' ').toUpperCase()}
                                                                 </p>
                                                                 <div className="mt-2 text-right">
-                                                                    <span className="text-sm font-semibold text-emerald-600 flex items-center justify-between">
+                                                                    <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 flex items-center justify-between">
                                                                         <QuoteGeneratorDialog opportunityId={opp._id} clientName={opp.clientName || 'Cliente'} />
                                                                         <span>S/ {opp.estimatedValue.toLocaleString('es-PE', { minimumFractionDigits: 2 })}</span>
                                                                     </span>

@@ -157,15 +157,15 @@ export function EmployeeProfileDialog({ userId, userName }: { userId: Id<"users"
                     Legajo HR
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[700px] h-[85vh] flex flex-col p-0 bg-white gap-0 border-zinc-200 shadow-2xl">
-                <DialogHeader className="px-6 py-4 border-b border-zinc-100 bg-slate-50">
+            <DialogContent className="sm:max-w-[700px] h-[85vh] flex flex-col p-0 bg-white dark:bg-zinc-950 gap-0 border-zinc-200 dark:border-zinc-800 shadow-2xl">
+                <DialogHeader className="px-6 py-4 border-b border-zinc-100 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900">
                     <DialogTitle className="flex items-center justify-between text-xl">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center">
+                            <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
                                 <Briefcase className="w-5 h-5" />
                             </div>
                             <div>
-                                <div className="text-zinc-900 font-bold">{userName}</div>
+                                <div className="text-zinc-900 dark:text-white font-bold">{userName}</div>
                                 <div className="text-xs text-zinc-500 font-mono">Legajo Digital Corporativo</div>
                             </div>
                         </div>
@@ -178,12 +178,12 @@ export function EmployeeProfileDialog({ userId, userName }: { userId: Id<"users"
                 </DialogHeader>
 
                 <Tabs defaultValue="contrato" className="flex-1 flex flex-col overflow-hidden">
-                    <div className="px-6 pt-4 border-b border-zinc-100">
-                        <TabsList className="grid grid-cols-4 w-full bg-zinc-100/50 p-1 rounded-xl h-12">
-                            <TabsTrigger value="contrato" className="data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-lg text-sm font-medium">Contrato & Salario</TabsTrigger>
-                            <TabsTrigger value="legal" className="data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-lg text-sm font-medium">Demográfica Legal</TabsTrigger>
-                            <TabsTrigger value="documentos" className="data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-lg text-sm font-medium flex items-center gap-2"><FileText className="w-4 h-4" /> Bóveda Doc</TabsTrigger>
-                            <TabsTrigger value="ciclo" className="data-[state=active]:bg-red-50 data-[state=active]:text-red-700 data-[state=active]:shadow-sm rounded-lg text-sm font-medium text-red-500"><ShieldAlert className="w-4 h-4 mr-1" /> Ciclo Vida</TabsTrigger>
+                    <div className="px-6 pt-4 border-b border-zinc-100 dark:border-zinc-800">
+                        <TabsList className="grid grid-cols-4 w-full bg-zinc-100/50 dark:bg-zinc-900 p-1 rounded-xl h-12">
+                            <TabsTrigger value="contrato" className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-950 data-[state=active]:shadow-sm rounded-lg text-sm font-medium">Contrato & Salario</TabsTrigger>
+                            <TabsTrigger value="legal" className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-950 data-[state=active]:shadow-sm rounded-lg text-sm font-medium">Demográfica Legal</TabsTrigger>
+                            <TabsTrigger value="documentos" className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-950 data-[state=active]:shadow-sm rounded-lg text-sm font-medium flex items-center gap-2"><FileText className="w-4 h-4" /> Bóveda Doc</TabsTrigger>
+                            <TabsTrigger value="ciclo" className="data-[state=active]:bg-red-50 dark:data-[state=active]:bg-red-900/20 data-[state=active]:text-red-700 dark:data-[state=active]:text-red-400 data-[state=active]:shadow-sm rounded-lg text-sm font-medium text-red-500"><ShieldAlert className="w-4 h-4 mr-1" /> Ciclo Vida</TabsTrigger>
                         </TabsList>
                     </div>
 
@@ -209,11 +209,11 @@ export function EmployeeProfileDialog({ userId, userName }: { userId: Id<"users"
                                     </div>
                                     <div className="space-y-3">
                                         <label className="text-xs font-bold tracking-wider text-zinc-500 uppercase flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" /> F. Ingreso (Alta Laboral)</label>
-                                        <Input type="date" className="h-11 bg-white border-zinc-200" value={formData.hireDate} onChange={(e) => setFormData({ ...formData, hireDate: e.target.value })} />
+                                        <Input type="date" className="h-11 bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800" value={formData.hireDate} onChange={(e) => setFormData({ ...formData, hireDate: e.target.value })} />
                                     </div>
                                     <div className="space-y-3">
                                         <label className="text-xs font-bold tracking-wider text-zinc-500 uppercase flex items-center gap-1.5"><CreditCard className="w-3.5 h-3.5" /> Finanzas / Cuenta de Abono</label>
-                                        <Input type="text" placeholder="BCP Soles 191..." className="h-11 bg-white border-zinc-200" value={formData.bankAccountDetails} onChange={(e) => setFormData({ ...formData, bankAccountDetails: e.target.value })} />
+                                        <Input type="text" placeholder="BCP Soles 191..." className="h-11 bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800" value={formData.bankAccountDetails} onChange={(e) => setFormData({ ...formData, bankAccountDetails: e.target.value })} />
                                     </div>
                                 </div>
                             </TabsContent>
@@ -253,12 +253,12 @@ export function EmployeeProfileDialog({ userId, userName }: { userId: Id<"users"
 
                             {/* TAB 3: STORAGE */}
                             <TabsContent value="documentos" className="space-y-6 m-0">
-                                <div className="border border-dashed border-indigo-200 bg-indigo-50/50 p-6 rounded-2xl flex flex-col items-center justify-center text-center transition-colors hover:bg-indigo-50">
-                                    <div className="w-14 h-14 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-500 mb-4 shadow-sm">
+                                <div className="border border-dashed border-indigo-200 dark:border-indigo-800 bg-indigo-50/50 dark:bg-indigo-950 p-6 rounded-2xl flex flex-col items-center justify-center text-center transition-colors hover:bg-indigo-50 dark:hover:bg-indigo-900/20">
+                                    <div className="w-14 h-14 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center text-indigo-500 dark:text-indigo-400 mb-4 shadow-sm">
                                         <UploadCloud className="w-6 h-6" />
                                     </div>
-                                    <h3 className="font-bold text-zinc-900 mb-1">Subir Documento Confidencial</h3>
-                                    <p className="text-sm text-zinc-500 mb-6 max-w-sm">Adjunta memorándums, contratos físicos escaneados o NDAs vinculados directamente a {userName}.</p>
+                                    <h3 className="font-bold text-zinc-900 dark:text-white mb-1">Subir Documento Confidencial</h3>
+                                    <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6 max-w-sm">Adjunta memorándums, contratos físicos escaneados o NDAs vinculados directamente a {userName}.</p>
 
                                     <input type="file" ref={fileInputRef} className="hidden" onChange={handleFileUpload} accept=".pdf,.doc,.docx,.jpg,.png" />
                                     <Button type="button" onClick={() => fileInputRef.current?.click()} disabled={isUploading} className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md">
@@ -272,9 +272,9 @@ export function EmployeeProfileDialog({ userId, userName }: { userId: Id<"users"
                                         <div className="text-sm text-zinc-400 italic p-4 text-center border border-zinc-100 rounded-lg">No hay contratos escaneados en el legajo.</div>
                                     )}
                                     {documents?.map(doc => (
-                                        <div key={doc._id} className="flex flex-row items-center justify-between p-3.5 bg-white border border-zinc-200 rounded-xl hover:shadow-sm transition-all group">
+                                        <div key={doc._id} className="flex flex-row items-center justify-between p-3.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl hover:shadow-sm transition-all group">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center text-slate-500 border border-slate-200">
+                                                <div className="w-10 h-10 bg-slate-100 dark:bg-zinc-800 rounded-lg flex items-center justify-center text-slate-500 dark:text-zinc-400 border border-slate-200 dark:border-zinc-700">
                                                     <File className="w-5 h-5" />
                                                 </div>
                                                 <div>
@@ -292,11 +292,11 @@ export function EmployeeProfileDialog({ userId, userName }: { userId: Id<"users"
 
                             {/* TAB 4: CICLO DE VIDA (ZONA DE PELIGRO) */}
                             <TabsContent value="ciclo" className="space-y-8 m-0">
-                                <div className="p-6 bg-red-50/50 border border-red-100 rounded-2xl">
-                                    <h3 className="text-lg font-bold text-red-900 flex items-center gap-2 mb-2">
+                                <div className="p-6 bg-red-50/50 dark:bg-red-950/20 border border-red-100 dark:border-red-900/30 rounded-2xl">
+                                    <h3 className="text-lg font-bold text-red-900 dark:text-red-400 flex items-center gap-2 mb-2">
                                         <UserMinus className="w-5 h-5 text-red-500" /> Estado de la Operación
                                     </h3>
-                                    <p className="text-sm text-red-700/80 mb-6 max-w-lg">Cambiar a un estado negativo deshabilitará de inmediato el acceso de este usuario al sistema Field Service, Pizarras Dev y Client Portal.</p>
+                                    <p className="text-sm text-red-700/80 dark:text-red-400/80 mb-6 max-w-lg">Cambiar a un estado negativo deshabilitará de inmediato el acceso de este usuario al sistema Field Service, Pizarras Dev y Client Portal.</p>
 
                                     <div className="space-y-6">
                                         <div className="space-y-3">
@@ -314,14 +314,14 @@ export function EmployeeProfileDialog({ userId, userName }: { userId: Id<"users"
                                         </div>
 
                                         {formData.status === 'cesado' && (
-                                            <div className="grid grid-cols-2 gap-6 bg-white p-5 rounded-xl border border-red-100 shadow-sm animate-in fade-in slide-in-from-top-2">
+                                            <div className="grid grid-cols-2 gap-6 bg-white dark:bg-zinc-900 p-5 rounded-xl border border-red-100 dark:border-red-900/30 shadow-sm animate-in fade-in slide-in-from-top-2">
                                                 <div className="space-y-3">
-                                                    <label className="text-xs font-bold tracking-wider text-zinc-500 uppercase">Fecha de Salida</label>
-                                                    <Input type="date" className="h-11" value={formData.terminationDate} onChange={(e) => setFormData({ ...formData, terminationDate: e.target.value })} required={formData.status === 'cesado'} />
+                                                    <label className="text-xs font-bold tracking-wider text-zinc-500 dark:text-zinc-400 uppercase">Fecha de Salida</label>
+                                                    <Input type="date" className="h-11 dark:bg-zinc-950 dark:border-zinc-800" value={formData.terminationDate} onChange={(e) => setFormData({ ...formData, terminationDate: e.target.value })} required={formData.status === 'cesado'} />
                                                 </div>
                                                 <div className="space-y-3">
-                                                    <label className="text-xs font-bold tracking-wider text-zinc-500 uppercase">Sustento Legal / Motivo</label>
-                                                    <Input type="text" placeholder="Término contrato, Infracción, Renuncia..." className="h-11" value={formData.terminationReason} onChange={(e) => setFormData({ ...formData, terminationReason: e.target.value })} />
+                                                    <label className="text-xs font-bold tracking-wider text-zinc-500 dark:text-zinc-400 uppercase">Sustento Legal / Motivo</label>
+                                                    <Input type="text" placeholder="Término contrato, Infracción, Renuncia..." className="h-11 dark:bg-zinc-950 dark:border-zinc-800" value={formData.terminationReason} onChange={(e) => setFormData({ ...formData, terminationReason: e.target.value })} />
                                                 </div>
                                             </div>
                                         )}
@@ -332,8 +332,8 @@ export function EmployeeProfileDialog({ userId, userName }: { userId: Id<"users"
                     </div>
                 </Tabs>
 
-                <div className="px-6 py-4 bg-slate-50 border-t border-zinc-200 flex justify-end gap-3 mt-auto">
-                    <Button type="button" variant="outline" onClick={() => setOpen(false)} className="border-zinc-200 text-zinc-600">Cerrar Legajo</Button>
+                <div className="px-6 py-4 bg-slate-50 dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 flex justify-end gap-3 mt-auto">
+                    <Button type="button" variant="outline" onClick={() => setOpen(false)} className="border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400">Cerrar Legajo</Button>
                     <Button type="submit" form="hr-form" className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8">Guardar Enmiendas Legales</Button>
                 </div>
             </DialogContent>

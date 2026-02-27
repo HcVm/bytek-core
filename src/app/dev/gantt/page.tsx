@@ -67,12 +67,12 @@ export default function GanttPage() {
         <div className="p-8 max-w-full mx-auto space-y-6 overflow-hidden">
             <header className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">Diagrama Gantt</h1>
-                    <p className="text-slate-500 mt-1">Visualización cronológica de las tareas del proyecto.</p>
+                    <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Diagrama Gantt</h1>
+                    <p className="text-slate-500 dark:text-zinc-400 mt-1">Visualización cronológica de las tareas del proyecto.</p>
                 </div>
                 <div className="flex items-center gap-3">
                     <select
-                        className="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white text-slate-800"
+                        className="border border-slate-200 dark:border-zinc-800 rounded-lg px-3 py-2 text-sm bg-white dark:bg-zinc-950 text-slate-800 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-blue-500/20"
                         value={activeBoardId || ""}
                         onChange={e => setSelectedBoardId(e.target.value as Id<"boards">)}
                     >
@@ -84,22 +84,22 @@ export default function GanttPage() {
             </header>
 
             {!ganttTasks || ganttTasks.length === 0 ? (
-                <div className="border-2 border-dashed border-slate-200 rounded-xl p-16 text-center">
-                    <GanttChartSquare className="w-12 h-12 mx-auto mb-4 text-slate-300" />
-                    <h3 className="text-lg font-bold text-slate-800">Sin Tareas Planificadas</h3>
-                    <p className="text-slate-500 mt-1 max-w-md mx-auto">
+                <div className="border-2 border-dashed border-slate-200 dark:border-zinc-800 rounded-xl p-16 text-center bg-white dark:bg-zinc-900/50">
+                    <GanttChartSquare className="w-12 h-12 mx-auto mb-4 text-slate-300 dark:text-zinc-700" />
+                    <h3 className="text-lg font-bold text-slate-800 dark:text-white">Sin Tareas Planificadas</h3>
+                    <p className="text-slate-500 dark:text-zinc-400 mt-1 max-w-md mx-auto">
                         Asigna fechas de inicio y fin a las tareas del Kanban (desde el detalle de cada tarea) para que aparezcan en el Gantt.
                     </p>
                 </div>
             ) : (
-                <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                <div className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl overflow-hidden shadow-sm">
                     {/* Leyenda */}
-                    <div className="px-6 py-3 border-b border-slate-100 flex items-center gap-6 bg-slate-50">
-                        <span className="flex items-center gap-1.5 text-xs text-slate-600"><span className="w-3 h-3 rounded bg-emerald-500 inline-block"></span> Feature</span>
-                        <span className="flex items-center gap-1.5 text-xs text-slate-600"><span className="w-3 h-3 rounded bg-red-500 inline-block"></span> Bug</span>
-                        <span className="flex items-center gap-1.5 text-xs text-slate-600"><span className="w-3 h-3 rounded bg-purple-500 inline-block"></span> Epic</span>
-                        <span className="flex items-center gap-1.5 text-xs text-slate-600"><span className="w-3 h-3 rounded bg-indigo-500 inline-block"></span> Task</span>
-                        <div className="ml-auto flex items-center gap-1.5 text-xs text-slate-400">
+                    <div className="px-6 py-3 border-b border-slate-100 dark:border-zinc-800 flex items-center gap-6 bg-slate-50 dark:bg-zinc-900/50">
+                        <span className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-zinc-400"><span className="w-3 h-3 rounded bg-emerald-500 inline-block"></span> Feature</span>
+                        <span className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-zinc-400"><span className="w-3 h-3 rounded bg-red-500 inline-block"></span> Bug</span>
+                        <span className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-zinc-400"><span className="w-3 h-3 rounded bg-purple-500 inline-block"></span> Epic</span>
+                        <span className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-zinc-400"><span className="w-3 h-3 rounded bg-indigo-500 inline-block"></span> Task</span>
+                        <div className="ml-auto flex items-center gap-1.5 text-xs text-slate-400 dark:text-zinc-500">
                             <Calendar className="w-3 h-3" /> {ganttTasks.length} tareas planificadas
                         </div>
                     </div>
@@ -110,8 +110,8 @@ export default function GanttPage() {
                             <g transform={`translate(${labelWidth}, 0)`}>
                                 {weekLines.map((wl, i) => (
                                     <g key={i}>
-                                        <line x1={wl.x} y1={30} x2={wl.x} y2={ganttTasks.length * rowHeight + 40} stroke="#e2e8f0" strokeWidth={1} strokeDasharray="4 4" />
-                                        <text x={wl.x + 4} y={20} fontSize={10} fill="#94a3b8" fontFamily="Inter, sans-serif">{wl.label}</text>
+                                        <line x1={wl.x} y1={30} x2={wl.x} y2={ganttTasks.length * rowHeight + 40} className="stroke-slate-200 dark:stroke-zinc-800" strokeWidth={1} strokeDasharray="4 4" />
+                                        <text x={wl.x + 4} y={20} fontSize={10} className="fill-slate-400 dark:fill-zinc-500" fontFamily="Inter, sans-serif">{wl.label}</text>
                                     </g>
                                 ))}
                                 {/* Línea de HOY */}
@@ -140,13 +140,13 @@ export default function GanttPage() {
                                     <g key={task._id}>
                                         {/* Fondo alterno */}
                                         {idx % 2 === 0 && (
-                                            <rect x={0} y={y - 5} width={labelWidth + chartWidth + 40} height={rowHeight} fill="#f8fafc" />
+                                            <rect x={0} y={y - 5} width={labelWidth + chartWidth + 40} height={rowHeight} className="fill-slate-50 dark:fill-zinc-900/30" />
                                         )}
                                         {/* Label */}
-                                        <text x={12} y={y + 16} fontSize={12} fill="#1e293b" fontFamily="Inter, sans-serif" fontWeight={task.type === 'epic' ? 700 : 500}>
+                                        <text x={12} y={y + 16} fontSize={12} className="fill-slate-900 dark:fill-zinc-100" fontFamily="Inter, sans-serif" fontWeight={task.type === 'epic' ? 700 : 500}>
                                             {task.title.length > 30 ? task.title.substring(0, 30) + '...' : task.title}
                                         </text>
-                                        <text x={12} y={y + 30} fontSize={9} fill="#94a3b8" fontFamily="Inter, sans-serif">
+                                        <text x={12} y={y + 30} fontSize={9} className="fill-slate-400 dark:fill-zinc-500" fontFamily="Inter, sans-serif">
                                             {task.assigneeName || "Sin asignar"} · {task.storyPoints || 0} SP
                                         </text>
                                         {/* Barra */}

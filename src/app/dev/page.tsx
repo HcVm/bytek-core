@@ -12,38 +12,38 @@ export default function DevDashboardOverview() {
     const boards = useQuery(api.agile.getBoardsForUser, userId ? { userId } : "skip");
     // const pendingTasks = useQuery(api.agile.getMyPendingTasks, userId ? { userId } : "skip"); // Ideal for a dashboard
 
-    if (boards === undefined) return <div className="p-10 flex items-center justify-center h-full"><span className="animate-pulse text-slate-400 font-semibold tracking-widest text-sm uppercase">Cargando Workspace...</span></div>;
+    if (boards === undefined) return <div className="p-10 flex items-center justify-center h-full"><span className="animate-pulse text-slate-400 dark:text-zinc-500 font-semibold tracking-widest text-sm uppercase">Cargando Workspace...</span></div>;
 
     return (
         <div className="p-8 max-w-5xl mx-auto space-y-8">
             <header>
-                <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">Developer Dashboard</h1>
-                <p className="text-slate-500 mt-1">Tu centro de mando para ingeniería de software.</p>
+                <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Developer Dashboard</h1>
+                <p className="text-slate-500 dark:text-zinc-400 mt-1">Tu centro de mando para ingeniería de software.</p>
             </header>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col">
-                    <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-4">
+                <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 shadow-sm flex flex-col">
+                    <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center mb-4">
                         <KanbanSquare className="w-6 h-6" />
                     </div>
-                    <h2 className="text-xl font-bold text-slate-800 mb-1">Tus Pizarras</h2>
-                    <p className="text-sm text-slate-500 mb-4 flex-1">Proyectos activos a los que fuiste asignado como desarrollador o líder.</p>
-                    <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-100">
-                        <span className="text-2xl font-black text-slate-900">{boards.length}</span>
-                        <Link href="/dev/pizarras" className="text-sm font-medium text-blue-600 hover:text-blue-700 flex items-center gap-1 group">
+                    <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-1">Tus Pizarras</h2>
+                    <p className="text-sm text-slate-500 dark:text-zinc-400 mb-4 flex-1">Proyectos activos a los que fuiste asignado como desarrollador o líder.</p>
+                    <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-100 dark:border-zinc-800">
+                        <span className="text-2xl font-black text-slate-900 dark:text-white">{boards.length}</span>
+                        <Link href="/dev/pizarras" className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 flex items-center gap-1 group">
                             Ver todas <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </Link>
                     </div>
                 </div>
 
-                <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] flex flex-col relative overflow-hidden group hover:border-indigo-200 transition-colors">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-bl-full -z-10 transition-transform group-hover:scale-110"></div>
-                    <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center mb-4">
+                <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] flex flex-col relative overflow-hidden group hover:border-indigo-200 transition-colors">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50 dark:bg-indigo-900/20 rounded-bl-full -z-10 transition-transform group-hover:scale-110"></div>
+                    <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center mb-4">
                         <ListTodo className="w-6 h-6" />
                     </div>
-                    <h2 className="text-xl font-bold text-slate-800 mb-1">Backlog Review</h2>
-                    <p className="text-sm text-slate-500 mb-4 flex-1">Revisa tareas sin sprint asignado y planifica tu capacidad de story points.</p>
-                    <div className="mt-auto pt-4 border-t border-slate-100">
+                    <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-1">Backlog Review</h2>
+                    <p className="text-sm text-slate-500 dark:text-zinc-400 mb-4 flex-1">Revisa tareas sin sprint asignado y planifica tu capacidad de story points.</p>
+                    <div className="mt-auto pt-4 border-t border-slate-100 dark:border-zinc-800">
                         <Link href="/dev/backlog" className="w-full py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg flex items-center justify-center gap-2 text-sm font-medium transition-colors">
                             Ir al Backlog Global
                         </Link>
@@ -66,19 +66,19 @@ export default function DevDashboardOverview() {
                 </div>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-2xl p-6">
+            <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl p-6">
                 <div className="flex items-center gap-3 mb-4">
-                    <Layers className="w-5 h-5 text-slate-400" />
-                    <h3 className="font-bold text-lg text-slate-800">Actividad Reciente en tus Pizarras</h3>
+                    <Layers className="w-5 h-5 text-slate-400 dark:text-zinc-500" />
+                    <h3 className="font-bold text-lg text-slate-800 dark:text-white">Actividad Reciente en tus Pizarras</h3>
                 </div>
                 <div className="space-y-3">
                     {boards.slice(0, 3).map((board: any) => (
-                        <div key={board._id} className="flex items-center justify-between p-3 hover:bg-slate-50 rounded-lg group transition-colors">
+                        <div key={board._id} className="flex items-center justify-between p-3 hover:bg-slate-50 dark:hover:bg-zinc-800 rounded-lg group transition-colors">
                             <div className="flex items-center gap-3">
                                 <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-                                <span className="font-medium text-slate-700">{board.title}</span>
+                                <span className="font-medium text-slate-700 dark:text-zinc-300">{board.title}</span>
                             </div>
-                            <Link href={`/dev/pizarras/${board._id}`} className="opacity-0 group-hover:opacity-100 text-sm text-blue-600 font-medium transition-opacity">
+                            <Link href={`/dev/pizarras/${board._id}`} className="opacity-0 group-hover:opacity-100 text-sm text-blue-600 dark:text-blue-400 font-medium transition-opacity">
                                 Abrir Tablero
                             </Link>
                         </div>

@@ -36,7 +36,7 @@ export default function ClientPortalLogin() {
     };
 
     return (
-        <div className="min-h-screen bg-zinc-950 flex justify-center items-center relative overflow-hidden">
+        <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex justify-center items-center relative overflow-hidden">
             {/* Ambient Background */}
             <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-indigo-600/20 blur-[150px] rounded-full pointer-events-none" />
 
@@ -44,27 +44,27 @@ export default function ClientPortalLogin() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5 }}
-                className="w-full max-w-md bg-zinc-900/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden relative z-10"
+                className="w-full max-w-md bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-zinc-200 dark:border-white/10 rounded-2xl shadow-xl overflow-hidden relative z-10"
             >
-                <div className="p-8 pb-6 border-b border-white/5 flex flex-col items-center text-center">
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center mb-4 text-indigo-400 border border-white/5 shadow-inner">
+                <div className="p-8 pb-6 border-b border-zinc-200 dark:border-white/5 flex flex-col items-center text-center">
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500/10 to-purple-500/10 dark:from-indigo-500/20 dark:to-purple-500/20 flex items-center justify-center mb-4 text-indigo-600 dark:text-indigo-400 border border-zinc-200 dark:border-white/5 shadow-inner">
                         <Cctv className="w-8 h-8" />
                     </div>
-                    <h1 className="text-2xl font-bold tracking-tight text-white mb-2">Portal de Clientes</h1>
-                    <p className="text-sm text-zinc-400">Transparencia corporativa y estado de cuenta 24/7.</p>
+                    <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white mb-2">Portal de Clientes</h1>
+                    <p className="text-sm text-zinc-600 dark:text-zinc-400">Transparencia corporativa y estado de cuenta 24/7.</p>
                 </div>
 
-                <div className="p-8 bg-zinc-950/50 space-y-6">
+                <div className="p-8 bg-zinc-50/50 dark:bg-zinc-950/50 space-y-6">
                     {/* Switcher de Métodos (Solo Dev) */}
-                    <div className="flex bg-zinc-900 p-1 rounded-lg border border-white/5">
+                    <div className="flex bg-zinc-200/50 dark:bg-zinc-900 p-1 rounded-lg border border-zinc-300 dark:border-white/5">
                         <button
-                            className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${loginMethod === 'simulate' ? 'bg-indigo-600 text-white shadow-sm' : 'text-zinc-500 hover:text-white'}`}
+                            className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${loginMethod === 'simulate' ? 'bg-indigo-600 text-white shadow-sm' : 'text-zinc-600 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-white'}`}
                             onClick={() => setLoginMethod('simulate')}
                         >
                             Simulador (Demo)
                         </button>
                         <button
-                            className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${loginMethod === 'magic' ? 'bg-indigo-600 text-white shadow-sm' : 'text-zinc-500 hover:text-white'}`}
+                            className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${loginMethod === 'magic' ? 'bg-indigo-600 text-white shadow-sm' : 'text-zinc-600 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-white'}`}
                             onClick={() => setLoginMethod('magic')}
                         >
                             Enlace Mágico (Real)
@@ -74,14 +74,14 @@ export default function ClientPortalLogin() {
                     {loginMethod === "simulate" ? (
                         <div className="space-y-4">
                             <div className="space-y-2">
-                                <Label className="text-zinc-300">Seleccionar Razón Social Habilitada</Label>
+                                <Label className="text-zinc-700 dark:text-zinc-300">Seleccionar Razón Social Habilitada</Label>
                                 <Select value={selectedClient} onValueChange={setSelectedClient}>
-                                    <SelectTrigger className="w-full bg-zinc-900 border-zinc-700 text-white focus:ring-indigo-500">
+                                    <SelectTrigger className="w-full bg-white dark:bg-zinc-900 border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white focus:ring-indigo-500">
                                         <SelectValue placeholder="Buscando empresas inscritas..." />
                                     </SelectTrigger>
-                                    <SelectContent className="bg-zinc-800 border-zinc-700 text-zinc-200">
+                                    <SelectContent className="bg-white dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700 text-zinc-900 dark:text-zinc-200">
                                         {clients.map((c: any) => (
-                                            <SelectItem key={c._id} value={c._id} className="focus:bg-zinc-700 focus:text-white">
+                                            <SelectItem key={c._id} value={c._id} className="focus:bg-zinc-100 dark:focus:bg-zinc-700 focus:text-zinc-900 dark:focus:text-white">
                                                 {c.companyName}
                                             </SelectItem>
                                         ))}
@@ -91,7 +91,7 @@ export default function ClientPortalLogin() {
                             </div>
                             <Button
                                 onClick={handleAccess}
-                                className="w-full bg-white text-zinc-950 hover:bg-zinc-200 font-bold h-11"
+                                className="w-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-950 hover:bg-zinc-800 dark:hover:bg-zinc-200 font-bold h-11"
                             >
                                 Ingresar al Portal <ArrowRight className="w-4 h-4 ml-2" />
                             </Button>
@@ -99,11 +99,11 @@ export default function ClientPortalLogin() {
                     ) : (
                         <div className="space-y-4">
                             <div className="space-y-2">
-                                <Label className="text-zinc-300">Correo Electrónico Corporativo</Label>
+                                <Label className="text-zinc-700 dark:text-zinc-300">Correo Electrónico Corporativo</Label>
                                 <Input
                                     type="email"
                                     placeholder="contacto@miempresa.com"
-                                    className="bg-zinc-900 border-zinc-700 text-white focus-visible:ring-indigo-500 h-11"
+                                    className="bg-white dark:bg-zinc-900 border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white focus-visible:ring-indigo-500 h-11"
                                 />
                             </div>
                             <Button
@@ -112,7 +112,7 @@ export default function ClientPortalLogin() {
                             >
                                 <Mail className="w-4 h-4 mr-2" /> Enviar Enlace de Acceso
                             </Button>
-                            <p className="text-xs text-center text-zinc-500">
+                            <p className="text-xs text-center text-zinc-600 dark:text-zinc-500">
                                 Le enviaremos un Link Seguro temporal que no requiere contraseña.
                             </p>
                         </div>

@@ -82,7 +82,7 @@ export function UserFormDialog({
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 {trigger || (
-                    <Button className="bg-zinc-900 text-white hover:bg-zinc-800">
+                    <Button className="bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200">
                         <UserPlus className="w-4 h-4 mr-2" />
                         Nuevo Miembro
                     </Button>
@@ -133,7 +133,7 @@ export function UserFormDialog({
                                     <FormLabel>Rol en Sistema</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
-                                            <SelectTrigger>
+                                            <SelectTrigger className="dark:bg-zinc-950 dark:border-zinc-800">
                                                 <SelectValue placeholder="Selecciona un Rol..." />
                                             </SelectTrigger>
                                         </FormControl>
@@ -157,7 +157,7 @@ export function UserFormDialog({
                                     <FormLabel>Departamento / Área Organizacional</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
-                                            <SelectTrigger>
+                                            <SelectTrigger className="dark:bg-zinc-950 dark:border-zinc-800">
                                                 <SelectValue placeholder="Asignar al Área..." />
                                             </SelectTrigger>
                                         </FormControl>
@@ -187,7 +187,7 @@ export function UserFormDialog({
                             )}
                         />
 
-                        <Button type="submit" className="w-full bg-zinc-900 hover:bg-zinc-800 text-white">
+                        <Button type="submit" className="w-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200">
                             Guardar Personal
                         </Button>
                     </form>
