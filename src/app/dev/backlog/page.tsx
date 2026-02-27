@@ -23,12 +23,7 @@ export default function GlobalBacklog() {
     const backlogTasks = useQuery(api.agile.getBacklogTasks, {});
     const assignToSprint = useMutation(api.agile.assignTaskToSprint);
 
-    // get all sprints from all boards
-    const allSprints: any[] = [];
-    const boardSprints: Record<string, any[]> = {};
-
-    // Simple approach: collect sprints for each loaded board
-    const boardIds = boards?.map(b => b._id) || [];
+    const allSprints = useQuery(api.agile.getSprintsForUser, userId ? { userId } : "skip");
 
     const getTypeIcon = (t: string) => {
         switch (t) {
@@ -77,38 +72,65 @@ export default function GlobalBacklog() {
                     <p className="text-slate-500 mt-1">Todas las tareas están asignadas a sprints. ¡Excelente trabajo!</p>
                 </div>
             ) : (
-                Object.entries(tasksByBoard).map(([boardTitle, tasks]) => (
-                    <div key={boardTitle} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                        <div className="bg-slate-50 px-5 py-3 border-b border-slate-200 flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <div className="w-2 h-2 rounded-full bg-indigo-500"></div>
-                                <span className="font-bold text-sm text-slate-800">{boardTitle}</span>
-                            </div>
-                            <span className="text-xs text-slate-500">
-                                {tasks.reduce((a: number, t: any) => a + (t.storyPoints || 0), 0)} SP total
-                            </span>
-                        </div>
-                        <div className="divide-y divide-slate-100">
-                            {tasks.map((task: any) => (
-                                <div key={task._id} className="px-5 py-3.5 flex items-center gap-4 hover:bg-slate-50/50 transition-colors">
-                                    <div className="shrink-0">{getTypeIcon(task.type || "task")}</div>
-                                    <div className="flex-1 min-w-0">
-                                        <p className="font-medium text-sm text-slate-900 truncate">{task.title}</p>
-                                        <p className="text-xs text-slate-500 mt-0.5">
-                                            {task.assigneeName || "Sin asignar"} · {task.storyPoints || 0} SP
-                                        </p>
-                                    </div>
-                                    <Badge className={`${getPriorityColor(task.priority)} text-[10px] font-bold uppercase border shadow-none`}>
-                                        {task.priority}
-                                    </Badge>
-                                    <Badge variant="outline" className="text-[10px] uppercase border-slate-200 shadow-none">
-                                        {task.status.replace("_", " ")}
-                                    </Badge>
+                Object.entries(tasksByBoard).map(([boardTitle, tasks]) => {
+                    const boardId = tasks[0]?.boardId;
+                    const availableSprints = allSprints?.filter(s => s.boardId === boardId) || [];
+
+                    return (
+                        <div key={boardTitle} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                            <div className="bg-slate-50 px-5 py-3 border-b border-slate-200 flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-2 h-2 rounded-full bg-indigo-500"></div>
+                                    <span className="font-bold text-sm text-slate-800">{boardTitle}</span>
                                 </div>
-                            ))}
+                                <span className="text-xs text-slate-500">
+                                    {tasks.reduce((a: number, t: any) => a + (t.storyPoints || 0), 0)} SP total
+                                </span>
+                            </div>
+                            <div className="divide-y divide-slate-100">
+                                {tasks.map((task: any) => (
+                                    <div key={task._id} className="px-5 py-3.5 flex items-center gap-4 hover:bg-slate-50/50 transition-colors">
+                                        <div className="shrink-0">{getTypeIcon(task.type || "task")}</div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="font-medium text-sm text-slate-900 truncate">{task.title}</p>
+                                            <p className="text-xs text-slate-500 mt-0.5">
+                                                {task.assigneeName || "Sin asignar"} · {task.storyPoints || 0} SP
+                                            </p>
+                                        </div>
+                                        <Badge className={`${getPriorityColor(task.priority)} text-[10px] font-bold uppercase border shadow-none`}>
+                                            {task.priority}
+                                        </Badge>
+                                        <Badge variant="outline" className="text-[10px] uppercase border-slate-200 shadow-none">
+                                            {task.status.replace("_", " ")}
+                                        </Badge>
+                                        <div className="ml-4 w-48">
+                                            <Select
+                                                onValueChange={(val) => {
+                                                    assignToSprint({ taskId: task._id, sprintId: val as Id<"sprints"> })
+                                                        .then(() => sileo.success({ title: "Tarea asignada al sprint." }))
+                                                        .catch(() => sileo.error({ title: "Error al asignar" }));
+                                                }}
+                                            >
+                                                <SelectTrigger className="h-8 text-xs bg-slate-50">
+                                                    <SelectValue placeholder="Asignar a Sprint" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {availableSprints.length === 0 ? (
+                                                        <SelectItem value="none" disabled>No hay sprints disponibles</SelectItem>
+                                                    ) : (
+                                                        availableSprints.map(s => (
+                                                            <SelectItem key={s._id} value={s._id}>{s.name}</SelectItem>
+                                                        ))
+                                                    )}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    </div>
-                ))
+                    );
+                })
             )}
         </div>
     );

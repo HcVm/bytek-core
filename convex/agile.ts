@@ -195,6 +195,18 @@ export const getSprintsByBoard = query({
     }
 });
 
+export const getSprintsForUser = query({
+    args: { userId: v.id("users") },
+    handler: async (ctx, args) => {
+        const allBoards = await ctx.db.query("boards").collect();
+        const userBoards = allBoards.filter(board => board.memberIds.includes(args.userId) || board.ownerId === args.userId);
+        const boardIds = userBoards.map(b => b._id);
+
+        const allSprints = await ctx.db.query("sprints").order("desc").collect();
+        return allSprints.filter(sprint => boardIds.includes(sprint.boardId) && sprint.status !== "closed");
+    }
+});
+
 export const createSprint = mutation({
     args: {
         boardId: v.id("boards"),
