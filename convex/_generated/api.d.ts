@@ -9,6 +9,7 @@
  */
 
 import type * as accounting from "../accounting.js";
+import type * as adminCommunications from "../adminCommunications.js";
 import type * as agile from "../agile.js";
 import type * as analytics from "../analytics.js";
 import type * as assets from "../assets.js";
@@ -18,6 +19,7 @@ import type * as budgets from "../budgets.js";
 import type * as clientPortal from "../clientPortal.js";
 import type * as clients from "../clients.js";
 import type * as contracts from "../contracts.js";
+import type * as daily from "../daily.js";
 import type * as departments from "../departments.js";
 import type * as documents from "../documents.js";
 import type * as exchangeRates from "../exchangeRates.js";
@@ -56,6 +58,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   accounting: typeof accounting;
+  adminCommunications: typeof adminCommunications;
   agile: typeof agile;
   analytics: typeof analytics;
   assets: typeof assets;
@@ -65,6 +68,7 @@ declare const fullApi: ApiFromModules<{
   clientPortal: typeof clientPortal;
   clients: typeof clients;
   contracts: typeof contracts;
+  daily: typeof daily;
   departments: typeof departments;
   documents: typeof documents;
   exchangeRates: typeof exchangeRates;

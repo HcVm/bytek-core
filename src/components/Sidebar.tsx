@@ -1,6 +1,6 @@
 "use client";
 
-import { Settings, Users, Briefcase, LayoutDashboard, LogOut, PackageSearch, FileText, FolderKanban, CreditCard, Archive, Compass, UserCog, FileSignature } from "lucide-react";
+import { Settings, Users, Briefcase, LayoutDashboard, LogOut, PackageSearch, FileText, FolderKanban, CreditCard, Archive, Compass, UserCog, FileSignature, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuthActions } from "@convex-dev/auth/react";
@@ -22,6 +22,10 @@ export default function Sidebar() {
                 <Link href="/crm" className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${pathname === '/crm' ? 'bg-indigo-500/10 text-indigo-400' : 'hover:bg-zinc-900 hover:text-white'}`}>
                     <LayoutDashboard className="w-5 h-5" />
                     <span className="text-sm font-medium">Dashboard</span>
+                </Link>
+                <Link href="/crm/comunicaciones" className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${pathname.includes('/comunicaciones') ? 'bg-indigo-500/10 text-indigo-400' : 'hover:bg-zinc-900 hover:text-white'}`}>
+                    <MessageCircle className="w-5 h-5" />
+                    <span className="text-sm font-medium">Comunicaciones</span>
                 </Link>
                 <Link href="/crm/clientes" className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${pathname.includes('/clientes') ? 'bg-indigo-500/10 text-indigo-400' : 'hover:bg-zinc-900 hover:text-white'}`}>
                     <Users className="w-5 h-5" />

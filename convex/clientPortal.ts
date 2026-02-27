@@ -55,6 +55,14 @@ export const getClientDashboardData = query({
             }
         }
 
+        // Upcoming meetings (Pending and Confirmed)
+        const meetings = await ctx.db.query("clientMessages")
+            .withIndex("by_client", q => q.eq("clientId", args.clientId))
+            .filter(q => q.eq(q.field("type"), "meeting"))
+            .filter(q => q.or(q.eq(q.field("meetingStatus"), "pending"), q.eq(q.field("meetingStatus"), "confirmed")))
+            .order("desc") // Most recently created or we could sort by meetingDate on frontend
+            .collect();
+
         return {
             client: {
                 name: client.companyName,
@@ -86,6 +94,13 @@ export const getClientDashboardData = query({
             installedHardware: interventions.flatMap((i: any) => i.installedHardware || []),
             tickets: enrichedTickets,
             slas,
+            upcomingMeetings: meetings.map(m => ({
+                _id: m._id,
+                title: m.meetingTitle,
+                date: m.meetingDate,
+                status: m.meetingStatus,
+                link: m.meetingLink
+            })),
             summary: {
                 totalProjects: projects.length,
                 activeProjects: projects.filter(p => p.status !== "completed").length,
@@ -150,5 +165,118 @@ export const getKnowledgeBase = query({
             content: d.content || "",
             createdAt: d.createdAt,
         }));
+    }
+});
+
+// =============================================
+// COMUNICACIÓN (Mensajes, Documentos, Reuniones)
+// =============================================
+
+export const getMessages = query({
+    args: { clientId: v.id("clients") },
+    handler: async (ctx, args) => {
+        const messages = await ctx.db.query("clientMessages")
+            .withIndex("by_client", q => q.eq("clientId", args.clientId))
+            .order("asc")
+            .collect();
+
+        // Enriquecer con URLs de archivos si es necesario y nombres de remitentes
+        return await Promise.all(messages.map(async (m) => {
+            let fileUrl = null;
+            if (m.type === "document" && m.fileId) {
+                fileUrl = await ctx.storage.getUrl(m.fileId);
+            }
+
+            let senderName = m.isFromClient ? "Cliente" : "BYTEK Support";
+            if (!m.isFromClient && m.senderId) {
+                const user = await ctx.db.get(m.senderId);
+                if (user && user.name) {
+                    senderName = user.name;
+                }
+            }
+
+            return {
+                ...m,
+                fileUrl,
+                senderName
+            };
+        }));
+    }
+});
+
+export const sendMessage = mutation({
+    args: {
+        clientId: v.id("clients"),
+        senderId: v.optional(v.id("users")),
+        isFromClient: v.boolean(),
+        content: v.string(),
+        type: v.union(v.literal("text"), v.literal("meeting")),
+        meetingDate: v.optional(v.number()),
+        meetingTitle: v.optional(v.string())
+    },
+    handler: async (ctx, args) => {
+        let meetingStatus = undefined;
+        if (args.type === "meeting") {
+            meetingStatus = "pending";
+        }
+
+        return await ctx.db.insert("clientMessages", {
+            ...args,
+            meetingStatus: meetingStatus as any,
+            createdAt: Date.now()
+        });
+    }
+});
+
+export const updateMeetingStatus = mutation({
+    args: {
+        messageId: v.id("clientMessages"),
+        status: v.union(v.literal("pending"), v.literal("confirmed"), v.literal("cancelled"), v.literal("completed")),
+        meetingLink: v.optional(v.string())
+    },
+    handler: async (ctx, args) => {
+        const message = await ctx.db.get(args.messageId);
+        if (!message || message.type !== "meeting") throw new Error("Mensaje de reunión no válido.");
+
+        const updates: any = { meetingStatus: args.status };
+        if (args.meetingLink !== undefined) {
+            updates.meetingLink = args.meetingLink;
+        }
+
+        return await ctx.db.patch(args.messageId, updates);
+    }
+});
+
+export const generateMessageUploadUrl = mutation(async (ctx) => {
+    return await ctx.storage.generateUploadUrl();
+});
+
+export const sendDocumentMessage = mutation({
+    args: {
+        clientId: v.id("clients"),
+        senderId: v.optional(v.id("users")),
+        isFromClient: v.boolean(),
+        content: v.string(),
+        fileId: v.id("_storage"),
+        fileName: v.string(),
+    },
+    handler: async (ctx, args) => {
+        return await ctx.db.insert("clientMessages", {
+            clientId: args.clientId,
+            senderId: args.senderId,
+            isFromClient: args.isFromClient,
+            content: args.content,
+            type: "document",
+            fileId: args.fileId,
+            fileName: args.fileName,
+            createdAt: Date.now()
+        });
+    }
+});
+
+export const getMessageById = query({
+    args: { messageId: v.id("clientMessages") },
+    handler: async (ctx, args) => {
+        return await ctx.db.get(args.messageId);
     }
 });

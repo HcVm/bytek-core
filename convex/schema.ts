@@ -771,4 +771,22 @@ export default defineSchema({
         expirationDate: v.optional(v.number()),
         costPerUser: v.number(),
     }).index("by_expiration", ["expirationDate"]),
+
+    // ==========================================
+    // PORTAL DE CLIENTES (Comunicación Exterior)
+    // ==========================================
+    clientMessages: defineTable({
+        clientId: v.id("clients"),
+        senderId: v.optional(v.id("users")), // Si es null o undefined pero isFromClient es true, asume que es el cliente (que no tiene id user). Si isFromClient es false, senderId es obligatorio.
+        isFromClient: v.boolean(),           // true si lo escribió el cliente, false si lo escribió BYTEK
+        content: v.string(),                 // Texto del mensaje
+        type: v.union(v.literal("text"), v.literal("document"), v.literal("meeting")),
+        fileId: v.optional(v.id("_storage")),// Archivo adjunto si type="document"
+        fileName: v.optional(v.string()),    // Nombre original del archivo
+        meetingDate: v.optional(v.number()), // Fecha propuesta si type="meeting"
+        meetingTitle: v.optional(v.string()),// Título de la reunión
+        meetingStatus: v.optional(v.union(v.literal("pending"), v.literal("confirmed"), v.literal("cancelled"), v.literal("completed"))),
+        meetingLink: v.optional(v.string()), // URL to Google Meet/Zoom etc.
+        createdAt: v.number(),
+    }).index("by_client", ["clientId"]),
 });

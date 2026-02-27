@@ -7,8 +7,10 @@ import { notFound, useParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Activity, Receipt, Route, FileCheck2, Cpu, Compass } from "lucide-react";
+import { Activity, Receipt, Route, FileCheck2, Cpu, Compass, MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function ClientDashboardPage() {
     const params = useParams();
@@ -29,7 +31,7 @@ export default function ClientDashboardPage() {
         return notFound();
     }
 
-    const { client, projects, invoices, installedHardware } = data;
+    const { client, projects, invoices, installedHardware, upcomingMeetings } = data;
 
     // Calcular deuda total (Vencida + Pendiente)
     const totalDebt = invoices
@@ -47,7 +49,13 @@ export default function ClientDashboardPage() {
             >
                 <div>
                     <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">Hola, equipo de {client.name}</h1>
-                    <p className="text-zinc-500 text-sm mt-1">Este es su panel de control corporativo. Aquí puede hacer seguimiento a sus servicios.</p>
+                    <p className="text-zinc-500 text-sm mt-1 mb-4">Este es su panel de control corporativo. Aquí puede hacer seguimiento a sus servicios.</p>
+                    <Link href={`/client-portal/${clientId}/communication`}>
+                        <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
+                            <MessageCircle className="w-4 h-4 mr-2" />
+                            Centro de Comunicación
+                        </Button>
+                    </Link>
                 </div>
                 {hasDebt ? (
                     <div className="bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-xl flex items-center gap-3">
@@ -124,6 +132,48 @@ export default function ClientDashboardPage() {
                             <p className="text-zinc-500 font-medium">No tiene proyectos tecnológicos activos en este momento.</p>
                         </div>
                     )}
+
+                    {/* Nueva sub-sección: Reuniones */}
+                    <div className="pt-6">
+                        <h2 className="text-lg font-bold text-zinc-900 flex items-center gap-2 mb-4">
+                            <Activity className="w-5 h-5 text-indigo-500" /> Próximas Reuniones
+                        </h2>
+                        {upcomingMeetings && upcomingMeetings.length > 0 ? (
+                            <div className="space-y-3">
+                                {upcomingMeetings.map((meeting: any) => (
+                                    <Card key={meeting._id} className="bg-white hover:border-indigo-200 transition-colors">
+                                        <CardContent className="p-4 flex items-center justify-between">
+                                            <div>
+                                                <h3 className="font-semibold text-zinc-900">{meeting.title || "Reunión de seguimiento"}</h3>
+                                                <p className="text-sm text-zinc-500">
+                                                    {meeting.date ? new Date(meeting.date).toLocaleString([], { dateStyle: 'long', timeStyle: 'short' }) : "Fecha por confirmar"}
+                                                </p>
+                                            </div>
+                                            <div className="flex flex-col items-end gap-2">
+                                                <Badge variant="outline" className={
+                                                    meeting.status === "confirmed" ? "bg-emerald-50 text-emerald-700 border-emerald-200" :
+                                                        meeting.status === "pending" ? "bg-amber-50 text-amber-700 border-amber-200" : ""
+                                                }>
+                                                    {meeting.status === "confirmed" ? "Confirmada" : "Pendiente"}
+                                                </Badge>
+                                                {meeting.status === "confirmed" && meeting.link && (
+                                                    <Link href={`/client-portal/${clientId}/communication/meeting/${meeting._id}`}>
+                                                        <Button size="sm" variant="secondary" className="h-7 text-xs bg-indigo-50 text-indigo-700 hover:bg-indigo-100">
+                                                            Unirse a Llamada Nativa
+                                                        </Button>
+                                                    </Link>
+                                                )}
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="p-6 text-center border border-zinc-200 rounded-xl bg-zinc-50">
+                                <p className="text-zinc-500 text-sm">No hay reuniones agendadas próximas.</p>
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 {/* Columna Derecha: Facturación & Field Service */}
